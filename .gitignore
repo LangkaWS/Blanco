@@ -1,3 +1,8 @@
+# Bot config
+config.json
+package-lock.json
+package.json
+
 # Logs
 logs
 *.log
@@ -49,6 +54,9 @@ typings/
 
 # Optional npm cache directory
 .npm
+
+# eslint
+.eslintrc
 
 # Optional eslint cache
 .eslintcache
