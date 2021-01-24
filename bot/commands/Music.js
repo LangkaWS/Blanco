@@ -1,7 +1,6 @@
 class Music {
     
     static ytdl   = require('ytdl-core');
-    static config = require('../../config.json');
     static Tools  = require('../Tools.js');
 
     static queue  = new Map();
