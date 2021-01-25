@@ -1,15 +1,18 @@
-const { Client }            = require('discord.js');
-const { PREFIX, BOT_TOKEN } = require('../config.json');
-const Music                 = require('./commands/Music.js');
+const { Client, Intents }  = require('discord.js');
+const { prefix, botToken } = require('../config.json');
+const Music                = require('./commands/Music.js');
+const Stream               = require('./commands/Stream.js');
 
-const client  = new Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
-client.login(BOT_TOKEN);
+
+const client  = new Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'], ws: { intents: [Intents.NON_PRIVILEGED, 'GUILD_PRESENCES', 'GUILD_MEMBERS'] } });
+client.login(botToken);
+
+client.on('ready', () => console.log('Hello'));
 
 client.on('message', async message => {
-    if(message.author.bot)                  return;
-    if(!message.content.startsWith(PREFIX)) return;
+    if(message.author.bot || !message.content.startsWith(prefix)) return;
 
-    const args    = message.content.slice(PREFIX.length).split(' ');
+    const args    = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
 
     switch(command) {
@@ -34,6 +37,21 @@ client.on('message', async message => {
         case 'resume':
             Music.resume(message);
             break;
+
+        /* Streaming commands */
+        case 'config':
+            Stream.config(message);
+            break;
     }
 
+});
+
+client.on('guildMemberUpdate', (oldMember, newMember) => {
+    try {
+        if(newMember.roles.cache.find(r => r.name == Stream.streamingConfig.get(newMember.guild.id).role)) {
+            Stream.announceStream(newMember);
+        }
+    } catch (error) {
+        console.log(error);
+    }
 });
