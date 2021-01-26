@@ -1,9 +1,46 @@
 class Music {
     
+    static config = require('../../config.json');
     static ytdl   = require('ytdl-core');
     static Tools  = require('../Tools.js');
 
+    static prefix = this.config.prefix;
+
     static queue  = new Map();
+
+    /**
+     * Call the suitable function according to arguments of the command.
+     * @param {Message} message 
+     */
+    static menu(message) {
+        const args = this.Tools.getArgs(message);
+
+        switch(args[0]) {
+        case 'play':
+            this.play(message);
+            break;
+        
+        case 'skip':
+            this.skip(message);
+            break;
+
+        case 'stop':
+            this.stop(message);
+            break;
+        
+        case 'pause':
+            this.pause(message);
+            break;
+
+        case 'resume':
+            this.resume(message);
+            break;
+        
+        case 'help':
+        default:
+            this.help(message);
+        }
+    }
 
     /**
      * Add the music to guild queue and start it if there is no current queue for the guild. 
@@ -23,7 +60,7 @@ class Music {
             return;
         }
 
-        const musicInfo = await this.ytdl.getInfo(this.Tools.getArgs(message)[0])
+        const musicInfo = await this.ytdl.getInfo(this.Tools.getArgs(message)[1])
                                          .catch(e => this.sendError(e, message.channel));
         const music     = {
             title: musicInfo.videoDetails.title,
@@ -198,8 +235,9 @@ class Music {
      */
     static sendError(error, channel) {
         console.log(error);
+        this.queue.get(channel.guild.id).voiceChannel.leave();
         this.queue.delete(channel.guild.id);
-        channel.send('J\'ai rencontré une erreur et dois partir.\n(Si l\'erreur persiste, contactez un administrateur.');
+        channel.send('J\'ai rencontré une erreur et dois partir.\n(Si l\'erreur persiste, contactez un administrateur)');
     }
 
     /**
@@ -208,6 +246,22 @@ class Music {
      */
     static notSameVoiceChannel(textChannel) {
         textChannel.send('Tu dois être dans le même channel que moi pour exécuter cette action.');
+    }
+
+    /**
+     * Display help on the music commands
+     * @param {Message} message 
+     */
+    static help(message) {
+        message.channel.send(`
+Voici les différentes fonctions de la catégorie "musique" :
+    - !m play \`youtube_video_url\` : lit la piste audio de la vidéo dans le canal vocal où tu es connecté
+    - !m pause : met en pause la lecture
+    - !m resume : reprend la lecture en pause
+    - !m skip : passe à la vidéo suivante ; s'il n'y en a aucune en attente, arrête la lecture et quitte le canal vocal
+    - !m stop : arrête la lecture et quitte le canal vocal
+Si vous avez des questions ou rencontrez des problèmes, n'hésitez pas à en faire part aux administrateurs.
+        `);
     }
 }
 
