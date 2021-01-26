@@ -24,24 +24,8 @@ client.on('message', async message => {
     switch(command) {
 
         /* Music commands */
-        case 'play':
-            Music.play(message);
-            break;
-        
-        case 'skip':
-            Music.skip(message);
-            break;
-
-        case 'stop':
-            Music.stop(message);
-            break;
-        
-        case 'pause':
-            Music.pause(message);
-            break;
-
-        case 'resume':
-            Music.resume(message);
+        case 'm':
+            Music.menu(message);
             break;
 
         /* Streaming commands */
