@@ -1,0 +1,35 @@
+{
+  "name": "bot",
+  "version": "0.1.0",
+  "description": "Custom bot for White Wyvern community",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LangkaWS/WhiteWyvernBot.git"
+  },
+  "keywords": [
+    "white-wyvern",
+    "bot"
+  ],
+  "author": "Langka-WebStudio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LangkaWS/WhiteWyvernBot/issues"
+  },
+  "homepage": "https://github.com/LangkaWS/WhiteWyvernBot#readme",
+  "dependencies": {
+    "@discordjs/opus": "^0.3.3",
+    "cron": "^1.8.2",
+    "discord.js": "^12.5.1",
+    "ffmpeg-static": "^4.2.7",
+    "ytdl-core": "^4.4.4"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.22",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.18.0"
+  }
+}
