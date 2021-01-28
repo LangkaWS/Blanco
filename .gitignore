@@ -1,7 +1,6 @@
 # Bot config
 config.json
-package-lock.json
-package.json
+bot/config/
 
 # Logs
 logs
