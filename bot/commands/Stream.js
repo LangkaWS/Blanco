@@ -3,7 +3,7 @@ const Tools    = require('../Tools.js');
 
 const {StreamTxt, ErrorTxt, NotUnderstoodTxt} = require('../languages/fr.json');
 
-exports.config = async (message) => {
+async function config(message) {
     try {
         const guildId = message.guild.id;
         const [result]  = await Database.getStreaming(guildId);
@@ -77,7 +77,7 @@ exports.config = async (message) => {
 
 }
 
-exports.getStreamingRoleName = async (guildId) => {
+async function getStreamingRoleName(guildId) {
     try {
         const [result]  = await Database.getStreaming(guildId);
         return result.streamingRole;
@@ -86,7 +86,7 @@ exports.getStreamingRoleName = async (guildId) => {
     }
 }
 
-exports.announceStream = async (member) => {
+async function announceStream(member) {
     try {
         const guild = member.guild;
         const [result]  = await Database.getStreaming(guild.id);
@@ -107,3 +107,5 @@ exports.announceStream = async (member) => {
         console.log(err);
     }
 }
+
+module.exports = { config, getStreamingRoleName, announceStream }
