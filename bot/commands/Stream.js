@@ -1,7 +1,7 @@
-const Database = require('../Database.js');
-const Tools    = require('../Tools.js');
+const Database     = require('../Database.js');
+const { getReply } = require('../Tools.js');
 
-const {StreamTxt, ErrorTxt, NotUnderstoodTxt} = require('../languages/fr.json');
+const { StreamTxt, ErrorTxt, NotUnderstoodTxt } = require('../languages/fr.json');
 
 async function config(message) {
     try {
@@ -11,9 +11,9 @@ async function config(message) {
         if(!result) {
             message.channel.send(StreamTxt.NoConfig);
 
-            const streamRole    = await Tools.getReply(message, StreamTxt.AskRole);
-            const streamChannel = await Tools.getReply(message, StreamTxt.AskChannel);
-            const streamMessage = await Tools.getReply(message, StreamTxt.AskMessage);
+            const streamRole    = await getReply(message, StreamTxt.AskRole);
+            const streamChannel = await getReply(message, StreamTxt.AskChannel);
+            const streamMessage = await getReply(message, StreamTxt.AskMessage);
 
             await Database.setStreaming(guildId, streamRole, streamChannel, streamMessage);
 
@@ -40,21 +40,21 @@ async function config(message) {
             let newMessage = currentMessage;
 
             do {
-                const reply = await Tools.getReply(message, StreamTxt.AskWhatToModify);
+                const reply = await getReply(message, StreamTxt.AskWhatToModify);
                 switch(reply) {
                     case 'role':
                         isReplyOk = true;
-                        newRole   = await Tools.getReply(message, StreamTxt.AskNewRole);
+                        newRole   = await getReply(message, StreamTxt.AskNewRole);
                         break;
 
                     case 'channel':
                         isReplyOk  = true;
-                        newChannel = await Tools.getReply(message, StreamTxt.AskNewChannel);
+                        newChannel = await getReply(message, StreamTxt.AskNewChannel);
                         break;
 
                     case 'message':
                         isReplyOk  = true;
-                        newMessage = await Tools.getReply(message, StreamTxt.AskNewMessage);
+                        newMessage = await getReply(message, StreamTxt.AskNewMessage);
                         break;
 
                     case 'end':
