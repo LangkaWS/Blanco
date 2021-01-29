@@ -4,6 +4,7 @@ const { Client, Intents } = require('discord.js');
 
 const { prefix }          = require('../config.json');
 
+const Database            = require('./Database.js');
 const Music               = require('./commands/Music.js');
 const Stream              = require('./commands/Stream.js');
 const ReactionRoles       = require('./commands/ReactionRoles.js');
@@ -20,6 +21,7 @@ client.login(process.env.BOT_TOKEN);
 client.on('ready', () => {
     console.log('Hello');
     console.log('Remember to configure the Stream feature with !config.');
+    Database.getConnection();
 });
 
 
