@@ -10,5 +10,18 @@ async function getConnection() {
     });
 }
 
+exports.getStreaming = async (guildId) => {
+    const con = await getConnection();
+    const [rows] =  await con.execute('SELECT * FROM STREAMING_CONFIG WHERE guildID = ?', [guildId]);
+    return rows;
+}
 
+exports.setStreaming = async (guildId, role, channel, message) => {
+    const con = await getConnection();
+    await con.execute('INSERT INTO STREAMING_CONFIG SET guildID = ?, streamingRole = ?, streamingChannelId = ?, streamingMessage = ?', [guildId, role, channel, message]);
+}
+
+exports.updateStreaming = async (guildId, role, channel, message) => {
+    const con = await getConnection();
+    await con.execute('UPDATE STREAMING_CONFIG SET streamingRole = ?, streamingChannelId = ?, streamingMessage = ? WHERE guildID = ?', [role, channel, message, guildId]);
 }
