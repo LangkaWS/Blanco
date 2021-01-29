@@ -1,0 +1,21 @@
+{
+    "StreamTxt": {
+        "AlreadyConfig": "Il y a déjà une configuration pour mon service d'annonce de stream sur ton serveur. Voici les paramètres :",
+        "AskChannel": "Ok, ensuite il me faut l'identifiant du canal dans lequel tu veux que j'annonce le stream.\rTu peux le trouver en faisant un clic droit sur le canal et \"Copier l'identifiant\".",
+        "AskMessage": "Merci. Encore une dernière information : peux-tu m'écrire le message que je dois utiliser pour annoncer le steam ?\rTu peux utiliser les expressions suivantes pour personnaliser le message :\r`{name}` : m'indique que je devrai renseigner le pseudo du membre qui streame\r`{url}` : m'indique que je devrai renseigner l'url du stream\rUn exemple de message : \"Salut à tous ! {name} est en train de streamer ! Rendez-vous ici : {url} !\"\rSi tu as besoin de plus de paramètres personnalisables, n'hésites pas à en faire par à mon support.",
+        "AskNewChannel": "Quel est l'identifiant du canal dans lequel tu veux que j'annonce le stream.\rTu peux le trouver en faisant un clic droit sur le canal et \"Copier l'identifiant\".",
+        "AskNewMessage": "Quel est le message que je dois utiliser pour annoncer le steam ?\rTu peux utiliser les expressions suivantes pour personnaliser le message :\r`{name}` : m'indique que je devrai renseigner le pseudo du membre qui streame\r`{url}` : m'indique que je devrai renseigner l'url du stream\rUn exemple de message : \"Salut à tous ! {name} est en train de streamer ! Rendez-vous ici : {url} !\"\rSi tu as besoin de plus de paramètres personnalisables, n'hésites pas à en faire par à mon support.",
+        "AskNewRole": "Quel rôle est attribué lorsqu'un de tes membres commence à streamer sur Twitch ?",
+        "AskRole": "D'abord quel rôle est attribué lorsqu'un de tes membres commence à streamer sur Twitch ?",
+        "AskWhatToModify": "Que veux tu modifier ? Entre une de ces commandes : `role`, `channel`, `message`, `end` (pour terminer les modifications).",
+        "ChannelNotFound": "Je ne retrouve pas le canal qui m'a été donné lors de la configuration...",
+        "NoConfig": "Il n'existe pas encore de configuration pour mon service d'annonce de stream. Configurons-la tout de suite !",
+        "StreamingChannel": "Le canal où j'annonce le stream : ",
+        "StreamingMessage": "Le message d'annonce que j'affiche : ",
+        "StreamingRole": "Le rôle du membre qui est en stream sur Twitch : ",
+        "SuccessConfig": "La configuration est terminée. Merci de ton aide."
+    },
+
+    "ErrorTxt": "Oops ! J'ai rencontré une erreur. Si celle-ci persiste, contactes un administrateur.",
+    "NotUnderstoodTxt": "Je n'ai pas compris ton message. Peux-tu le vérifier et le renvoyer ?"
+}
