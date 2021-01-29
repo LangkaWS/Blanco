@@ -6,8 +6,8 @@ async function getReply(initMessage, question) {
     return collected.first().content;
 }
 
-async function getArgs(message) {
+function getArgs(message) {
     return message.content.slice(prefix.length).split(' ').slice(1);
 }
 
-module.exports = { getReply, getArgs};
+module.exports = { getReply, getArgs };
