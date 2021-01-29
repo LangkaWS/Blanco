@@ -6,8 +6,6 @@ const {StreamTxt, ErrorTxt, NotUnderstoodTxt} = require('../languages/fr.json');
 class Stream {
 
 
-    static streamingConfig = new Map();
-
     static async config(message) {
 
         try {
