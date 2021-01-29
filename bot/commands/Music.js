@@ -217,7 +217,7 @@ function resume(message) {
         return;
     }
 
-    if(!guildQueue || guildQueue.connection.dispatcher.paused == false) {
+    if(!guildQueue || guildQueue.connection.dispatcher.paused === false) {
         message.channel.send(MusicTxt.NoPausedMusic);
         return;
     }
@@ -240,7 +240,7 @@ function printQueue(guildQueue) {
     let str = MusicTxt.Playlist;
 
     for(let i = 0; i < guildQueue.musics.length; i++) {
-        str += `${i == 0 ? MusicTxt.Current : '- '}` + guildQueue.musics[i].title + `${i == 0 ? '*' : ''}\n`;
+        str += `${i === 0 ? MusicTxt.Current : '- '}` + guildQueue.musics[i].title + `${i === 0 ? '*' : ''}\n`;
     }
     
     return str;

@@ -97,7 +97,7 @@ async function announceStream(member) {
         }
 
         if(message.match(/{url}/)) {
-            const url = member.presence.activities.find(act => act.type == 'STREAMING').url;
+            const url = member.presence.activities.find(act => act.type === 'STREAMING').url;
             message = message.replace(/{url}/, url);
         }
 
