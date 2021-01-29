@@ -20,8 +20,6 @@ client.login(process.env.BOT_TOKEN);
 
 client.on('ready', () => {
     console.log('Hello');
-    console.log('Remember to configure the Stream feature with !config.');
-    Database.getConnection();
 });
 
 
@@ -41,7 +39,7 @@ client.on('message', message => {
             break;
 
         /* Streaming commands */
-        case 'config':
+        case 'streamconf':
             Stream.config(message);
             break;
         
@@ -69,9 +67,11 @@ client.on('messageReactionRemove', (reaction, user) => {
     ReactionRoles.removeRole(reaction, user);
 });
 
-client.on('guildMemberUpdate', (oldMember, newMember) => {
+client.on('guildMemberUpdate', async (oldMember, newMember) => {
     try {
-        if(newMember.roles.cache.find(r => r.name == Stream.streamingConfig.get(newMember.guild.id).role)) {
+        const diffRole = newMember.roles.cache.difference(oldMember.roles.cache).first();
+        const streamingRole = await Stream.getStreamingRoleName(oldMember.guild.id);
+        if(diffRole.name === streamingRole && newMember.roles.cache.get(diffRole.id)) {
             Stream.announceStream(newMember);
         }
     } catch (error) {
