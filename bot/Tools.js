@@ -1,11 +1,11 @@
-class Tools {
+const { prefix } = require('../config.json');
 
-    static config = require('../config.json');
-    static prefix = this.config.prefix;
-
-    static getArgs(message) {
-        return message.content.slice(this.prefix.length).split(' ').slice(1);
-    }
+exports.getReply = async (initMessage, question) => {
+    initMessage.channel.send(question);
+    const collected = await initMessage.channel.awaitMessages(msg => msg.author.id === initMessage.author.id, {max: 1});
+    return collected.first().content;
 }
 
-module.exports = Tools;
+exports.getArgs = (message) => {
+    return message.content.slice(prefix.length).split(' ').slice(1);
+}
