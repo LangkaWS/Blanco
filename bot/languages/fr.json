@@ -16,6 +16,22 @@
         "SuccessConfig": "La configuration est terminée. Merci de ton aide."
     },
 
+    "MusicTxt": {
+        "NotInVoiceChannel": "Tu dois d'abord te connecter à un canal vocal",
+        "NotInSameVoiceChannel": "Tu dois être dans le même channel que moi pour exécuter cette action.",
+        "NoPermissions": "J'ai besoin des permissions de me connecter et de parler dans ton canal vocal pour jouer de la musique. Contactes un administrateur.",
+        "URLNotFound" : "Je n'ai pas trouvé l'URL demandée.",
+        "MusicAddedToPlaylist": " a été ajouté à la liste de lecture.",
+        "EmptyPlaylist" : "Il n' y a plus de musique en attente de lecture. Au revoir !",
+        "NowPlaying": "Lecture en cours : ",
+        "NoNowPlaying": "Il n'y a aucune musique en cours de lecture.",
+        "NoPausedMusic": "Il n'y a aucune musique en pause.",
+        "Bye": "Au revoir !",
+        "Playlist": "**__Liste de lecture :__**\n",
+        "Current": "*(En cours) ",
+        "Help": "Voici les différentes fonctions de la catégorie musique :\r- `!m` `play` `youtube_video_url` : lit la piste audio de la vidéo dans le canal vocal où tu es connecté\r- `!m` `pause` : met en pause la lecture\r- `!m` `resume` : reprend la lecture en pause\r- `!m` `skip` : passe à la vidéo suivante ; s'il n'y en a aucune en attente, arrête la lecture et quitte le canal vocal\r- `!m` `stop` : arrête la lecture et quitte le canal vocal\rSi vous avez des questions ou rencontrez des problèmes, n'hésitez pas à en faire part aux administrateurs."
+    },
+
     "ErrorTxt": "Oops ! J'ai rencontré une erreur. Si celle-ci persiste, contactes un administrateur.",
     "NotUnderstoodTxt": "Je n'ai pas compris ton message. Peux-tu le vérifier et le renvoyer ?"
 }
