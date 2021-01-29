@@ -1,12 +1,20 @@
-const { Client, Intents }  = require('discord.js');
-const { prefix, botToken } = require('../config.json');
-const Music                = require('./commands/Music.js');
-const Stream               = require('./commands/Stream.js');
-const ReactionRoles        = require('./commands/ReactionRoles.js');
+require('dotenv').config();
 
 
-const client  = new Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'], ws: { intents: [Intents.NON_PRIVILEGED, 'GUILD_PRESENCES', 'GUILD_MEMBERS'] } });
-client.login(botToken);
+const { prefix }          = require('../config.json');
+
+const Music               = require('./commands/Music.js');
+const Stream              = require('./commands/Stream.js');
+const ReactionRoles       = require('./commands/ReactionRoles.js');
+
+
+const client  = new Client({
+    partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
+    ws: {
+        intents: [Intents.NON_PRIVILEGED, 'GUILD_PRESENCES', 'GUILD_MEMBERS']
+    }
+});
+client.login(process.env.BOT_TOKEN);
 
 client.on('ready', () => {
     console.log('Hello');
@@ -14,9 +22,10 @@ client.on('ready', () => {
 });
 
 
-
-client.on('message', async message => {
-    if(message.author.bot || !message.content.startsWith(prefix)) return;
+client.on('message', message => {
+    if(message.author.bot || !message.content.startsWith(prefix)) {
+        return;
+    }
 
     const args    = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
@@ -42,14 +51,18 @@ client.on('message', async message => {
 });
 
 client.on('messageReactionAdd', (reaction, user) => {
-    if(reaction.message.id != ReactionRoles.rrMenuIdList.get(reaction.message.guild.id)) return;
+    if(reaction.message.id != ReactionRoles.rrMenuIdList.get(reaction.message.guild.id)) {
+        return;
+    }
 
     ReactionRoles.addRole(reaction, user);
 });
 
 client.on('messageReactionRemove', (reaction, user) => {
-    if(reaction.message.id != ReactionRoles.rrMenuIdList.get(reaction.message.guild.id)) return;
-
+    if(reaction.message.id != ReactionRoles.rrMenuIdList.get(reaction.message.guild.id)) {
+        return;
+    }
+    
     ReactionRoles.removeRole(reaction, user);
 });
 
