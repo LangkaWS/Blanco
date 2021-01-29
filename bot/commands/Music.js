@@ -1,5 +1,7 @@
-const ytdl   = require('ytdl-core');
-const Tools  = require('../Tools.js');
+const ytdl         = require('ytdl-core');
+const { getArgs }  = require('../Tools.js');
+
+const { MusicTxt, ErrorTxt } = require('../languages/fr.json');
 
 const queue  = new Map();
 
@@ -8,7 +10,7 @@ const queue  = new Map();
  * @param {Message} message 
  */
 function menu(message) {
-    const [command] = Tools.getArgs(message);
+    const [command] = getArgs(message);
 
     switch(command) {
     case 'play':
@@ -42,84 +44,99 @@ function menu(message) {
  * @param {Message} message the command message
  */
 async function play(message) {
-    if(!message.member.voice.channel) {
-        message.channel.send('Tu dois d\'abord te connecter à un canal vocal');
-        return;
-    }
-
-    const voiceChannel = message.member.voice.channel;
-    const permissions  = voiceChannel.permissionsFor(message.client.user);
-
-    if(!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
-        message.channel.send('J\'ai besoin des permissions de me connecter et de parler dans ton canal vocal pour jouer de la musique. Contactes un administrateur.');
-        return;
-    }
-
-    const musicInfo = await ytdl.getInfo(Tools.getArgs(message)[1])
-                                     .catch(e => sendError(e, message.channel));
-    const music     = {
-        title: musicInfo.videoDetails.title,
-        url:   musicInfo.videoDetails.video_url
-    };
-    const guildQueue = queue.get(message.guild.id);
-
-    if(!guildQueue) {
-        const queueConstruct = {
-            textChannel:  message.channel,
-            voiceChannel: voiceChannel,
-            connection:   null,
-            musics:       [],
-            volume:       5,
-            playing:      true
+    try {
+        const voiceChannel = message.member.voice.channel;
+        if(!voiceChannel) {
+            message.channel.send(MusicTxt.NotInVoiceChannel);
+            return;
         }
-
-        queue.set(message.guild.id, queueConstruct);
-        queueConstruct.musics.push(music);
-
-        try {
-            let connection            = await voiceChannel.join()
-                                                          .catch(e => sendError(e, message.channel));
-            queueConstruct.connection = connection;
-            start(message.guild.id, queueConstruct.musics[0]);
-        } catch (e) {
-            console.log(e);
-            queue.delete(message.guild.id);
-            message.channel.send(e);
+    
+        const permissions  = voiceChannel.permissionsFor(message.client.user);
+        if(!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
+            message.channel.send(MusicTxt.NoPermissions);
             return;
         }
 
-    } else {
-        guildQueue.musics.push(music);
-        message.channel.send(`${music.title} a été ajouté à la liste de lecture.`);
-        message.channel.send(printQueue(guildQueue));
-        return;
-    }  
+        const [, musicURL] = getArgs(message);
+        try {
+            const musicInfo = await ytdl.getInfo(musicURL);
+            const music     = {
+                title: musicInfo.videoDetails.title,
+                url  : musicInfo.videoDetails.video_url
+            };
+            const guildQueue = queue.get(message.guild.id);
+            
+            if(!guildQueue) {
+                const queueConstruct = {
+                    textChannel : message.channel,
+                    voiceChannel: voiceChannel,
+                    connection  : null,
+                    musics      : [],
+                    volume      : 5,
+                    playing     : true
+                }
+        
+                queue.set(message.guild.id, queueConstruct);
+                queueConstruct.musics.push(music);
+        
+                let connection = await voiceChannel.join();
+                queueConstruct.connection = connection;
+                start(message.guild.id, queueConstruct.musics[0]);
+
+            } else {
+                guildQueue.musics.push(music);
+                message.channel.send(music.title + MusicTxt.MusicAddedToPlaylist);
+                message.channel.send(printQueue(guildQueue));
+            }  
+        } catch (err) {
+            console.log(err);
+            message.channel.send(MusicTxt.URLNotFound);
+        }
+    } catch (err) {
+        console.log(err);
+        message.channel.send(ErrorTxt);
+        if(queue.get(message.guild.id)) {
+            if(message.guild.voice) {
+                queue.get(message.guild.id).voiceChannel.leave();
+                queue.delete(message.guild.id);
+            }
+        }
+    }
 }
 
 /**
  * Play a music in the defined voice channel. If no music left, leave the channel and delete the guild queue.
- * @param {number} guildId the id of the guild
- * @param {object} music the music to play
+ * @param {Number} guildId the id of the guild
+ * @param {Object} music the music to play
+ * @param {String} music.title the title of the music
+ * @param {String} music.url the url of the music
  */
 function start(guildId, music) {
-    const guildQueue = queue.get(guildId);
+    try {
+        const guildQueue = queue.get(guildId);
+    
+        if(!music) {
+            guildQueue.voiceChannel.leave();
+            queue.delete(guildId);
+            guildQueue.textChannel.send(MusicTxt.EmptyPlaylist);
+            return;
+        }
+    
+        const dispatcher = guildQueue.connection
+            .play(ytdl(music.url))
+            .on('finish', () => {
+                guildQueue.musics.shift();
+                start(guildId, guildQueue.musics[0]);
+            })
+        dispatcher.setVolumeLogarithmic(1);
+        guildQueue.textChannel.send(MusicTxt.NowPlaying + "**" + music.title + "**");
+        guildQueue.textChannel.send(printQueue(guildQueue));
 
-    if(!music) {
-        guildQueue.voiceChannel.leave();
+    } catch (err) {
+        console.log(err);
+        queue.get(guildId).voiceChannel.leave();
         queue.delete(guildId);
-        guildQueue.textChannel.send('Il n\' y a plus de musique en attente de lecture. Au revoir !');
-        return;
     }
-
-    const dispatcher = guildQueue.connection.play(ytdl(music.url))
-                                            .on('finish', () => {
-                                                 guildQueue.musics.shift();
-                                                 start(guildId, guildQueue.musics[0]);
-                                            })
-                                            .on('error', error => sendError(error, guildQueue.textChannel));
-    dispatcher.setVolumeLogarithmic(1);
-    guildQueue.textChannel.send(`Lecture en cours : **${music.title}**`);
-    guildQueue.textChannel.send(printQueue(guildQueue));
 }
 
 /**
@@ -136,7 +153,7 @@ function skip(message) {
     }
 
     if(!guildQueue) {
-        message.channel.send('Il n\'y a aucune musique en cours de lecture que je puisse passer.');
+        message.channel.send(MusicTxt.NoNowPlaying);
         return;
     }
 
@@ -157,13 +174,13 @@ function stop(message) {
     }
 
     if(!guildQueue) {
-        message.channel.send('Il n\'y a aucune musique en cours de lecture.');
+        message.channel.send(MusicTxt.NoNowPlaying);
         return;
     }
 
     guildQueue.voiceChannel.leave();
     queue.delete(message.guild.id);
-    guildQueue.textChannel.send('Au revoir !');
+    guildQueue.textChannel.send(MusicTxt.Bye);
 }
 
 /**
@@ -180,7 +197,7 @@ function pause(message) {
     }
 
     if(!guildQueue) {
-        message.channel.send('Il n\'y a aucune musique en cours de lecture.');
+        message.channel.send(MusicTxt.NoNowPlaying);
         return;
     }
 
@@ -201,7 +218,7 @@ function resume(message) {
     }
 
     if(!guildQueue || guildQueue.connection.dispatcher.paused == false) {
-        message.channel.send('Il n\'y a aucune musique en pause.');
+        message.channel.send(MusicTxt.NoPausedMusic);
         return;
     }
 
@@ -210,29 +227,23 @@ function resume(message) {
 
 /**
  * Take the guild queue and format it in user friendly playlist.
- * @param {object} guildQueue 
+ * @param {Object} guildQueue the queue for the guild
+ * @param {TextChannel} guildQueue.textChannel the text channel to send messages to 
+ * @param {VoiceChannel} guildQueue.voiceChannel the voice channel where the music is played
+ * @param {VoiceConnection} guildQueue.connection the connection to the voice channel
+ * @param {[Object]} guildQueue.musics the playlist
+ * @param {Number} guildQueue.volume the volume
+ * @param {Boolean} guildQueue.playing if is playing or not
  * @returns {string} the playlist
  */
 function printQueue(guildQueue) {
-    let str = '**__Liste de lecture :__**\n';
+    let str = MusicTxt.Playlist;
 
     for(let i = 0; i < guildQueue.musics.length; i++) {
-        str += `${i == 0 ? '*(En cours) ' : '- '}` + guildQueue.musics[i].title + `${i == 0 ? '*' : ''}\n`;
+        str += `${i == 0 ? MusicTxt.Current : '- '}` + guildQueue.musics[i].title + `${i == 0 ? '*' : ''}\n`;
     }
     
     return str;
-}
-
-/**
- * Prints the error in the console, delete the guild queue and send an error message in the channel.
- * @param {object} error 
- * @param {object} channel 
- */
-function sendError(error, channel) {
-    console.log(error);
-    queue.get(channel.guild.id).voiceChannel.leave();
-    queue.delete(channel.guild.id);
-    channel.send('J\'ai rencontré une erreur et dois partir.\n(Si l\'erreur persiste, contactez un administrateur)');
 }
 
 /**
@@ -240,7 +251,7 @@ function sendError(error, channel) {
  * @param {TextChannel} textChannel the text channel to send the message
  */
 function notSameVoiceChannel(textChannel) {
-    textChannel.send('Tu dois être dans le même channel que moi pour exécuter cette action.');
+    textChannel.send(MusicTxt.NotInSameVoiceChannel);
 }
 
 /**
@@ -248,15 +259,7 @@ function notSameVoiceChannel(textChannel) {
  * @param {Message} message 
  */
 function help(message) {
-    message.channel.send(`
-Voici les différentes fonctions de la catégorie musique :
-- \`!m\` \`play\` \`youtube_video_url\` : lit la piste audio de la vidéo dans le canal vocal où tu es connecté
-- \`!m\` \`pause\` : met en pause la lecture
-- \`!m\` \`resume\` : reprend la lecture en pause
-- \`!m\` \`skip\` : passe à la vidéo suivante ; s'il n'y en a aucune en attente, arrête la lecture et quitte le canal vocal
-- \`!m\` \`stop\` : arrête la lecture et quitte le canal vocal
-Si vous avez des questions ou rencontrez des problèmes, n'hésitez pas à en faire part aux administrateurs.
-    `);
+    message.channel.send(MusicTxt.Help);
 }
 
 module.exports = { menu };
