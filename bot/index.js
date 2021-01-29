@@ -4,7 +4,6 @@ const { Client, Intents } = require('discord.js');
 
 const { prefix }          = require('../config.json');
 
-const Database            = require('./Database.js');
 const Music               = require('./commands/Music.js');
 const Stream              = require('./commands/Stream.js');
 const ReactionRoles       = require('./commands/ReactionRoles.js');
