@@ -50,20 +50,18 @@ client.on('message', message => {
 
 });
 
-client.on('messageReactionAdd', (reaction, user) => {
-    if(reaction.message.id != ReactionRoles.rrMenuIdList.get(reaction.message.guild.id)) {
-        return;
+client.on('messageReactionAdd', async (reaction, user) => {
+    const rrMenu = await ReactionRoles.isReactionMenu(reaction);
+    if(rrMenu) {
+        ReactionRoles.addReactionRole(rrMenu, reaction, user);
     }
-
-    ReactionRoles.addRole(reaction, user);
 });
 
-client.on('messageReactionRemove', (reaction, user) => {
-    if(reaction.message.id != ReactionRoles.rrMenuIdList.get(reaction.message.guild.id)) {
-        return;
+client.on('messageReactionRemove', async (reaction, user) => {
+    const rrMenu = await ReactionRoles.isReactionMenu(reaction);
+    if(rrMenu) {
+        ReactionRoles.removeReactionRole(rrMenu, reaction, user);
     }
-    
-    ReactionRoles.removeRole(reaction, user);
 });
 
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
