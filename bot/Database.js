@@ -30,9 +30,9 @@ async function updateStreaming(guildId, role, channel, message) {
 
 /* Reaction Roles */
 
-async function setRRMenu(guildId, menuMessageId, roleId, emoteId) {
+async function setRRMenu(guildId, channelId, menuMessageId, roleId, emoteId) {
     const con = await getConnection();
-    await con.execute('INSERT INTO RR_MENU SET guildID = ?, menuID = ?, roleID = ?, emoteID = ?', [guildId, menuMessageId, roleId, emoteId]);
+    await con.execute('INSERT INTO RR_MENU SET guildID = ?, channelID = ?, menuID = ?, roleID = ?, emoteID = ?', [guildId, channelId, menuMessageId, roleId, emoteId]);
 }
 
 async function getRRMenu(menuMessageId) {
