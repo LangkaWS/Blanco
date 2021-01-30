@@ -80,7 +80,11 @@ async function config(message) {
 async function getStreamingRoleName(guildId) {
     try {
         const [result]  = await Database.getStreaming(guildId);
-        return result.streamingRole;
+        if(result) {
+            return result.streamingRole;
+        } else {
+            return null;
+        }
     } catch (err) {
         console.log(err);
     }
