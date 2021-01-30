@@ -12,6 +12,9 @@ function rrMenu(message) {
         case 'modify':
             modifyMenu(message);
             break;
+        case 'delete':
+            deleteMenu(message);
+            break;
         case 'next':
         case 'val':
         case 'end' :
@@ -146,6 +149,31 @@ async function modifyMenu(message) {
         console.log(err);
     }
 }
+
+async function deleteMenu(message) {
+    try {
+        const [, menuId] = getArgs(message);
+        const rrMenu = await Database.getRRMenu(menuId);
+
+        message.channel.send(ReactionRoles.DeleteConfirm);
+        const filter = msg => msg.author.id === message.author.id;
+        const reply = await message.channel.awaitMessages(filter, {max: 1});
+
+        if(reply.first().content === "yes") {
+
+            await Database.deleteRRMenu(menuId);
+
+            const channel = message.guild.channels.resolve(rrMenu[0].channelID);
+            const menuMsg = await channel.messages.fetch(menuId);
+            menuMsg.delete();
+
+            message.channel.send(ReactionRoles.DeleteDone);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 async function isReactionMenu(reaction) {
     try {
         const rrMenu = await Database.getRRMenu(reaction.message.id);
