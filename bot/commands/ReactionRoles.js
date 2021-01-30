@@ -15,6 +15,7 @@ function rrMenu(message) {
             break;
         case 'help':
         default:
+            help(message);
             break;
     }
 }
@@ -152,6 +153,10 @@ async function removeReactionRole(menu, reaction, user) {
     } catch (err) {
         console.log(err);
     }
+}
+
+function help(message) {
+    message.channel.send(ReactionRoles.Help);
 }
 
 module.exports = { rrMenu, isReactionMenu, addReactionRole, removeReactionRole };
