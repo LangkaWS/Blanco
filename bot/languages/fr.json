@@ -32,6 +32,17 @@
         "URLNotFound" : "Je n'ai pas trouvé l'URL demandée."
     },
 
+    "ReactionRoles": {
+        "AskChannelForMenu": "Dans quel canal voulez-vous poster votre menu ?\r(Copiez et collez l'identifiant du canal)",
+        "CancelMenu": "Arrêt de la création de menu. Aucun rôle configuré.",
+        "ChannelFound": "Ok, j'ai trouvé le canal. Je vais poster le menu. Merci pour votre aide !",
+        "CreationStep1": "Création du menu d'attribution des rôles...\rD'abord la description :\r- en 1 ou plusieurs messages\r- tapez `!rr next` quand vous avez fini la description.\r- tapez `!rr end` pour annuler la création du menu",
+        "CreationStep2": "Ok, j'ai la description du menu. Passons aux rôles. Voici quelques règles :\r- 1 message par rôle\r- Pensez à mentionner le rôle dans le message et indiquer l'émoticône à utiliser pour s'attribuer ce rôle.\r- **Réagissez au message** avec l'émoticône à utiliser\r- Tapez \"!rr end\" quand vous avez fini.",
+        "MenuPreview": "Voici à quoi ressemblera le menu des rôles. Tapez \"!rr val\" pour valider le menu. Si vous ne validez pas au bout de 1 minute, le menu s'autodétruira.",
+        "MessageExample": "Par exemple :\rVous voulez devenir un @bot ? Réagissez avec 🤖",
+        "MessageExampleReaction": "🤖"
+    },
+
     "ErrorTxt": "Oops ! J'ai rencontré une erreur. Si celle-ci persiste, contactes un administrateur.",
     "NotUnderstoodTxt": "Je n'ai pas compris ton message. Peux-tu le vérifier et le renvoyer ?"
 }
