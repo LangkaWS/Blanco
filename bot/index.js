@@ -69,7 +69,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
         const diffRole = newMember.roles.cache.difference(oldMember.roles.cache).first();
         if(diffRole) {
             const streamingRole = await Stream.getStreamingRoleName(oldMember.guild.id);
-            if(diffRole.name === streamingRole && newMember.roles.cache.get(diffRole.id)) {
+            if(streamingRole && diffRole.name === streamingRole && newMember.roles.cache.get(diffRole.id)) {
                 Stream.announceStream(newMember);
             }
         }
