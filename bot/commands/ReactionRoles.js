@@ -9,6 +9,9 @@ function rrMenu(message) {
         case 'create':
             createMenu(message);
             break;
+        case 'modify':
+            modifyMenu(message);
+            break;
         case 'next':
         case 'val':
         case 'end' :
@@ -117,6 +120,32 @@ async function createMenu(message) {
     } 
 }
 
+async function modifyMenu(message) {
+    try {
+        const [, menuId] = getArgs(message);
+        const rrMenu = await Database.getRRMenu(menuId);
+
+        const channel = message.guild.channels.resolve(rrMenu[0].channelID);
+        const menuMsg = channel.messages.resolve(menuId);
+
+        message.channel.send(ReactionRoles.CurrentMenu);
+        const sanitizedMenuMsg = menuMsg.content
+            .replace(/\*/g, '\\*')
+            .replace(/_/g, '\\_')
+            .replace(/~/g, '\\~')
+            .replace(/`/g, '\\`')
+            .replace(/\\/g, '\\\\');
+        message.channel.send(sanitizedMenuMsg);
+        message.channel.send("J'ai affiché les caractères utilisés pour la mise en forme, comme ça tu peux recopier le message et faire tes modifications plus facilement. Envoie \"!rr end\" quand tu as fini pour que je mette à jour le menu.");
+        const filter = msg => msg.author.id === message.author.id;
+        const reply = await message.channel.awaitMessages(filter, {max: 1});
+
+        menuMsg.edit(reply.first().content);
+
+    } catch (err) {
+        console.log(err);
+    }
+}
 async function isReactionMenu(reaction) {
     try {
         const rrMenu = await Database.getRRMenu(reaction.message.id);
