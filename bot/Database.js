@@ -10,6 +10,8 @@ async function getConnection() {
     });
 }
 
+/* Streaming */
+
 async function getStreaming(guildId) {
     const con = await getConnection();
     const [rows] =  await con.execute('SELECT * FROM STREAMING_CONFIG WHERE guildID = ?', [guildId]);
@@ -26,4 +28,17 @@ async function updateStreaming(guildId, role, channel, message) {
     await con.execute('UPDATE STREAMING_CONFIG SET streamingRole = ?, streamingChannelId = ?, streamingMessage = ? WHERE guildID = ?', [role, channel, message, guildId]);
 }
 
-module.exports = { getStreaming, setStreaming, updateStreaming }
+/* Reaction Roles */
+
+async function setRRMenu(guildId, menuMessageId, roleId, emoteId) {
+    const con = await getConnection();
+    await con.execute('INSERT INTO RR_MENU SET guildID = ?, menuID = ?, roleID = ?, emoteID = ?', [guildId, menuMessageId, roleId, emoteId]);
+}
+
+async function getRRMenu(menuMessageId) {
+    const con = await getConnection();
+    const [rows] = await con.execute('SELECT * FROM RR_MENU WHERE menuID = ?', [menuMessageId]);
+    return rows;
+}
+
+module.exports = { getStreaming, setStreaming, updateStreaming, setRRMenu, getRRMenu }
