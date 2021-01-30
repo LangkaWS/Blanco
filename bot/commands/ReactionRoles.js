@@ -90,8 +90,9 @@ async function createMenu(message) {
 
                 message.channel.send(ReactionRoles.AskChannelForMenu);
                 const filterChannel = msg => Number.isInteger(parseInt(msg.content));
-                const channelId = await message.channel.awaitMessages(filterChannel, {max: 1});
-                const channel = guild.channels.resolve(channelId.first().content);
+                const channelIdMsg = await message.channel.awaitMessages(filterChannel, {max: 1});
+                const channelId = channelIdMsg.first().content;
+                const channel = guild.channels.resolve(channelId);
 
                 if(channel) {
                     message.channel.send(ReactionRoles.ChannelFound);
@@ -103,7 +104,7 @@ async function createMenu(message) {
                     }
 
                     for(let [key, value] of reactionRoles) {
-                        await Database.setRRMenu(guild.id, guildMenuMessageId, key, value);
+                        await Database.setRRMenu(guild.id, channelId, guildMenuMessageId, key, value);
                     }
                 }
 
