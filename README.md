@@ -36,7 +36,7 @@ What is a community without events ? Blanco help you create events and manage re
 * Discord
 *Coming soon...*
 
-* [Github](https://github.com/LangkaWS/WhiteWyvernBot)
+* [Github](https://github.com/LangkaWS/Blanco)
 
 ## Contributing
 Before creating an issue please ensure that it hasn't already been reported or suggested and check F.A.Q.
