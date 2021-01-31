@@ -15,6 +15,12 @@ function rrMenu(message) {
         case 'delete':
             deleteMenu(message);
             break;
+        case 'add':
+            addRoleToMenu(message);
+            break;
+        case 'remove':
+            removeRoleFromMenu(message);
+            break;
         case 'next':
         case 'val':
         case 'end' :
@@ -26,10 +32,6 @@ function rrMenu(message) {
     }
 }
 
-//TODO
-// If already existing menu : delete id
-// Modify menu
-// Delete menu
 async function createMenu(message) {
 
     try {
@@ -57,7 +59,7 @@ async function createMenu(message) {
 
             const reactionRoles = new Map();
 
-            message.channel.send(ReactionRoles.CreationStep2);
+            message.channel.send(ReactionRoles.CreationStep2 + ' ' + ReactionRoles.RoleRules);
             const example = await message.channel.send(ReactionRoles.MessageExample);
             example.react(ReactionRoles.MessageExampleReaction);
 
@@ -129,7 +131,7 @@ async function modifyMenu(message) {
         const rrMenu = await Database.getRRMenu(menuId);
 
         const channel = message.guild.channels.resolve(rrMenu[0].channelID);
-        const menuMsg = channel.messages.resolve(menuId);
+        const menuMsg = await channel.messages.fetch(menuId);
 
         message.channel.send(ReactionRoles.CurrentMenu);
         const sanitizedMenuMsg = menuMsg.content
@@ -139,7 +141,7 @@ async function modifyMenu(message) {
             .replace(/`/g, '\\`')
             .replace(/\\/g, '\\\\');
         message.channel.send(sanitizedMenuMsg);
-        message.channel.send("J'ai affiché les caractères utilisés pour la mise en forme, comme ça tu peux recopier le message et faire tes modifications plus facilement. Envoie \"!rr end\" quand tu as fini pour que je mette à jour le menu.");
+        message.channel.send(ReactionRoles.SanitizedMenu);
         const filter = msg => msg.author.id === message.author.id;
         const reply = await message.channel.awaitMessages(filter, {max: 1});
 
@@ -168,6 +170,101 @@ async function deleteMenu(message) {
             menuMsg.delete();
 
             message.channel.send(ReactionRoles.DeleteDone);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function addRoleToMenu(message) {
+    try {
+        const [, menuId] = getArgs(message);
+        const rrMenu = await Database.getRRMenu(menuId);
+
+        const channel = message.guild.channels.resolve(rrMenu[0].channelID);
+        const menuMsg = await channel.messages.fetch(menuId);
+        let newMenuContent = menuMsg.content;
+
+        message.channel.send(ReactionRoles.AskRolesToAdd + '\r' + ReactionRoles.RoleRules);
+
+        const reactionRoles = new Map();
+
+        const filter = msg => msg.author.id === message.author.id;
+        const roleCollector = message.channel.createMessageCollector(filter);
+
+        roleCollector.on('collect', async msg => {
+            if(msg.content === '!rr end') {
+                roleCollector.stop();
+                return;
+            }
+
+            newMenuContent += '\n' + msg.content;
+
+            const reactionFilter = (reaction, user) => user.id == msg.author.id;
+            const reactionCollector = await msg.awaitReactions(reactionFilter, {max: 1});
+
+            const roleMentioned = msg.mentions.roles.first();
+            const isInMenu = rrMenu.find(el => el.roleId === roleMentioned.id);
+
+            if(roleMentioned && !isInMenu) {
+                reactionRoles.set(roleMentioned.id, reactionCollector.first().emoji.identifier);
+            }
+
+        });
+        
+        roleCollector.on('end', async () => {
+            await menuMsg.edit(newMenuContent);
+            
+            for(let reaction of reactionRoles.values()) {
+                menuMsg.react(reaction);
+            }
+
+            for(let [key, value] of reactionRoles) {
+                await Database.setRRMenu(menuMsg.guild.id, channel.id, menuMsg.id, key, value);
+            }
+        });
+
+        message.channel.send(ReactionRoles.AddRoleDone);
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function removeRoleFromMenu(message) {
+    try {
+        const [, menuId, roleId] = getArgs(message);
+        const rrMenu = await Database.getRRMenu(menuId);
+
+        message.channel.send(ReactionRoles.DeleteRoleConfirm);
+        const filter = msg => msg.author.id === message.author.id;
+        const reply = await message.channel.awaitMessages(filter, {max: 1});
+        
+        if(reply.first().content === "yes") {
+            const channel = message.guild.channels.resolve(rrMenu[0].channelID);
+            const menuMsg = await channel.messages.fetch(menuId);
+            const reaction = rrMenu.find(el => el.roleID === roleId).emoteID;
+            
+            let newMenuContent = menuMsg.content;
+            
+            const roleStr = '<@&' + roleId + '>';
+            const roleIndex = newMenuContent.search(roleStr);
+            let contentToRemove;
+            
+            if(newMenuContent.indexOf('\n', roleIndex) !== -1) {
+                contentToRemove = newMenuContent.slice(roleIndex, newMenuContent.indexOf('\n', roleIndex));
+            } else {
+                contentToRemove = newMenuContent.slice(roleIndex);
+            }
+            
+            newMenuContent = newMenuContent.replace(contentToRemove, '');
+            
+            await Database.deleteRole(menuId, roleId);
+            const emoji = menuMsg.reactions.cache.find(el => el.emoji.identifier === reaction);
+            menuMsg.reactions.resolve(emoji).remove();
+            menuMsg.edit(newMenuContent);
+
+            message.channel.send(ReactionRoles.DeleteRoleDone);
         }
     } catch (err) {
         console.log(err);
