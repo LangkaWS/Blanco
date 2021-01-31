@@ -4,7 +4,7 @@
 
 Welcome on the Blanco's own page !
 
-Blanco has been developped for the White Wyvern Community server.
+Blanco has been developped for the "Vouivre Blanche" Community server.
 It is an open source Discord bot coded in JavaScript with Discord.js by LangkaWS.
 
 ## Features
@@ -20,7 +20,7 @@ Blanco can play music too ! With the Youtube API, give it the video URL and it w
 This feature comes with some other commands like pause, resume, skip and stop.
 
 ### Streaming announcement
-Because there are streamers in the White Wyvern Community, they need to be announced when they begin a stream on Twitch. Blanco make this announcement in a dedicated channel so that everybody can go and see their stream !
+Because there are streamers in the "Vouivre Blanche" Community, they need to be announced when they begin a stream on Twitch. Blanco make this announcement in a dedicated channel so that everybody can go and see their stream !
 
 ### Events (coming soon)
 What is a community without events ? Blanco help you create events and manage registrations by reactions.
