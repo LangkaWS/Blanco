@@ -46,4 +46,9 @@ async function deleteRRMenu(menuMessageId) {
     await con.execute('DELETE FROM RR_MENU WHERE menuID = ?', [menuMessageId]);
 }
 
-module.exports = { getStreaming, setStreaming, updateStreaming, setRRMenu, getRRMenu, deleteRRMenu }
+async function deleteRole(menuMessageId, roleId) {
+    const con = await getConnection();
+    await con.execute('DELETE FROM RR_MENU WHERE menuID = ? AND roleID = ?', [menuMessageId, roleId]);
+}
+
+module.exports = { getStreaming, setStreaming, updateStreaming, setRRMenu, getRRMenu, deleteRRMenu, deleteRole }
