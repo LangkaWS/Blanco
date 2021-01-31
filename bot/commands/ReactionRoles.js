@@ -1,29 +1,55 @@
 const { getArgs }  = require('../Tools.js');
-const { ReactionRoles } = require('../languages/fr.json');
+const { ReactionRoles, AccessDenied } = require('../languages/fr.json');
 const Database     = require('../Database.js');
 
 function rrMenu(message) {
     const [command] = getArgs(message);
 
+    const isAdmin = message.member.roles.cache.get('492407354537541635');
+        
     switch(command) {
         case 'create':
+            if(!isAdmin) {
+                message.channel.send(AccessDenied);
+                return;
+            }
             createMenu(message);
             break;
         case 'modify':
+            if(!isAdmin) {
+                message.channel.send(AccessDenied);
+                return;
+            }
             modifyMenu(message);
             break;
         case 'delete':
+            if(!isAdmin) {
+                message.channel.send(AccessDenied);
+                return;
+            }
             deleteMenu(message);
             break;
         case 'add':
+            if(!isAdmin) {
+                message.channel.send(AccessDenied);
+                return;
+            }
             addRoleToMenu(message);
             break;
         case 'remove':
+            if(!isAdmin) {
+                message.channel.send(AccessDenied);
+                return;
+            }
             removeRoleFromMenu(message);
             break;
         case 'next':
         case 'val':
         case 'end' :
+            if(!isAdmin) {
+                message.channel.send(AccessDenied);
+                return;
+            }
             break;
         case 'help':
         default:

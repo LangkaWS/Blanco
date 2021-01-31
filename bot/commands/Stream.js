@@ -1,10 +1,15 @@
 const Database     = require('../Database.js');
 const { getReply } = require('../Tools.js');
 
-const { StreamTxt, ErrorTxt, NotUnderstoodTxt } = require('../languages/fr.json');
+const { StreamTxt, ErrorTxt, NotUnderstoodTxt, AccessDenied } = require('../languages/fr.json');
 
 async function config(message) {
     try {
+        const isAdmin = message.member.roles.cache.get('492407354537541635');
+        if(!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
         const guildId = message.guild.id;
         const [result]  = await Database.getStreaming(guildId);
 
