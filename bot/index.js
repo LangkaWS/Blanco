@@ -8,7 +8,6 @@ const Music               = require('./commands/Music.js');
 const Stream              = require('./commands/Stream.js');
 const ReactionRoles       = require('./commands/ReactionRoles.js');
 
-
 const client  = new Client({
     partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
     ws: {
@@ -20,7 +19,6 @@ client.login(process.env.BOT_TOKEN);
 client.on('ready', () => {
     console.log('Hello');
 });
-
 
 client.on('message', message => {
     if(message.author.bot || !message.content.startsWith(prefix)) {
