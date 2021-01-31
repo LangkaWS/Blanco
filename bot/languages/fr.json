@@ -33,18 +33,24 @@
     },
 
     "ReactionRoles": {
+        "AddRoleDone": "Le rôle a bien été ajouté au menu.",
         "AskChannelForMenu": "Dans quel canal voulez-vous poster votre menu ?\r(Copiez et collez l'identifiant du canal)",
+        "AskRolesToAdd": "Quels rôles voulez-vous ajouter ?\rTapez\"!rr end\" quand vous avez fini.",
         "CancelMenu": "Arrêt de la création de menu. Aucun rôle configuré.",
         "ChannelFound": "Ok, j'ai trouvé le canal. Je vais poster le menu. Merci pour votre aide !",
-        "CreationStep1": "Création du menu d'attribution des rôles...\rD'abord la description :\r- en 1 ou plusieurs messages\r- tapez `!rr next` quand vous avez fini la description.\r- tapez `!rr end` pour annuler la création du menu",
-        "CreationStep2": "Ok, j'ai la description du menu. Passons aux rôles. Voici quelques règles :\r- 1 message par rôle\r- Pensez à mentionner le rôle dans le message et indiquer l'émoticône à utiliser pour s'attribuer ce rôle.\r- **Réagissez au message** avec l'émoticône à utiliser\r- Tapez \"!rr end\" quand vous avez fini.",
+        "CreationStep1": "Création du menu d'attribution des rôles...\rD'abord la description :\r- en 1 ou plusieurs messages\r- tapez `!rr next` quand vous avez fini la description.\r- tapez `!rr end` pour annuler la création du menu.",
+        "CreationStep2": "Ok, j'ai la description du menu. Passons aux rôles.",
         "CurrentMenu": "Voici le menu reaction roles actuel :",
         "DeleteConfirm": "Voulez-vous vraiment supprimer ce menu ? (yes/no)\rCette action est irréversible. ",
+        "DeleteRoleConfirm": "Voulez-vous vraiment supprimer ce rôle du menu ? (yes/no)\rCette action est irréversible. ",
         "DeleteDone": "Le menu a bien été supprimé.",
+        "DeleteRoleDone": "Le rôle a bien été supprimé du menu.",
         "Help": "Voici les différentes fonctions de la catégorie reaction roles :\r- `!rr` `create` : lance la création d'un message menu reaction roles où chaque membre peut réagir pour s'attribuer un rôle.\r- `!rr` `next` : utilisé pendant la création du menu, permet de passer de l'étape \"renseigner la description\" à l'étape de définition des rôles et réactions.\r- `!rr` `end` : termine la création du menu. Si utilisé pendant la description du menu, annule la création.\r- `!rr` `val` : valide le menu.\r- `!rr` `delete` `messageId` : supprime le menu de reaction roles qui a l'id donné (pour avoir l'id du message : clic droit sur le message puis \"Copier l'identifiant\".", 
         "MenuPreview": "Voici à quoi ressemblera le menu des rôles. Tapez \"!rr val\" pour valider le menu. Si vous ne validez pas au bout de 1 minute, le menu s'autodétruira.",
         "MessageExample": "Par exemple :\rVous voulez devenir un @bot ? Réagissez avec 🤖",
-        "MessageExampleReaction": "🤖"
+        "MessageExampleReaction": "🤖",
+        "RoleRules": "Voici quelques règles :\r- 1 message par rôle\r- Pensez à mentionner le rôle dans le message et indiquer l'émoticône à utiliser pour s'attribuer ce rôle.\r- **Réagissez au message** avec l'émoticône à utiliser\r- Tapez \"!rr end\" quand vous avez fini.",
+        "SanitizedMenu": "J'ai affiché les caractères utilisés pour la mise en forme, comme ça tu peux recopier le message et faire tes modifications plus facilement. Envoie \"!rr end\" quand tu as fini pour que je mette à jour le menu."
     },
 
     "ErrorTxt": "Oops ! J'ai rencontré une erreur. Si celle-ci persiste, contactes un administrateur.",
