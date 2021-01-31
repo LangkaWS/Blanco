@@ -1,4 +1,6 @@
 {
+    "AccessDenied": "Vous ne disposez pas des droits pour faire cette action.",
+    
     "StreamTxt": {
         "AlreadyConfig": "Il y a déjà une configuration pour mon service d'annonce de stream sur ton serveur. Voici les paramètres :",
         "AskChannel": "Ok, ensuite il me faut l'identifiant du canal dans lequel tu veux que j'annonce le stream.\rTu peux le trouver en faisant un clic droit sur le canal et \"Copier l'identifiant\".",
