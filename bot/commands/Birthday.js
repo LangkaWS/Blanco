@@ -123,22 +123,19 @@ async function addBirthday(message) {
 
 async function removeBirthday(message) {
     try {
-        if(!isConfig(message)) {
-            return;
+        if(isConfig(message)) {
+            const [memberBirthday] = await Database.getMemberBirthday(message.guild.id, message.member.id);
+
+            if(memberBirthday) {
+                await Database.removeBirthday(message.member.id);
+                message.channel.send("Votre anniversaire a bien été supprimé.");
+            } else {
+                message.channel.send("Vous n'avez pas d'anniversaire enregistré.");
+            }
         }
-
-        const [memberBirthday] = await Database.getMemberBirthday(message.guild.id, message.member.id);
-    
-        if(!memberBirthday) {
-            message.channel.send("Vous n'avez pas d'anniversaire enregistré.");
-            return;
-        }
-
-        await Database.removeBirthday(message.member.id);
-        message.channel.send("Votre anniversaire a bien été supprimé.");
-
     } catch (err) {
         console.log(err);
     }
 }
+
 module.exports = { menu };
