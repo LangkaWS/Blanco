@@ -95,27 +95,23 @@ async function isConfig(message) {
  */
 async function addBirthday(message) {
     try {
-        if(!isConfig(message)) {
-            return;
-        }
-    
-        const [memberBirthday] = await Database.getMemberBirthday(message.guild.id, message.member.id);
+        if(isConfig(message)) {
+            const [memberBirthday] = await Database.getMemberBirthday(message.guild.id, message.member.id);
+            
+            if(!memberBirthday) {
+                const [, date] = Tools.getArgs(message);
+                const dateRegex = /(?:31\/(0[13578])|(1[02]))|(?:30\/(0[13456789])|(1[02]))|(?:(?:(?:0[1-9])|(?:[1-2][0-9]))\/(?:(?:0[1-9])|(?:1[0-2])))/g;
+                console.log(date.match(dateRegex));
+                const year = new Date().getFullYear();
+                const fullDate = date + '/'+ year;
+                const moment = Moment(fullDate, 'DD/MM/YYYY');
         
-        if(memberBirthday) {
-            message.channel.send("Votre anniversaire est déjà enregistré.");
-            return;
+                await Database.addBirthday(message.member.id, moment.toDate(), message.guild.id);
+                message.channel.send("Votre anniversaire a bien été ajouté.");
+            } else {
+                message.channel.send("Votre anniversaire est déjà enregistré.");
+            }
         }
-    
-        const [, date] = Tools.getArgs(message);
-        const dateRegex = /(?:31\/(0[13578])|(1[02]))|(?:30\/(0[13456789])|(1[02]))|(?:(?:(?:0[1-9])|(?:[1-2][0-9]))\/(?:(?:0[1-9])|(?:1[0-2])))/g;
-        console.log(date.match(dateRegex));
-        const year = new Date().getFullYear();
-        const fullDate = date + '/'+ year;
-        const moment = Moment(fullDate, 'DD/MM/YYYY');
-
-        await Database.addBirthday(message.member.id, moment.toDate(), message.guild.id);
-        message.channel.send("Votre anniversaire a bien été ajouté.");
-
     } catch(err) {
         console.log(err);
     }
