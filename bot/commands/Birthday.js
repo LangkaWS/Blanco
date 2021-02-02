@@ -77,7 +77,7 @@ async function setup(message) {
             if(message.guild.channels.resolve(channelId)) {
                 const birthdayMessage = await collectMessages(message, BirthdayTxt.AskMessage);
 
-                await Database.createGuildConfig(message.guild.id, channelId, bdMessage);
+                await Database.createGuildConfig(message.guild.id, channelId, birthdayMessage);
                 message.channel.send("La configuration est terminée.");
             }
         }
