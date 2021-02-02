@@ -7,13 +7,25 @@ function menu(message) {
     const [command] = Tools.getArgs(message);
     
     switch(command) {
-    case 'setup':
+    case 'setup': {
+        const isAdmin = message.member.roles.cache.get('805321593198477342');
+        if(!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
         setup(message);
         break;
+    }
 
-    case 'auto':
+    case 'auto': {
+        const isAdmin = message.member.roles.cache.get('492407354537541635');
+        if(!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
         happyBirthday(message);
         break;
+    }
     
     case 'add':
         addBirthday(message);
