@@ -75,9 +75,9 @@ async function addBirthday(memberId, date, guildId) {
     await con.execute('INSERT INTO BIRTHDAYS SET memberID = ?, date = ?, guildID = ?', [memberId, date, guildId]);
 }
 
-async function removeBirthday(memberId) {
+async function removeBirthday(guildId, memberId) {
     const con = await getConnection();
-    await con.execute('DELETE FROM BIRTHDAYS WHERE memberID = ?', [memberId]);
+    await con.execute('DELETE FROM BIRTHDAYS WHERE memberID = ? AND guildID = ?', [memberId, guildId]);
 }
 
 module.exports = { getStreaming, setStreaming, updateStreaming, setRRMenu, getRRMenu, deleteRRMenu, deleteRole, getGuildConfig, getMemberBirthday, createGuildConfig, addBirthday, removeBirthday }
