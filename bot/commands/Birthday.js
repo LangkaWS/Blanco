@@ -1,6 +1,7 @@
 const Tools = require('../Tools.js');
 const Database = require('../Database.js');
 const Moment = require('moment');
+const { BirthdayTxt, AccessDenied } = require('../languages/fr.json');
 
 function menu(message) {
     const [command] = Tools.getArgs(message);
@@ -40,20 +41,20 @@ async function setup(message) {
         const [conf] = await Database.getGuildConfig(message.guild.id);
         if(conf) {
             const channel = message.guild.channels.resolve(conf.channelID);
-            message.channel.send("Il existe déjà une configuration pour votre serveur :\nChannel : " + channel.name + "\rMessage d'annonce :\r" + conf.message + "\nVoulez-vous la remplacer ? (yes/no)");
+            message.channel.send(BirthdayTxt.AlreadyConfig + '\r' + BirthdayTxt.Channel + channel.name + '\r' + BirthdayTxt.Message + conf.message + '\r' + BirthdayTxt.AskModifyConfig);
             const confirm = await message.channel.awaitMessages(filter, { max: 1 });
             if(confirm.first().content === 'yes') {
-                message.channel.send("Dans quel canal veux-tu que je souhaite les anniversaires ? (copie et colle l'identifiant du canal)");
+                message.channel.send(BirthdayTxt.AskChannel);
                 const channel = await message.channel.awaitMessages(filter, { max: 1 });
                 const channelId = channel.first().content;
 
                 if(message.guild.channels.resolve(channelId)) {
-                    message.channel.send("Quel message veux-tu afficher ? Utilises `{name}` pour me signaler que je dois indiquer ici le nom du membre.");
+                    message.channel.send(BirthdayTxt.AskMessage);
                     const msgCollector = await message.channel.awaitMessages(filter ,{ max: 1 });
                     const bdMessage = msgCollector.first().content;
 
                     await Database.updateGuildConfig(message.guild.id, channelId, bdMessage);
-                    message.channel.send("La mise à jour a bien été faite.");
+                    message.channel.send(BirthdayTxt.UpdateDone);
                 }
 
 
@@ -107,9 +108,9 @@ async function addBirthday(message) {
                 const moment = Moment(fullDate, 'DD/MM/YYYY');
         
                 await Database.addBirthday(message.member.id, moment.toDate(), message.guild.id);
-                message.channel.send("Votre anniversaire a bien été ajouté.");
+                message.channel.send(BirthdayTxt.BirthdayAddConfirm);
             } else {
-                message.channel.send("Votre anniversaire est déjà enregistré.");
+                message.channel.send(BirthdayTxt.AlreadyRegistered);
             }
         }
     } catch(err) {
