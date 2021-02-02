@@ -119,15 +119,22 @@ async function addBirthday(message) {
             const [memberBirthday] = await Database.getMemberBirthday(message.guild.id, message.member.id);
             
             if(!memberBirthday) {
-                const [, date] = Tools.getArgs(message);
-                const dateRegex = /(?:31\/(0[13578])|(1[02]))|(?:30\/(0[13456789])|(1[02]))|(?:(?:(?:0[1-9])|(?:[1-2][0-9]))\/(?:(?:0[1-9])|(?:1[0-2])))/g;
-                console.log(date.match(dateRegex));
-                const year = new Date().getFullYear();
-                const fullDate = date + '/'+ year;
-                const moment = Moment(fullDate, 'DD/MM/YYYY');
-        
-                await Database.addBirthday(message.member.id, moment.toDate(), message.guild.id);
-                message.channel.send(BirthdayTxt.BirthdayAddConfirm);
+                let [, date] = Tools.getArgs(message);
+                const dateRegex = /(?:31\/((0[13578])|(1[02])))|(?:30\/((0[13456789])|(1[02])))|(?:(?:(?:0[1-9])|(?:[1-2][0-9]))\/(?:(?:0[1-9])|(?:1[0-2])))/g;
+                let match = date.match(dateRegex);
+
+                if(!match) {
+                    date = await collectMessages(message, BirthdayTxt.IncorrectDate);
+                    match = date.match(dateRegex);
+                } else {
+                    const year = new Date().getFullYear();
+                    const fullDate = date + '/'+ year;
+                    const moment = Moment(fullDate, 'DD/MM/YYYY');
+            
+                    await Database.addBirthday(message.member.id, moment.format('YYYY-MM-DD'), message.guild.id);
+                    message.channel.send(BirthdayTxt.BirthdayAddConfirm);
+                }
+
             } else {
                 message.channel.send(BirthdayTxt.AlreadyRegistered);
             }
