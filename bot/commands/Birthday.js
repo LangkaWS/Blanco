@@ -150,7 +150,7 @@ async function removeBirthday(message) {
             const [memberBirthday] = await Database.getMemberBirthday(message.guild.id, message.member.id);
 
             if(memberBirthday) {
-                await Database.removeBirthday(message.member.id);
+                await Database.removeBirthday(message.guild.id, message.member.id);
                 message.channel.send("Votre anniversaire a bien été supprimé.");
             } else {
                 message.channel.send("Vous n'avez pas d'anniversaire enregistré.");
