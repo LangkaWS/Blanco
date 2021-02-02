@@ -161,4 +161,8 @@ async function removeBirthday(message) {
     }
 }
 
+function help(message) {
+    message.channel.send(BirthdayTxt.Help);
+}
+
 module.exports = { menu };
