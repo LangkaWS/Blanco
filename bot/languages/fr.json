@@ -18,6 +18,20 @@
         "SuccessConfig": "La configuration est terminée. Merci de ton aide."
     },
 
+    "BirthdayTxt": {
+        "AlreadyConfig": "Il existe déjà une configuration pour votre serveur :",
+        "AlreadyRegistered": "Votre anniversaire est déjà enregistré.",
+        "AskChannel": "Dans quel canal veux-tu que je souhaite les anniversaires ? (copie et colle l'identifiant du canal)",
+        "AskMessage": "Quel message veux-tu afficher ? Utilises `{name}` pour me signaler que je dois indiquer ici le nom du membre.",
+        "AskModifyConfig": "Voulez-vous la remplacer ? (yes/no)",
+        "BirthdayAddConfirm": "Votre anniversaire a bien été ajouté.",
+        "Channel": "Channel : ",
+        "Help": "Voici les différentes fonctions de la catégorie anniversaire :\r- `!bd` `add` `date (dd/MM)`: ajoute votre anniversaire à la liste.\r- `!bd` `remove` : retire votre anniversaire de la liste.",
+        "IncorrectDate": "La date entrée est incorrecte. Merci de respecter le format DD/MM (par exemple 31/01)",
+        "Message": "Message d'annonce : ",
+        "UpdateDone": "La mise à jour a bien été faite."
+    },
+    
     "MusicTxt": {
         "Bye": "Au revoir !",
         "Current": "*(En cours) ",
