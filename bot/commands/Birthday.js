@@ -72,14 +72,10 @@ async function setup(message) {
 
             }
         } else {
-            message.channel.send("Dans quel canal veux-tu que je souhaite les anniversaires ? (copie et colle l'identifiant du canal)");
-            const channel = await message.channel.awaitMessages(filter, { max: 1 });
-            const channelId = channel.first().content;
+            const channelId = await collectMessages(message, BirthdayTxt.AskChannel);
                 
             if(message.guild.channels.resolve(channelId)) {
-                message.channel.send("Quel message veux-tu afficher ? Utilises `{name}` pour me signaler que je dois indiquer ici le nom du membre.");
-                const msgCollector = await message.channel.awaitMessages(filter ,{ max: 1 });
-                const bdMessage = msgCollector.first().content;
+                const birthdayMessage = await collectMessages(message, BirthdayTxt.AskMessage);
 
                 await Database.createGuildConfig(message.guild.id, channelId, bdMessage);
                 message.channel.send("La configuration est terminée.");
@@ -89,6 +85,17 @@ async function setup(message) {
     } catch (err) {
         console.log(err);
     }
+
+}
+
+async function collectMessages(originalMessage, question) {
+    originalMessage.channel.send(question);
+    const filter = msg => msg.author.id === originalMessage.author.id;
+    const collector = await originalMessage.channel.awaitMessages(filter, { max: 1 });
+    return collector.first().content;
+}
+
+function happyBirthday(message) {
 
 }
 
