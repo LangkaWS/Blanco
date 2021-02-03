@@ -115,9 +115,9 @@ function happyBirthday(message) {
     birthdayJob.start();
 }
 
-async function isConfig(message) {
-    const [config] = await Database.getGuildConfig(message.guild.id);
-    if(!config) {
+async function isSetup(message) {
+    const [setup] = await Database.getGuildConfig(message.guild.id);
+    if(!setup) {
         message.channel.send(BirthdayTxt.NoConfig);
         return false;
     } else {
@@ -131,7 +131,7 @@ async function isConfig(message) {
  */
 async function addBirthday(message) {
     try {
-        if(isConfig(message)) {
+        if(await isSetup(message)) {
             const [memberBirthday] = await Database.getMemberBirthday(message.guild.id, message.member.id);
             
             if(!memberBirthday) {
@@ -162,7 +162,7 @@ async function addBirthday(message) {
 
 async function removeBirthday(message) {
     try {
-        if(isConfig(message)) {
+        if(await isSetup(message)) {
             const [memberBirthday] = await Database.getMemberBirthday(message.guild.id, message.member.id);
 
             if(memberBirthday) {
