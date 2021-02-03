@@ -1,7 +1,7 @@
 const Moment   = require('moment');
 const Cron     = require('cron');
 const Tools    = require('../Tools.js');
-const Database = require('../Database.js');
+const BirthdayQueries = require('../queries/BirthdayQueries.js');
 
 const { BirthdayTxt, AccessDenied } = require('../languages/fr.json');
 
@@ -56,7 +56,7 @@ async function setup(message) {
     try {
         const filter = msg => msg.author.id === message.author.id;
         
-        const [conf] = await Database.getGuildConfig(message.guild.id);
+        const [conf] = await BirthdayQueries.getGuildConfig(message.guild.id);
         if(conf) {
             const channel = message.guild.channels.resolve(conf.channelID);
             message.channel.send(BirthdayTxt.AlreadyConfig + '\r' + BirthdayTxt.Channel + channel.name + '\r' + BirthdayTxt.Message + conf.message + '\r' + BirthdayTxt.AskModifyConfig);
@@ -71,7 +71,7 @@ async function setup(message) {
                     const msgCollector = await message.channel.awaitMessages(filter ,{ max: 1 });
                     const bdMessage = msgCollector.first().content;
 
-                    await Database.updateGuildConfig(message.guild.id, channelId, bdMessage);
+                    await BirthdayQueries.updateGuildConfig(message.guild.id, channelId, bdMessage);
                     message.channel.send(BirthdayTxt.UpdateDone);
                 }
 
@@ -83,7 +83,7 @@ async function setup(message) {
             if(message.guild.channels.resolve(channelId)) {
                 const birthdayMessage = await collectMessages(message, BirthdayTxt.AskMessage);
 
-                await Database.createGuildConfig(message.guild.id, channelId, birthdayMessage);
+                await BirthdayQueries.createGuildConfig(message.guild.id, channelId, birthdayMessage);
                 message.channel.send(BirthdayTxt.SetupComplete);
             }
         }
@@ -118,7 +118,7 @@ async function happyBirthday(message) {
                 const today = new Date();
                 const todayMySQL = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                 console.log(todayMySQL);
-                const allBirthdays = await Database.getTodayAllBirthdays(todayMySQL);
+                const allBirthdays = await BirthdayQueries.getTodayAllBirthdays(todayMySQL);
                 allBirthdays.forEach(bd => {
                     const guild = message.client.guilds.resolve(bd.guildID);
                     const channel = guild.channels.resolve(bd.channelID);
@@ -137,7 +137,7 @@ async function happyBirthday(message) {
 }
 
 async function isSetup(message) {
-    const [setup] = await Database.getGuildConfig(message.guild.id);
+    const [setup] = await BirthdayQueries.getGuildConfig(message.guild.id);
     if(!setup) {
         message.channel.send(BirthdayTxt.NoConfig);
         return false;
@@ -154,7 +154,7 @@ async function isSetup(message) {
 async function addBirthday(message) {
     try {
         if(await isSetup(message)) {
-            const [memberBirthday] = await Database.getMemberBirthday(message.guild.id, message.member.id);
+            const [memberBirthday] = await BirthdayQueries.getMemberBirthday(message.guild.id, message.member.id);
             
             if(!memberBirthday) {
                 let [, date] = Tools.getArgs(message);
@@ -169,7 +169,7 @@ async function addBirthday(message) {
                     const fullDate = date + '/'+ year;
                     const moment = Moment(fullDate, 'DD/MM/YYYY');
             
-                    await Database.addBirthday(message.member.id, moment.format('YYYY-MM-DD'), message.guild.id);
+                    await BirthdayQueries.addBirthday(message.member.id, moment.format('YYYY-MM-DD'), message.guild.id);
                     message.channel.send(BirthdayTxt.BirthdayAddConfirm);
                 }
 
@@ -189,10 +189,10 @@ async function addBirthday(message) {
 async function removeBirthday(message) {
     try {
         if(await isSetup(message)) {
-            const [memberBirthday] = await Database.getMemberBirthday(message.guild.id, message.member.id);
+            const [memberBirthday] = await BirthdayQueries.getMemberBirthday(message.guild.id, message.member.id);
 
             if(memberBirthday) {
-                await Database.removeBirthday(message.guild.id, message.member.id);
+                await BirthdayQueries.removeBirthday(message.guild.id, message.member.id);
                 message.channel.send(BirthdayTxt.BirthdayDeleteConfirm);
             } else {
                 message.channel.send(BirthdayTxt.BirthdayNotFound);
