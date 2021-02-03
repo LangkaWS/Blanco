@@ -1,9 +1,14 @@
-const Tools = require('../Tools.js');
+const Moment   = require('moment');
+const Cron     = require('cron');
+const Tools    = require('../Tools.js');
 const Database = require('../Database.js');
-const Moment = require('moment');
-const Cron = require('cron');
+
 const { BirthdayTxt, AccessDenied } = require('../languages/fr.json');
 
+/**
+ * The menu of Birthday feature that call the appropriate function.
+ * @param {Message} message 
+ */
 function menu(message) {
     const [command] = Tools.getArgs(message);
     
@@ -89,6 +94,12 @@ async function setup(message) {
 
 }
 
+/**
+ * Send a message and collect one reply in a channel (the same as originalMessage was post in).
+ * @param {Message} originalMessage 
+ * @param {string} question 
+ * @returns {string} the content of the first message
+ */
 async function collectMessages(originalMessage, question) {
     originalMessage.channel.send(question);
     const filter = msg => msg.author.id === originalMessage.author.id;
@@ -96,10 +107,14 @@ async function collectMessages(originalMessage, question) {
     return collector.first().content;
 }
 
+/**
+ * Activate the auto-birthday : in each guild, send an happy birthday message for each member that have a birthday today.
+ * @param {Message} message 
+ */
 async function happyBirthday(message) {
     try {
         if(await isSetup(message)) {
-            const birthdayJob = new Cron.CronJob('00 * * * * *', async () => {
+            const birthdayJob = new Cron.CronJob('00 00 08 * * *', async () => {
                 const today = new Date();
                 const todayMySQL = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                 console.log(todayMySQL);
@@ -132,6 +147,7 @@ async function isSetup(message) {
 }
 
 /**
+ * Add the birthday of a member to the database.
  * Called with: `!bd add 31/12`
  * @param {Message} message 
  */
@@ -166,6 +182,10 @@ async function addBirthday(message) {
     }
 }
 
+/**
+ * Remove the birthday of a member from the database.
+ * @param {Message} message 
+ */
 async function removeBirthday(message) {
     try {
         if(await isSetup(message)) {
@@ -183,6 +203,10 @@ async function removeBirthday(message) {
     }
 }
 
+/**
+ * Display help.
+ * @param {Message} message 
+ */
 function help(message) {
     message.channel.send(BirthdayTxt.Help);
 }
