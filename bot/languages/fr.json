@@ -10,10 +10,14 @@
         "AskMessage": "Quel message veux-tu afficher ? Utilises `{name}` pour me signaler que je dois indiquer ici le nom du membre.",
         "AskModifyConfig": "Voulez-vous la remplacer ? (yes/no)",
         "BirthdayAddConfirm": "Votre anniversaire a bien été ajouté.",
+        "BirthdayDeleteConfirm" : "Votre anniversaire a bien été supprimé.",
+        "BirthdayNotFound": "Vous n'avez pas d'anniversaire enregistré.",
         "Channel": "Channel : ",
         "Help": "Voici les différentes fonctions de la catégorie anniversaire :\r- `!bd` `add` `date (dd/MM)`: ajoute votre anniversaire à la liste.\r- `!bd` `remove` : retire votre anniversaire de la liste.",
         "IncorrectDate": "La date entrée est incorrecte. Merci de respecter le format DD/MM (par exemple 31/01)",
         "Message": "Message d'annonce : ",
+        "NoConfig": "Le service des anniversaires n'est pas encore configuré sur ce serveur. Demandes à un administrateur de le configurer.",
+        "SetupComplete": "La configuration est terminée.",
         "UpdateDone": "La mise à jour a bien été faite."
     },
     
