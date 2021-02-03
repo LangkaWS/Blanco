@@ -1,6 +1,7 @@
 const Tools = require('../Tools.js');
 const Database = require('../Database.js');
 const Moment = require('moment');
+const Cron = require('cron');
 const { BirthdayTxt, AccessDenied } = require('../languages/fr.json');
 
 function menu(message) {
@@ -96,7 +97,22 @@ async function collectMessages(originalMessage, question) {
 }
 
 function happyBirthday(message) {
-
+    const birthdayJob = new Cron.CronJob('00 * * * * *', async () => {
+        const today = new Date();
+        const todayMySQL = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        console.log(todayMySQL);
+        const allBirthdays = await Database.getTodayAllBirthdays(todayMySQL);
+        allBirthdays.forEach(bd => {
+            const guild = message.client.guilds.resolve(bd.guildID);
+            const channel = guild.channels.resolve(bd.channelID);
+            let msg = bd.message;
+            console.log(msg.match(/\{name\}/));
+            msg = bd.message.replace(/{name}/, `<@${bd.memberID}>`);
+            channel.send(msg);
+        });
+        console.log(allBirthdays);
+    });
+    birthdayJob.start();
 }
 
 async function isConfig(message) {
