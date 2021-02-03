@@ -7,6 +7,7 @@ const { prefix }          = require('../config.json');
 const Music               = require('./commands/Music.js');
 const Stream              = require('./commands/Stream.js');
 const ReactionRoles       = require('./commands/ReactionRoles.js');
+const Birthday = require('./commands/Birthday.js');
 
 const client  = new Client({
     partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
@@ -43,6 +44,11 @@ client.on('message', message => {
         /* Reaction roles commands */
         case 'rr':
             ReactionRoles.rrMenu(message);
+            break;
+
+        /* Birthday commands */
+        case 'bd':
+            Birthday.menu(message);
             break;
     }
 
