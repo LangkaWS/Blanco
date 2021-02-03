@@ -1,6 +1,6 @@
 const { getArgs }  = require('../Tools.js');
 const { ReactionRoles, AccessDenied } = require('../languages/fr.json');
-const Database     = require('../Database.js');
+const ReactionRolesQueries = require('../queries/ReactionRolesQueries.js');
 
 function rrMenu(message) {
     const [command] = getArgs(message);
@@ -138,7 +138,7 @@ async function createMenu(message) {
                     }
 
                     for(let [key, value] of reactionRoles) {
-                        await Database.setRRMenu(guild.id, channelId, guildMenuMessageId, key, value);
+                        await ReactionRolesQueries.setRRMenu(guild.id, channelId, guildMenuMessageId, key, value);
                     }
                 }
 
@@ -154,7 +154,7 @@ async function createMenu(message) {
 async function modifyMenu(message) {
     try {
         const [, menuId] = getArgs(message);
-        const rrMenu = await Database.getRRMenu(menuId);
+        const rrMenu = await ReactionRolesQueries.getRRMenu(menuId);
 
         const channel = message.guild.channels.resolve(rrMenu[0].channelID);
         const menuMsg = await channel.messages.fetch(menuId);
@@ -181,7 +181,7 @@ async function modifyMenu(message) {
 async function deleteMenu(message) {
     try {
         const [, menuId] = getArgs(message);
-        const rrMenu = await Database.getRRMenu(menuId);
+        const rrMenu = await ReactionRolesQueries.getRRMenu(menuId);
 
         message.channel.send(ReactionRoles.DeleteConfirm);
         const filter = msg => msg.author.id === message.author.id;
@@ -189,7 +189,7 @@ async function deleteMenu(message) {
 
         if(reply.first().content === "yes") {
 
-            await Database.deleteRRMenu(menuId);
+            await ReactionRolesQueries.deleteRRMenu(menuId);
 
             const channel = message.guild.channels.resolve(rrMenu[0].channelID);
             const menuMsg = await channel.messages.fetch(menuId);
@@ -205,7 +205,7 @@ async function deleteMenu(message) {
 async function addRoleToMenu(message) {
     try {
         const [, menuId] = getArgs(message);
-        const rrMenu = await Database.getRRMenu(menuId);
+        const rrMenu = await ReactionRolesQueries.getRRMenu(menuId);
 
         const channel = message.guild.channels.resolve(rrMenu[0].channelID);
         const menuMsg = await channel.messages.fetch(menuId);
@@ -246,7 +246,7 @@ async function addRoleToMenu(message) {
             }
 
             for(let [key, value] of reactionRoles) {
-                await Database.setRRMenu(menuMsg.guild.id, channel.id, menuMsg.id, key, value);
+                await ReactionRolesQueries.setRRMenu(menuMsg.guild.id, channel.id, menuMsg.id, key, value);
             }
         });
 
@@ -260,7 +260,7 @@ async function addRoleToMenu(message) {
 async function removeRoleFromMenu(message) {
     try {
         const [, menuId, roleId] = getArgs(message);
-        const rrMenu = await Database.getRRMenu(menuId);
+        const rrMenu = await ReactionRolesQueries.getRRMenu(menuId);
 
         message.channel.send(ReactionRoles.DeleteRoleConfirm);
         const filter = msg => msg.author.id === message.author.id;
@@ -285,7 +285,7 @@ async function removeRoleFromMenu(message) {
             
             newMenuContent = newMenuContent.replace(contentToRemove, '');
             
-            await Database.deleteRole(menuId, roleId);
+            await ReactionRolesQueries.deleteRole(menuId, roleId);
             const emoji = menuMsg.reactions.cache.find(el => el.emoji.identifier === reaction);
             menuMsg.reactions.resolve(emoji).remove();
             menuMsg.edit(newMenuContent);
@@ -299,7 +299,7 @@ async function removeRoleFromMenu(message) {
 
 async function isReactionMenu(reaction) {
     try {
-        const rrMenu = await Database.getRRMenu(reaction.message.id);
+        const rrMenu = await ReactionRolesQueries.getRRMenu(reaction.message.id);
         if(rrMenu.length) {
             return rrMenu;
         } else {

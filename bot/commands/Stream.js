@@ -1,4 +1,4 @@
-const Database     = require('../Database.js');
+const StreamingQueries = require('../queries/StreamingQueries.js');
 const { getReply } = require('../Tools.js');
 
 const { StreamTxt, ErrorTxt, NotUnderstoodTxt, AccessDenied } = require('../languages/fr.json');
@@ -11,7 +11,7 @@ async function config(message) {
             return;
         }
         const guildId = message.guild.id;
-        const [result]  = await Database.getStreaming(guildId);
+        const [result]  = await StreamingQueries.getStreaming(guildId);
 
         if(!result) {
             message.channel.send(StreamTxt.NoConfig);
@@ -20,7 +20,7 @@ async function config(message) {
             const streamChannel = await getReply(message, StreamTxt.AskChannel);
             const streamMessage = await getReply(message, StreamTxt.AskMessage);
 
-            await Database.setStreaming(guildId, streamRole, streamChannel, streamMessage);
+            await StreamingQueries.setStreaming(guildId, streamRole, streamChannel, streamMessage);
 
             message.channel.send(StreamTxt.SuccessConfig);
 
@@ -65,7 +65,7 @@ async function config(message) {
                     case 'end':
                         isReplyOk = true;
                         endModify = true;
-                        await Database.updateStreaming(guildId, newRole, newChannel, newMessage);
+                        await StreamingQueries.updateStreaming(guildId, newRole, newChannel, newMessage);
                         message.channel.send(StreamTxt.SuccessConfig);
                         break;
 
@@ -84,7 +84,7 @@ async function config(message) {
 
 async function getStreamingRoleName(guildId) {
     try {
-        const [result]  = await Database.getStreaming(guildId);
+        const [result]  = await StreamingQueries.getStreaming(guildId);
         if(result) {
             return result.streamingRole;
         } else {
@@ -98,7 +98,7 @@ async function getStreamingRoleName(guildId) {
 async function announceStream(member) {
     try {
         const guild = member.guild;
-        const [result]  = await Database.getStreaming(guild.id);
+        const [result]  = await StreamingQueries.getStreaming(guild.id);
         let message = result.streamingMessage;
 
         if(message.match(/{name}/)) {
