@@ -80,4 +80,10 @@ async function removeBirthday(guildId, memberId) {
     await con.execute('DELETE FROM BIRTHDAYS WHERE memberID = ? AND guildID = ?', [memberId, guildId]);
 }
 
-module.exports = { getStreaming, setStreaming, updateStreaming, setRRMenu, getRRMenu, deleteRRMenu, deleteRole, getGuildConfig, getMemberBirthday, createGuildConfig, addBirthday, removeBirthday }
+async function getTodayAllBirthdays(date) {
+    const con = await getConnection();
+    const [rows] = await con.execute('SELECT * FROM BIRTHDAYS b INNER JOIN BD_CONFIG c ON b.guildID = c.guildID WHERE date = ?', [date]);
+    return rows;
+}
+
+module.exports = { getStreaming, setStreaming, updateStreaming, setRRMenu, getRRMenu, deleteRRMenu, deleteRole, getGuildConfig, getMemberBirthday, createGuildConfig, addBirthday, removeBirthday, getTodayAllBirthdays }
