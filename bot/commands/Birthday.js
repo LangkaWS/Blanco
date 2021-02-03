@@ -79,7 +79,7 @@ async function setup(message) {
                 const birthdayMessage = await collectMessages(message, BirthdayTxt.AskMessage);
 
                 await Database.createGuildConfig(message.guild.id, channelId, birthdayMessage);
-                message.channel.send("La configuration est terminée.");
+                message.channel.send(BirthdayTxt.SetupComplete);
             }
         }
         
@@ -118,7 +118,7 @@ function happyBirthday(message) {
 async function isConfig(message) {
     const [config] = await Database.getGuildConfig(message.guild.id);
     if(!config) {
-        message.channel.send("Le service des anniversaires n'est pas encore configuré sur ce serveur. Pour le configurer, faites \"!bd config\".");
+        message.channel.send(BirthdayTxt.NoConfig);
         return false;
     } else {
         return true;
@@ -167,9 +167,9 @@ async function removeBirthday(message) {
 
             if(memberBirthday) {
                 await Database.removeBirthday(message.guild.id, message.member.id);
-                message.channel.send("Votre anniversaire a bien été supprimé.");
+                message.channel.send(BirthdayTxt.BirthdayDeleteConfirm);
             } else {
-                message.channel.send("Vous n'avez pas d'anniversaire enregistré.");
+                message.channel.send(BirthdayTxt.BirthdayNotFound);
             }
         }
     } catch (err) {
