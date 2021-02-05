@@ -59,14 +59,19 @@
     },
 
     "Setup": {
+        "AdminRolesList": "Voici la liste des rôles d'administrateurs :",
+        "AskAdminRolesModification": "Pour ajouter ou supprimer un rôle, utilisez `!blanco add` ou `!blanco remove` suivi de la mention du rôle à ajouter/retirer.\rTapez `!blanco next` quand vous avez fini toutes vos modifications.",
         "AskAdminRoleToAdd": "Quel rôle voulez-vous ajouter en tant qu'administrateur ?\rTagguez le rôle et envoyez le message (un seul message par rôle).\rTapez `!blanco next` quand vous avez fini.",
+        "AskModifyAdminRoles": "Des rôles d'administrateurs sont déjà configurés, voulez-vous les modifier ?",
         "AskSetupAdminRole": "Les rôles d'administrateurs ne sont pas définis. Voulez-vous les définir maintenant ?",
         "AskSetupConfig": "La configuration du serveur n'est pas encore définie. Voulez-vous configurer votre serveur maintenant ?",
         
         "Help" : "La commande `!setup` permet de configurer votre serveur afin que je puisse l'utiliser au mieux.\r- Configuration du serveur pour le service de stream : Pour pouvoir utiliser ma fonction 'annonce de stream', j'ai besoin de connaître le nom du canal dans lequel je dois faire l'annonce, le rôle qu'a le membre qui streame sur Twitch et le message d'annonce.\r- Configuration du serveur pour le service des anniversaires : Ma fonctionnalité 'anniversaires' doit d'abord être configurée avec le nom du canal d'annonce, le message d'anniversaire et l'heure à laquelle je dois faire l'annonce.\r- Les rôles d'administrateurs : les administrateurs ont le droit de modifier ma configuration pour ce serveur (voir ci-dessus) et d'accéder à certaines fonctionnalités.\rVous avez besoin du rôle d'administrateur pour les commandes suivantes : `!setup`, `!str setup`, `!str go`, `!str stop`, `!bd setup`, `!bd go`, `!bd stop`, `!rr create`, `!rr modify`, `!rr delete`, `!rr add`, `!rr remove`.",
         "RoleAlreadyAdmin": "Ce rôle est déjà enregistré en tant qu'administrateur.",
+        "RoleIsNotAdmin": "Ce rôle n'est pas enregistré en tant qu'administrateur",
         "RoleNotFoundInGuild": "Ce rôle ne semble pas exister sur ce serveur.",
-        "RoleSuccessfullyAdded": "Le rôle a bien été ajouté en tant qu'adminsitrateur."
+        "RoleSuccessfullyAdded": "Le rôle a bien été ajouté en tant qu'adminsitrateur.",
+        "RoleSuccessfullyRemoved": "Le rôle a bien été retiré des rôles adminsitrateurs."
     },
 
     "StreamTxt": {
