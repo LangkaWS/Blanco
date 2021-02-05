@@ -6,4 +6,9 @@ async function addAdminRole(guildId, roleId) {
     return rows;
 }
 
-module.exports = { addAdminRole };
+async function removeAdminRole(guildId, roleId) {
+    const con = await Database.getConnection();
+    await con.execute('DELETE FROM admin_roles WHERE guild_id = ? AND role_id = ?', [guildId, roleId]);
+}
+
+module.exports = { addAdminRole, removeAdminRole };
