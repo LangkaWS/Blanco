@@ -8,6 +8,7 @@ const Music               = require('./commands/Music.js');
 const Stream              = require('./commands/Stream.js');
 const ReactionRoles       = require('./commands/ReactionRoles.js');
 const Birthday = require('./commands/Birthday.js');
+const Setup = require('./commands/Setup.js');
 
 const client  = new Client({
     partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
@@ -30,6 +31,10 @@ client.on('message', message => {
     const command = args.shift().toLowerCase();
 
     switch(command) {
+
+        case 'blanco':
+            Setup.menu(message);
+            break;
 
         /* Music commands */
         case 'm':
