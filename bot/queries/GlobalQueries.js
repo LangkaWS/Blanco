@@ -14,14 +14,14 @@ async function getConnection() {
 
 async function getAdminRoles(guildId) {
     const con    = await getConnection();
-    const [rows] =  await con.execute('SELECT * FROM admin_roles WHERE guild_id = ?', [guildId]);
+    const [rows] = await con.execute('SELECT * FROM admin_roles WHERE guild_id = ?', [guildId]);
     return rows;
 }
 
 async function getSetup(guildId) {
     const con    = await getConnection();
-    const [rows] =  await con.execute('SELECT * FROM config WHERE guild_id = ?', [guildId]);
+    const [rows] = await con.execute('SELECT * FROM config WHERE guild_id = ?', [guildId]);
     return rows;
 }
 
-module.exports = { getAdminRoles, getSetup }
+module.exports = { getConnection, getAdminRoles, getSetup }
