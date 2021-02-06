@@ -135,4 +135,4 @@ async function announceStream(member) {
     }
 }
 
-module.exports = { config, getStreamingRoleName, announceStream }
+module.exports = { menu, getStreamingRoleName, announceStream }
