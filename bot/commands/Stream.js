@@ -1,9 +1,8 @@
 const StreamingQueries = require('../queries/StreamingQueries.js');
-
-const { StreamTxt, ErrorTxt, NotUnderstoodTxt, AccessDenied } = require('../languages/fr.json');
 const Tools = require('../Tools.js');
 
 async function config(message) {
+const { StreamTxt, NotUnderstoodTxt, AccessDenied } = require('../languages/fr.json');
     try {
         const isAdmin = message.member.roles.cache.get('492407354537541635');
         if(!isAdmin) {
