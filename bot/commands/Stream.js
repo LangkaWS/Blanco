@@ -27,8 +27,8 @@ function menu(message) {
 
 async function setupStream(message) {
     try {
-        const isAdmin = message.member.roles.cache.get('492407354537541635');
         if(!isAdmin) {
+        const isAdmin = await Tools.isAdmin(message.member);
             message.channel.send(AccessDenied);
             return;
         }
