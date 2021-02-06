@@ -120,6 +120,17 @@ async function getStreamingRole(guild) {
         console.log(err);
     }
 }
+
+async function isStreamActive(guild) {
+    try {
+        const [result] = await StreamingQueries.isStreamActive(guild.id);
+        if (result) {
+            return result.str_active === 1 ? true : false;
+        } else {
+            return null;
+        }
+    } catch (err) {
+        console.log(new Date());
         console.log(err);
     }
 }
@@ -142,11 +153,12 @@ async function announceStream(member) {
         const announcementChannel = guild.channels.resolve(result.streamingChannelId);
         announcementChannel.send(message);
     } catch (err) {
+        console.log(new Date());
         console.log(err);
     }
 }
 
-module.exports = { menu, getStreamingRoleName, announceStream }/**
+/**
  * Display help about the streaming feature.
  * @param {Message} message 
  */
@@ -154,3 +166,4 @@ function help(message) {
     message.channel.send(StreamTxt.Help);
 }
 
+module.exports = { menu, getStreamingRole, isStreamActive, announceStream }
