@@ -33,75 +33,71 @@ async function setupStream(message) {
             return;
         }
         const guildId = message.guild.id;
-        const [result]  = await StreamingQueries.getStreaming(guildId);
+        const [strSetup] = await StreamingQueries.getStreaming(guildId);
 
-        if(!result) {
-            message.channel.send(StreamTxt.NoConfig);
-
-            const streamRole    = await getReply(message, StreamTxt.AskRole);
-            const streamChannel = await getReply(message, StreamTxt.AskChannel);
-            const streamMessage = await getReply(message, StreamTxt.AskMessage);
-
-            await StreamingQueries.setStreaming(guildId, streamRole, streamChannel, streamMessage);
-
-            message.channel.send(StreamTxt.SuccessConfig);
-
-        } else {
-            message.channel.send(StreamTxt.AlreadyConfig);
-
-            const currentRole      = result.streamingRole;
-            const currentChannelId = result.streamingChannelId;
-            const currentMessage   = result.streamingMessage;
-
-            const channel = message.guild.channels.resolve(currentChannelId);
-
-            message.channel.send(StreamTxt.StreamingRole + currentRole + '\r'
-                + StreamTxt.StreamingChannel + (channel ? channel.name : StreamTxt.ChannelNotFound) + '\r'
-                + StreamTxt.StreamingMessage + currentMessage);
-
-            let isReplyOk = false;
-            let endModify = false;
-
-            let newRole    = currentRole;
-            let newChannel = currentChannelId;
-            let newMessage = currentMessage;
-
-            do {
-                const reply = await getReply(message, StreamTxt.AskWhatToModify);
-                switch(reply) {
-                    case 'role':
-                        isReplyOk = true;
-                        newRole   = await getReply(message, StreamTxt.AskNewRole);
-                        break;
-
-                    case 'channel':
-                        isReplyOk  = true;
-                        newChannel = await getReply(message, StreamTxt.AskNewChannel);
-                        break;
-
-                    case 'message':
-                        isReplyOk  = true;
-                        newMessage = await getReply(message, StreamTxt.AskNewMessage);
-                        break;
-
-                    case 'end':
-                        isReplyOk = true;
-                        endModify = true;
-                        await StreamingQueries.updateStreaming(guildId, newRole, newChannel, newMessage);
-                        message.channel.send(StreamTxt.SuccessConfig);
-                        break;
-
-                    default:
-                        message.channel.send(NotUnderstoodTxt);
-                }
-            } while(!isReplyOk || !endModify);
-        }
+        const isNewSetup = !strSetup || (!strSetup.str_channel_id && !strSetup.str_role_id && !strSetup.str_message);
+        createSetupInDB(message, isNewSetup, strSetup);
 
     } catch (err) {
-        console.log(err);
-        message.channel.send(ErrorTxt);
+        Tools.sendError(err, message.channel);
     }
 
+}
+
+async function createSetupInDB (message, newSetup, strSetup) {
+    try {
+        let strRoleId, strChannelId;
+
+        if(!newSetup) {
+            strRoleId = strSetup.str_role_id;
+            strChannelId = strSetup.str_channel_id;
+    
+            const currentRole = message.guild.roles.resolve(strRoleId);
+            const currentChannel = message.guild.channels.resolve(strChannelId);
+        
+            const currentSetupMsg = StreamTxt.AlreadySetup + StreamTxt.StreamerRole + (currentRole ? currentRole.name : '') + '\r' + StreamTxt.StreamChannel + (currentChannel ? currentChannel : '') + '\r' + StreamTxt.StreamMessage + strSetup.str_message;
+            message.channel.send(currentSetupMsg);
+        }
+    
+        const wantSetupStream =  await Tools.getReply(message, newSetup ? StreamTxt.NoSetup : StreamTxt.AskModifyCurrentSetup);
+        
+        if (wantSetupStream === 'yes') {
+            let streamRole = await Tools.getReply(message, (!newSetup && strSetup.str_role_id) ? StreamTxt.AskModifyRole : StreamTxt.AskRole);
+    
+            if (streamRole !== '!str next') {
+                strRoleId = streamRole.replace('<@&', '').replace('>', '');
+                let isRole = Tools.isRole(message.guild, strRoleId);
+                while (!isRole) {
+                    streamRole = await Tools.getReply(message, StreamTxt.RoleNotFound);
+                    strRoleId = streamRole.replace('<@&', '').replace('>', '');
+                    isRole = Tools.isRole(message.guild, strRoleId);
+                }
+            }
+    
+            let streamChannel = await Tools.getReply(message, (!newSetup && strSetup.str_channel_id) ? StreamTxt.AskModifyChannel : StreamTxt.AskChannel);
+            if (streamChannel !== '!str next') {
+                strChannelId = streamChannel.replace('<#', '').replace('>', '');
+                let isChannel = Tools.isChannel(message.guild, strChannelId);
+                while (!isChannel) {
+                    streamRole = await Tools.getReply(message, StreamTxt.ChannelNotFound);
+                    strChannelId = streamChannel.replace('<#', '').replace('>', '');
+                    isChannel = Tools.isChannel(message.guild, strRoleId);
+                }
+            }
+            
+            const streamMessage = await Tools.getReply(message, (!newSetup && strSetup.str_message) ? StreamTxt.AskModifyMessage : StreamTxt.AskMessage);
+        
+            if(newSetup && !strSetup) {
+                await StreamingQueries.setStreaming(message.guild.id, strRoleId, strChannelId, streamMessage);
+            } else {
+                await StreamingQueries.updateStreaming(message.guild.id, strRoleId, strChannelId, streamMessage);
+            }
+        
+            message.channel.send(StreamTxt.SuccessConfig);
+        }
+    } catch (err) {
+        Tools.sendError(err, message.channel);
+    }
 }
 
 async function getStreamingRoleName(guildId) {
