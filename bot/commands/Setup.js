@@ -5,7 +5,7 @@ const AdminQueries = require('../queries/AdminQueries.js');
 const { Setup, AccessDenied, NotUnderstoodTxt } = require('../languages/fr.json');
 
 /**
- * Call the suitable function according to arguments of the command.
+ * Call the appropriate function according to arguments of the command.
  * @param {Message} message 
  */
 function menu(message) {
@@ -27,6 +27,10 @@ function menu(message) {
     }
 }
 
+/**
+ * Get the admin roles of the server and ask if the member want to modify them or create them if not set up.
+ * @param {Message} message 
+ */
 async function setupAdmin(message) {
     try {
         const adminRolesConfig = await Database.getAdminRoles(message.guild.id);
@@ -101,6 +105,12 @@ async function setupAdmin(message) {
     }
 }
 
+/**
+ * Check if the role is already set up as admin and if exists in the server, then add it as admin.
+ * @param {Message} message 
+ * @param {string} roleMention 
+ * @param {[string]} roles 
+ */
 async function addRole(message, roleMention, roles) {
     const roleId = roleMention.replace('<@&', '').replace('>', '');
     if (!roles.includes(roleId)) {
@@ -117,6 +127,12 @@ async function addRole(message, roleMention, roles) {
     return roleId;
 }
 
+/**
+ * Check if the role is set up as admin and if exists in the server, then remove it from admin.
+ * @param {Message} message 
+ * @param {string} roleMention 
+ * @param {[string]} roles 
+ */
 async function removeRole(message, roleMention, roles) {
     const roleId = roleMention.replace('<@&', '').replace('>', '');
     if (roles.includes(roleId)) {
@@ -132,14 +148,28 @@ async function removeRole(message, roleMention, roles) {
     }
 }
 
+/**
+ * Check if the member has an admin role or not.
+ * @param {GuildMember} member 
+ * @param {[string]} roles 
+ */
 function isAdmin(member, roles) {
     return member.roles.cache.some(role => roles.includes(role.id));
 }
 
+/**
+ * Check if the server has this role or not.
+ * @param {Guild} guild 
+ * @param {string} roleId 
+ */
 function isRole(guild, roleId) {
     return guild.roles.cache.some(r => r.id === roleId);
 }
 
+/**
+ * Display help about the admin setup.
+ * @param {Message} message 
+ */
 function help(message) {
     message.channel.send(Setup.Help);
 }
