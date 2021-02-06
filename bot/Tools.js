@@ -1,4 +1,5 @@
 const { prefix } = require('../config.json');
+const { ErrorTxt } = require('./languages/fr.json');
 
 async function getReply(initMessage, question) {
     initMessage.channel.send(question);
@@ -10,4 +11,10 @@ function getArgs(message) {
     return message.content.slice(prefix.length).split(' ').slice(1);
 }
 
-module.exports = { getReply, getArgs };
+function sendError(error, channel) {
+    console.log(new Date());
+    console.log(error);
+    channel.send(ErrorTxt);
+}
+
+module.exports = { getReply, getArgs, sendError };
