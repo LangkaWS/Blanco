@@ -232,7 +232,7 @@ async function deleteMenu(message) {
         }
 
     } catch (err) {
-        console.log(err);
+        Tools.sendError(err, message.channel);
     }
 }
 
@@ -344,7 +344,6 @@ async function removeRoleFromMenu(message) {
 
                 const rrMenu = await ReactionRolesQueries.getRRMenu(menuId);
 
-                rrMenu.forEach(el => console.log(el.role_id));
                 const reaction = rrMenu.find(el => el.role_id === roleId).emote_id;
                 
                 let newMenuContent = menuMsg.content;
@@ -392,7 +391,7 @@ async function isReactionMenu(reaction) {
             return false;
         }
     } catch (err) {
-        console.log(err);
+        Tools.sendError(err, reaction.message.channel);
     }
 }
 
@@ -411,7 +410,7 @@ async function addReactionRole(menu, reaction, user) {
             member.roles.add(reactionRole.role_id);
         }
     } catch (err) {
-        console.log(err);
+        Tools.sendError(err, reaction.message.channel);
     }
 }
 
@@ -430,7 +429,7 @@ async function removeReactionRole(menu, reaction, user) {
             member.roles.remove(reactionRole.role_id);
         }
     } catch (err) {
-        console.log(err);
+        Tools.sendError(err, reaction.message.channel);
     }
 }
 
