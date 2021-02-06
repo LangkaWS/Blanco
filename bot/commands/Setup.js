@@ -100,8 +100,7 @@ async function setupAdmin(message) {
             return;
         }
     } catch (err) {
-        console.error(new Date());
-        console.error(err);
+        Tools.sendError(err, message.channel);
     }
 }
 
@@ -112,19 +111,23 @@ async function setupAdmin(message) {
  * @param {[string]} roles 
  */
 async function addRole(message, roleMention, roles) {
-    const roleId = roleMention.replace('<@&', '').replace('>', '');
-    if (!roles.includes(roleId)) {
-        if (isRole(message.guild, roleId)) {
-            await AdminQueries.addAdminRole(message.guild.id, roleId);
-            roles.push(roleId);
-            message.channel.send(Setup.RoleSuccessfullyAdded);
+    try{
+        const roleId = roleMention.replace('<@&', '').replace('>', '');
+        if (!roles.includes(roleId)) {
+            if (isRole(message.guild, roleId)) {
+                await AdminQueries.addAdminRole(message.guild.id, roleId);
+                roles.push(roleId);
+                message.channel.send(Setup.RoleSuccessfullyAdded);
+            } else {
+                message.channel.send(Setup.RoleNotFoundInGuild);
+            }
         } else {
-            message.channel.send(Setup.RoleNotFoundInGuild);
+            message.channel.send(Setup.RoleAlreadyAdmin);
         }
-    } else {
-        message.channel.send(Setup.RoleAlreadyAdmin);
+        return roleId;
+    } catch (err) {
+        Tools.sendError(err, message.channel);
     }
-    return roleId;
 }
 
 /**
@@ -134,17 +137,21 @@ async function addRole(message, roleMention, roles) {
  * @param {[string]} roles 
  */
 async function removeRole(message, roleMention, roles) {
-    const roleId = roleMention.replace('<@&', '').replace('>', '');
-    if (roles.includes(roleId)) {
-        if (isRole(message.guild, roleId)) {
-            await AdminQueries.removeAdminRole(message.guild.id, roleId);
-            roles.splice(roles.indexOf(roleId), 1);
-            message.channel.send(Setup.RoleSuccessfullyRemoved);
+    try {
+        const roleId = roleMention.replace('<@&', '').replace('>', '');
+        if (roles.includes(roleId)) {
+            if (isRole(message.guild, roleId)) {
+                await AdminQueries.removeAdminRole(message.guild.id, roleId);
+                roles.splice(roles.indexOf(roleId), 1);
+                message.channel.send(Setup.RoleSuccessfullyRemoved);
+            } else {
+                message.channel.send(Setup.RoleNotFoundInGuild);
+            }
         } else {
-            message.channel.send(Setup.RoleNotFoundInGuild);
+            message.channel.send(Setup.RoleIsNotAdmin);
         }
-    } else {
-        message.channel.send(Setup.RoleIsNotAdmin);
+    } catch (err) {
+        Tools.sendError(err, message.channel);
     }
 }
 
