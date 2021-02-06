@@ -107,15 +107,19 @@ async function createSetupInDB (message, newSetup, strSetup) {
     }
 }
 
-async function getStreamingRoleName(guildId) {
+async function getStreamingRole(guild) {
     try {
-        const [result]  = await StreamingQueries.getStreaming(guildId);
+        const [result] = await StreamingQueries.getStreamingRoleId(guild.id);
         if (result) {
-            return result.streamingRole;
+            return guild.roles.resolve(result.str_role_id);
         } else {
             return null;
         }
     } catch (err) {
+        console.log(new Date());
+        console.log(err);
+    }
+}
         console.log(err);
     }
 }
