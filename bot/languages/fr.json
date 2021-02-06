@@ -1,7 +1,9 @@
 {
     "AccessDenied": "Vous ne disposez pas des droits pour faire cette action.",
+    "ChannelNotFound": "Ce canal ne semble pas exister sur ce serveur. Merci de mentionner le canal que vous voulez configurer.",
     "ErrorTxt": "Oops ! J'ai rencontré une erreur. Si celle-ci persiste, contactes un administrateur.",
     "NotUnderstoodTxt": "Je n'ai pas compris ton message. Peux-tu le vérifier et le renvoyer ?",
+    "RoleNotFound": "Ce rôle ne semble pas exister sur ce serveur. Merci de mentionner le rôle que vous voulez configurer.",
 
     "BirthdayTxt": {
         "AlreadyConfig": "Il existe déjà une configuration pour votre serveur :",
@@ -37,25 +39,26 @@
         "URLNotFound" : "Je n'ai pas trouvé l'URL demandée."
     },
 
-    "ReactionRoles": {
+    "ReactionRolesTxt": {
         "AddRoleDone": "Le rôle a bien été ajouté au menu.",
-        "AskChannelForMenu": "Dans quel canal voulez-vous poster votre menu ?\r(Copiez et collez l'identifiant du canal)",
-        "AskRolesToAdd": "Quels rôles voulez-vous ajouter ?\rTapez\"!rr end\" quand vous avez fini.",
+        "AskChannelForMenu": "Mentionnez le canal dans lequel vous voulez poster votre menu.",
+        "AskRolesToAdd": "Quels rôles voulez-vous ajouter ?\rTapez `!rr next` quand vous avez fini.",
+        "AskValidation": "Tapez `!rr val` pour valider le menu ou `!rr end` pour annuler la création du menu.",
         "CancelMenu": "Arrêt de la création de menu. Aucun rôle configuré.",
-        "ChannelFound": "Ok, j'ai trouvé le canal. Je vais poster le menu. Merci pour votre aide !",
+        "ChannelFound": "J'ai trouvé le canal. Je vais poster le menu. Merci pour votre aide !",
         "CreationStep1": "Création du menu d'attribution des rôles...\rD'abord la description :\r- en 1 ou plusieurs messages\r- tapez `!rr next` quand vous avez fini la description.\r- tapez `!rr end` pour annuler la création du menu.",
-        "CreationStep2": "Ok, j'ai la description du menu. Passons aux rôles.",
+        "CreationStep2": "Passons aux rôles maintenant.",
         "CurrentMenu": "Voici le menu reaction roles actuel :",
         "DeleteConfirm": "Voulez-vous vraiment supprimer ce menu ? (yes/no)\rCette action est irréversible. ",
         "DeleteRoleConfirm": "Voulez-vous vraiment supprimer ce rôle du menu ? (yes/no)\rCette action est irréversible. ",
         "DeleteDone": "Le menu a bien été supprimé.",
         "DeleteRoleDone": "Le rôle a bien été supprimé du menu.",
-        "Help": "Voici les différentes fonctions de la catégorie reaction roles :\r- `!rr` `create` : lance la création d'un message menu reaction roles où chaque membre peut réagir pour s'attribuer un rôle.\r- `!rr` `next` : utilisé pendant la création du menu, permet de passer de l'étape \"renseigner la description\" à l'étape de définition des rôles et réactions.\r- `!rr` `end` : termine la création du menu. Si utilisé pendant la description du menu, annule la création.\r- `!rr` `val` : valide le menu.\r- `!rr` `delete` `messageId` : supprime le menu de reaction roles qui a l'id donné (pour avoir l'id du message : clic droit sur le message puis \"Copier l'identifiant\".", 
-        "MenuPreview": "Voici à quoi ressemblera le menu des rôles. Tapez \"!rr val\" pour valider le menu. Si vous ne validez pas au bout de 1 minute, le menu s'autodétruira.",
+        "Help": "Le menu reaction roles vous permet de créer un menu auquel les membres de votre serveur réagissent pour s'attribuer des rôles.\rPour créer un nouveau menu, utilisez la commande `!rr create` et laissez vous guider. Lorsque c'est indiqué, vous pouvez utiliser `!rr end` pour annuler ou terminer la création du menu.\rPour modifier ou supprimer un menu reaction roles, répondez au menu à modifier/supprimer et tapez la commande `!rr modify` ou `!rr delete`. Attention, la modification ne porte que sur la description du menu. Pour ajouter ou supprimer des rôles, utilisez les commandes `!rr add` et `!rr remove`.\rPour ajouter un rôle à un menu, répondez au menu avec la commande `!rr add`.\rPour retirer un rôle du menu, répondez au menu avec `!rr remove @role` avec `@role` le rôle à retirer. Une fois la suppression faite, il est conseillé de faire un `!rr modify` pour corriger le texte du menu.", 
+        "MenuPreview": "Voici à quoi ressemblera le menu des rôles :",
         "MessageExample": "Par exemple :\rVous voulez devenir un @bot ? Réagissez avec 🤖",
         "MessageExampleReaction": "🤖",
-        "RoleRules": "Voici quelques règles :\r- 1 message par rôle\r- Pensez à mentionner le rôle dans le message et indiquer l'émoticône à utiliser pour s'attribuer ce rôle.\r- **Réagissez au message** avec l'émoticône à utiliser\r- Tapez \"!rr end\" quand vous avez fini.",
-        "SanitizedMenu": "J'ai affiché les caractères utilisés pour la mise en forme, comme ça tu peux recopier le message et faire tes modifications plus facilement. Envoie \"!rr end\" quand tu as fini pour que je mette à jour le menu."
+        "RoleRules": "Voici quelques règles :\r- 1 message par rôle\r- Pensez à mentionner le rôle dans le message et indiquer l'émoticône à utiliser pour s'attribuer ce rôle.\r- **Réagissez au message** avec l'émoticône à utiliser\r- Tapez `!rr next` quand vous avez fini.",
+        "SanitizedMenu": "J'ai affiché les caractères utilisés pour la mise en forme, comme ça tu peux recopier le message et faire tes modifications plus facilement. Envoie `!rr next` quand tu as fini pour que je mette à jour le menu."
     },
 
     "Setup": {
@@ -85,10 +88,8 @@
         "AskRole": "Mentionnez le rôle qui est attribué lorsqu'un des membres commence à streamer sur Twitch.",
         "AutoAnnouncementDisabled": "Je ne ferai plus d'une annonce dès qu'un des membres du serveur commence un stream sur Twitch.",
         "AutoAnnouncementEnabled": "Je ferai automatiquement une annonce dès qu'un des membres du serveur commence un stream sur Twitch.",
-        "ChannelNotFound": "Ce canal ne semble pas exister sur ce serveur. Merci de mentionner le canal que vous voulez configurer.",
         "Help": "Le service \"Annonce de stream Twitch\" vous permet d'envoyer automatiquement un message d'annonce dans un canal dès qu'un de vos membres commence un stream sur Twitch.\rAvant de pouvoir l'utiliser, il faut le configurer. Pour cela, utilisez la commande `!str setup` et laissez vous guider. Au préalable, il vous faudra décider et créer le cas échéant le canal d'annonce et le rôle que les streamers Twitch ont lorsqu'ils sont en stream.\rSi vous avez des problèmes avec ce service, n'hésitez pas à contacter le support.\rPour activer la fonction d'annonce automatique des streams, utilisez `!str go` ; pour la désactiver, utilisez `!str stop`.",
         "NoSetup": "Votre serveur n'est pas encore configuré pour utiliser mon service \"Annonce de stream Twitch\". Voulez-vous le configurer maintenant ? (yes/no)",
-        "RoleNotFound": "Ce rôle ne semble pas exister sur ce serveur. Merci de mentionner le rôle que vous voulez configurer.",
         "StreamChannel": "Canal que j'utilise pour annoncer les streams : ",
         "StreamMessage": "Message d'annonce de stream :\r",
         "StreamerRole": "Rôle de streamer : ",
