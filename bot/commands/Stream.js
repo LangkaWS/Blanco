@@ -107,7 +107,6 @@ async function createSetupInDB (message, newSetup, strSetup) {
                 wantToActivate = await Tools.getReply(message, NotUnderstoodTxt);
             }
             const autoParam = wantToActivate === 'yes' ? 1 : 0;
-            console.log(autoParam);
         
             if (newSetup && !strSetup) {
                 await StreamingQueries.setStreaming(message.guild.id, strRoleId, strChannelId, streamMessage, autoParam);
