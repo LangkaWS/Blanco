@@ -1,5 +1,11 @@
 const Database = require('./GlobalQueries.js');
 
+async function getStreaming(guildId) {
+    const con    = await Database.getConnection();
+    const [rows] = await con.execute('SELECT * FROM config WHERE guild_id = ?', [guildId]);
+    return rows;
+}
+
 async function getStreamingRoleId(guildId) {
     const con    = await Database.getConnection();
     const [rows] = await con.execute('SELECT str_role_id FROM config WHERE guild_id = ?', [guildId]);
