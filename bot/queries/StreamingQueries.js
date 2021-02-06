@@ -12,6 +12,11 @@ async function getStreamingChannelAndMessage(guildId) {
     return rows;
 }
 
+async function toogleAutoAnnouncement(param, guildId) {
+    const con = await Database.getConnection();
+    await con.execute('UPDATE config SET str_active = ? WHERE guild_id = ?', [param, guildId]);
+}
+
 async function isStreamActive(guildId) {
     const con    = await Database.getConnection();
     const [rows] = await con.execute('SELECT str_active FROM config WHERE guild_id = ?', [guildId]);
