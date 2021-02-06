@@ -77,9 +77,12 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
     try {
         const diffRole = newMember.roles.cache.difference(oldMember.roles.cache).first();
         if(diffRole) {
-            const streamingRole = await Stream.getStreamingRoleName(oldMember.guild.id);
-            if(streamingRole && diffRole.name === streamingRole && newMember.roles.cache.get(diffRole.id)) {
-                Stream.announceStream(newMember);
+            const streamingRole = await Stream.getStreamingRole(oldMember.guild);
+            if(streamingRole && diffRole === streamingRole && newMember.roles.cache.get(diffRole.id)) {
+                const isStreamActive = await Stream.isStreamActive(newMember.guild);
+                if(isStreamActive) {
+                    Stream.announceStream(newMember);
+                }
             }
         }
     } catch (error) {
