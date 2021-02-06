@@ -42,8 +42,8 @@ client.on('message', message => {
             break;
 
         /* Streaming commands */
-        case 'streamconf':
-            Stream.config(message);
+        case 'str':
+            Stream.menu(message);
             break;
         
         /* Reaction roles commands */
