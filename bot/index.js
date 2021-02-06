@@ -48,7 +48,7 @@ client.on('message', message => {
         
         /* Reaction roles commands */
         case 'rr':
-            ReactionRoles.rrMenu(message);
+            ReactionRoles.menu(message);
             break;
 
         /* Birthday commands */
@@ -60,6 +60,9 @@ client.on('message', message => {
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
+    if(user.bot) {
+        return;
+    }
     const rrMenu = await ReactionRoles.isReactionMenu(reaction);
     if(rrMenu) {
         ReactionRoles.addReactionRole(rrMenu, reaction, user);
@@ -67,6 +70,9 @@ client.on('messageReactionAdd', async (reaction, user) => {
 });
 
 client.on('messageReactionRemove', async (reaction, user) => {
+    if(user.bot) {
+        return;
+    }
     const rrMenu = await ReactionRoles.isReactionMenu(reaction);
     if(rrMenu) {
         ReactionRoles.removeReactionRole(rrMenu, reaction, user);

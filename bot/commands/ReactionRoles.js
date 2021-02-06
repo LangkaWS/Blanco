@@ -1,56 +1,41 @@
-const { getArgs }  = require('../Tools.js');
-const { ReactionRoles, AccessDenied } = require('../languages/fr.json');
 const ReactionRolesQueries = require('../queries/ReactionRolesQueries.js');
+const Tools                = require('../Tools.js');
 
-function rrMenu(message) {
-    const [command] = getArgs(message);
+const { ReactionRolesTxt, AccessDenied, NotUnderstoodTxt, RoleNotFound } = require('../languages/fr.json');
 
-    const isAdmin = message.member.roles.cache.get('492407354537541635');
-        
+/**
+ * Call the appropriate function according to arguments of the command.
+ * @param {Message} message 
+ */
+function menu(message) {
+    const [command] = Tools.getArgs(message);
+
     switch(command) {
         case 'create':
-            if(!isAdmin) {
-                message.channel.send(AccessDenied);
-                return;
-            }
             createMenu(message);
             break;
+
         case 'modify':
-            if(!isAdmin) {
-                message.channel.send(AccessDenied);
-                return;
-            }
             modifyMenu(message);
             break;
+
         case 'delete':
-            if(!isAdmin) {
-                message.channel.send(AccessDenied);
-                return;
-            }
             deleteMenu(message);
             break;
+
         case 'add':
-            if(!isAdmin) {
-                message.channel.send(AccessDenied);
-                return;
-            }
             addRoleToMenu(message);
             break;
+
         case 'remove':
-            if(!isAdmin) {
-                message.channel.send(AccessDenied);
-                return;
-            }
             removeRoleFromMenu(message);
             break;
+
         case 'next':
         case 'val':
         case 'end' :
-            if(!isAdmin) {
-                message.channel.send(AccessDenied);
-                return;
-            }
             break;
+
         case 'help':
         default:
             help(message);
@@ -58,13 +43,24 @@ function rrMenu(message) {
     }
 }
 
+/**
+ * Create a reaction roles menu.
+ * @param {Message} message 
+ */
 async function createMenu(message) {
 
     try {
+
+        const isAdmin = await Tools.isAdmin(message.member);
+        if (!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
+
         const guild = message.guild;
         let menu    = '';
 
-        await message.channel.send(ReactionRoles.CreationStep1);
+        await message.channel.send(ReactionRolesTxt.CreationStep1);
 
         const filter = msg => msg.author.id === message.author.id;
         const msgCollector = message.channel.createMessageCollector(filter);
@@ -79,20 +75,20 @@ async function createMenu(message) {
 
         msgCollector.on('end', async collected => {
             if(collected.last().content === '!rr end') {
-                message.channel.send(ReactionRoles.CancelMenu);
+                message.channel.send(ReactionRolesTxt.CancelMenu);
                 return;
             }
 
             const reactionRoles = new Map();
 
-            message.channel.send(ReactionRoles.CreationStep2 + ' ' + ReactionRoles.RoleRules);
-            const example = await message.channel.send(ReactionRoles.MessageExample);
-            example.react(ReactionRoles.MessageExampleReaction);
+            message.channel.send(ReactionRolesTxt.CreationStep2 + ' ' + ReactionRolesTxt.RoleRules);
+            const example = await message.channel.send(ReactionRolesTxt.MessageExample);
+            example.react(ReactionRolesTxt.MessageExampleReaction);
 
             const roleCollector = message.channel.createMessageCollector(filter);
 
             roleCollector.on('collect', async msg => {
-                if(msg.content === '!rr end') {
+                if(msg.content === '!rr next' || msg.content === '!rr end') {
                     roleCollector.stop();
                     return;
                 }
@@ -108,37 +104,53 @@ async function createMenu(message) {
 
             });
 
-            roleCollector.on('end', async () => {
-                message.channel.send(ReactionRoles.MenuPreview);
+            roleCollector.on('end', async (collected) => {
+
+                if(collected.last().content === '!rr end') {
+                    message.channel.send(ReactionRolesTxt.CancelMenu);
+                    return;
+                }
+
+                message.channel.send(ReactionRolesTxt.MenuPreview);
                 const menuMessage = await message.channel.send(menu);
                 for(let reaction of reactionRoles.values()) {
                     menuMessage.react(reaction);
                 }
 
-                const filterValidation = msg => msg.content === '!rr val';
-                const validate = await message.channel.awaitMessages(filterValidation, {max: 1, time: 60000});
+                let validate = await Tools.getReply(message, ReactionRolesTxt.AskValidation);
 
-                if(!validate.first()) {
+                while (validate !== '!rr val' && validate !== '!rr end') {
+                    validate = await Tools.getReply(message, NotUnderstoodTxt);
+                }
+
+                if(validate === '!rr end') {
                     return;
                 }
 
-                message.channel.send(ReactionRoles.AskChannelForMenu);
-                const filterChannel = msg => Number.isInteger(parseInt(msg.content));
-                const channelIdMsg = await message.channel.awaitMessages(filterChannel, {max: 1});
-                const channelId = channelIdMsg.first().content;
-                const channel = guild.channels.resolve(channelId);
+                let menuChannelStr = await Tools.getReply(message, ReactionRolesTxt.AskChannelForMenu);
 
-                if(channel) {
-                    message.channel.send(ReactionRoles.ChannelFound);
+                let menuChannelId  = menuChannelStr.replace('<#', '').replace('>', '');
+                let isChannel      = Tools.isChannel(message.guild, menuChannelId);
 
-                    const guildMenuMessage = await channel.send(menu);
+                while (!isChannel) {
+                    menuChannelStr   = await Tools.getReply(message, ReactionRolesTxt.ChannelNotFound);
+                    menuChannelId = menuChannelStr.replace('<#', '').replace('>', '');
+                    isChannel     = Tools.isChannel(message.guild, menuChannelId);
+                }
+                
+                if(menuChannelStr) {
+                    const menuChannel = guild.channels.resolve(menuChannelId);
+
+                    message.channel.send(ReactionRolesTxt.ChannelFound);
+
+                    const guildMenuMessage = await menuChannel.send(menu);
                     const guildMenuMessageId = guildMenuMessage.id;
                     for(let reaction of reactionRoles.values()) {
                         guildMenuMessage.react(reaction);
                     }
 
                     for(let [key, value] of reactionRoles) {
-                        await ReactionRolesQueries.setRRMenu(guild.id, channelId, guildMenuMessageId, key, value);
+                        await ReactionRolesQueries.setRRMenu(guild.id, menuChannelId, guildMenuMessageId, key, value);
                     }
                 }
 
@@ -147,19 +159,30 @@ async function createMenu(message) {
         });
 
     } catch (err) {
-        console.log(err);
+        Tools.sendError(err, message.channel);
     } 
 }
 
+/**
+ * Modify a reaction roles menu. The command need to be a reply to the menu.
+ * @param {Message} message 
+ */
 async function modifyMenu(message) {
     try {
-        const [, menuId] = getArgs(message);
-        const rrMenu = await ReactionRolesQueries.getRRMenu(menuId);
 
-        const channel = message.guild.channels.resolve(rrMenu[0].channelID);
+        const isAdmin = await Tools.isAdmin(message.member);
+        if (!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
+
+        const menuId = message.reference.messageID;
+        const channelId = message.reference.channelID;
+        const channel = message.guild.channels.resolve(channelId);
+
         const menuMsg = await channel.messages.fetch(menuId);
 
-        message.channel.send(ReactionRoles.CurrentMenu);
+        message.channel.send(ReactionRolesTxt.CurrentMenu);
         const sanitizedMenuMsg = menuMsg.content
             .replace(/\*/g, '\\*')
             .replace(/_/g, '\\_')
@@ -167,51 +190,76 @@ async function modifyMenu(message) {
             .replace(/`/g, '\\`')
             .replace(/\\/g, '\\\\');
         message.channel.send(sanitizedMenuMsg);
-        message.channel.send(ReactionRoles.SanitizedMenu);
-        const filter = msg => msg.author.id === message.author.id;
-        const reply = await message.channel.awaitMessages(filter, {max: 1});
+        const reply = await Tools.getReply(message, ReactionRolesTxt.SanitizedMenu);
 
-        menuMsg.edit(reply.first().content);
+        menuMsg.edit(reply);
 
     } catch (err) {
-        console.log(err);
+        Tools.sendError(err, message.channel);
     }
 }
 
+/**
+ * Delete a reaction roles menu. The command need to be a reply to the menu.
+ * @param {Message} message 
+ */
 async function deleteMenu(message) {
     try {
-        const [, menuId] = getArgs(message);
-        const rrMenu = await ReactionRolesQueries.getRRMenu(menuId);
 
-        message.channel.send(ReactionRoles.DeleteConfirm);
-        const filter = msg => msg.author.id === message.author.id;
-        const reply = await message.channel.awaitMessages(filter, {max: 1});
+        const isAdmin = await Tools.isAdmin(message.member);
+        if (!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
 
-        if(reply.first().content === "yes") {
+        const menuId = message.reference.messageID;
+        const channelId = message.reference.channelID;
+        const channel = message.guild.channels.resolve(channelId);
 
+        const menuMsg = await channel.messages.fetch(menuId);
+
+        let confirmDelete =  await Tools.getReply(message, ReactionRolesTxt.DeleteConfirm);
+        while (confirmDelete !== 'yes' && confirmDelete !== 'no') {
+            confirmDelete = await Tools.getReply(message, NotUnderstoodTxt);
+        }
+
+        if(confirmDelete === 'yes') {
             await ReactionRolesQueries.deleteRRMenu(menuId);
 
-            const channel = message.guild.channels.resolve(rrMenu[0].channelID);
-            const menuMsg = await channel.messages.fetch(menuId);
             menuMsg.delete();
-
-            message.channel.send(ReactionRoles.DeleteDone);
+    
+            message.channel.send(ReactionRolesTxt.DeleteDone);
         }
+
     } catch (err) {
-        console.log(err);
+        Tools.sendError(err, message.channel);
     }
 }
 
+/**
+ * Add a role to the reaction roles menu. The command need to be a reply to the menu.
+ * @param {Message} message 
+ */
 async function addRoleToMenu(message) {
     try {
-        const [, menuId] = getArgs(message);
+
+        const isAdmin = await Tools.isAdmin(message.member);
+        if (!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
+
+        const menuId = message.reference.messageID;
+        const channelId = message.reference.channelID;
+        const channel = message.guild.channels.resolve(channelId);
+
+        const menuMsg = await channel.messages.fetch(menuId);
+
         const rrMenu = await ReactionRolesQueries.getRRMenu(menuId);
 
-        const channel = message.guild.channels.resolve(rrMenu[0].channelID);
-        const menuMsg = await channel.messages.fetch(menuId);
         let newMenuContent = menuMsg.content;
 
-        message.channel.send(ReactionRoles.AskRolesToAdd + '\r' + ReactionRoles.RoleRules);
+        message.channel.send(ReactionRolesTxt.AskRolesToAdd + '\r' + ReactionRolesTxt.RoleRules);
 
         const reactionRoles = new Map();
 
@@ -219,7 +267,7 @@ async function addRoleToMenu(message) {
         const roleCollector = message.channel.createMessageCollector(filter);
 
         roleCollector.on('collect', async msg => {
-            if(msg.content === '!rr end') {
+            if(msg.content === '!rr next' || msg.content === '!rr end') {
                 roleCollector.stop();
                 return;
             }
@@ -230,7 +278,7 @@ async function addRoleToMenu(message) {
             const reactionCollector = await msg.awaitReactions(reactionFilter, {max: 1});
 
             const roleMentioned = msg.mentions.roles.first();
-            const isInMenu = rrMenu.find(el => el.roleId === roleMentioned.id);
+            const isInMenu = rrMenu.find(el => el.role_id === roleMentioned.id);
 
             if(roleMentioned && !isInMenu) {
                 reactionRoles.set(roleMentioned.id, reactionCollector.first().emoji.identifier);
@@ -238,7 +286,13 @@ async function addRoleToMenu(message) {
 
         });
         
-        roleCollector.on('end', async () => {
+        roleCollector.on('end', async (collected) => {
+
+            if(collected.last().content === '!rr end') {
+                message.channel.send(ReactionRolesTxt.CancelMenu);
+                return;
+            }
+
             await menuMsg.edit(newMenuContent);
             
             for(let reaction of reactionRoles.values()) {
@@ -248,55 +302,86 @@ async function addRoleToMenu(message) {
             for(let [key, value] of reactionRoles) {
                 await ReactionRolesQueries.setRRMenu(menuMsg.guild.id, channel.id, menuMsg.id, key, value);
             }
+            message.channel.send(ReactionRolesTxt.AddRoleDone);
         });
 
-        message.channel.send(ReactionRoles.AddRoleDone);
 
     } catch (err) {
-        console.log(err);
+        Tools.sendError(err, message.channel);
     }
 }
 
+/**
+ * Modify a reaction roles menu. The command needs to be a reply to the menu and mention the role to remove.
+ * @param {Message} message 
+ */
 async function removeRoleFromMenu(message) {
     try {
-        const [, menuId, roleId] = getArgs(message);
-        const rrMenu = await ReactionRolesQueries.getRRMenu(menuId);
 
-        message.channel.send(ReactionRoles.DeleteRoleConfirm);
-        const filter = msg => msg.author.id === message.author.id;
-        const reply = await message.channel.awaitMessages(filter, {max: 1});
-        
-        if(reply.first().content === "yes") {
-            const channel = message.guild.channels.resolve(rrMenu[0].channelID);
-            const menuMsg = await channel.messages.fetch(menuId);
-            const reaction = rrMenu.find(el => el.roleID === roleId).emoteID;
-            
-            let newMenuContent = menuMsg.content;
-            
-            const roleStr = '<@&' + roleId + '>';
-            const roleIndex = newMenuContent.search(roleStr);
-            let contentToRemove;
-            
-            if(newMenuContent.indexOf('\n', roleIndex) !== -1) {
-                contentToRemove = newMenuContent.slice(roleIndex, newMenuContent.indexOf('\n', roleIndex));
-            } else {
-                contentToRemove = newMenuContent.slice(roleIndex);
+        const isAdmin = await Tools.isAdmin(message.member);
+        if (!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
+
+        const menuId = message.reference.messageID;
+        const channelId = message.reference.channelID;
+        const channel = message.guild.channels.resolve(channelId);
+
+        const menuMsg = await channel.messages.fetch(menuId);
+
+        const [, roleMention] = Tools.getArgs(message);
+        const roleId = roleMention.replace('<@&', '').replace('>', '');
+
+        if (Tools.isRole(message.guild, roleId)) {
+
+            let confirmDelete =  await Tools.getReply(message, ReactionRolesTxt.DeleteRoleConfirm);
+            while (confirmDelete !== 'yes' && confirmDelete !== 'no') {
+                confirmDelete = await Tools.getReply(message, NotUnderstoodTxt);
             }
             
-            newMenuContent = newMenuContent.replace(contentToRemove, '');
-            
-            await ReactionRolesQueries.deleteRole(menuId, roleId);
-            const emoji = menuMsg.reactions.cache.find(el => el.emoji.identifier === reaction);
-            menuMsg.reactions.resolve(emoji).remove();
-            menuMsg.edit(newMenuContent);
+            if(confirmDelete === 'yes') {
 
-            message.channel.send(ReactionRoles.DeleteRoleDone);
+                const rrMenu = await ReactionRolesQueries.getRRMenu(menuId);
+
+                const reaction = rrMenu.find(el => el.role_id === roleId).emote_id;
+                
+                let newMenuContent = menuMsg.content;
+                
+                const roleIndex = newMenuContent.search(roleMention);
+
+                let contentToRemove;
+                
+                if(newMenuContent.indexOf('\n', roleIndex) !== -1) {
+                    contentToRemove = newMenuContent.slice(roleIndex, newMenuContent.indexOf('\n', roleIndex));
+                } else {
+                    contentToRemove = newMenuContent.slice(roleIndex);
+                }
+                
+                newMenuContent = newMenuContent.replace(contentToRemove, '');
+                
+                await ReactionRolesQueries.deleteRole(menuId, roleId);
+                const emoji = menuMsg.reactions.cache.find(el => el.emoji.identifier === reaction);
+                menuMsg.reactions.resolve(emoji).remove();
+                menuMsg.edit(newMenuContent);
+        
+                message.channel.send(ReactionRolesTxt.DeleteRoleDone);
+                
+            }
+        } else {
+            message.channel.send(RoleNotFound);
         }
+
+
     } catch (err) {
-        console.log(err);
+        Tools.sendError(err, message.channel);
     }
 }
 
+/**
+ * Check if the message is registered in database as a reaction roles menu.
+ * @param {MessageReaction} reaction 
+ */
 async function isReactionMenu(reaction) {
     try {
         const rrMenu = await ReactionRolesQueries.getRRMenu(reaction.message.id);
@@ -306,38 +391,54 @@ async function isReactionMenu(reaction) {
             return false;
         }
     } catch (err) {
-        console.log(err);
+        Tools.sendError(err, reaction.message.channel);
     }
 }
 
+/**
+ * Add a role to the member.
+ * @param {[BinaryRow]} menu the menu from database
+ * @param {MessageReaction} reaction the reaction that corresponds to a role
+ * @param {User} user the member to add the role to 
+ */
 async function addReactionRole(menu, reaction, user) {
     try {
         const member = reaction.message.guild.members.resolve(user);
         const rrMenu = menu;
-        const reactionRole = rrMenu.find(el => el.emoteID == reaction.emoji.identifier);
+        const reactionRole = rrMenu.find(el => el.emote_id == reaction.emoji.identifier);
         if(reactionRole) {
-            member.roles.add(reactionRole.roleID);
+            member.roles.add(reactionRole.role_id);
         }
     } catch (err) {
-        console.log(err);
+        Tools.sendError(err, reaction.message.channel);
     }
 }
 
+/**
+ * Remove a role from the member.
+ * @param {[BinaryRow]} menu the menu from database
+ * @param {MessageReaction} reaction the reaction that corresponds to a role
+ * @param {User} user the member to remove the role from 
+ */
 async function removeReactionRole(menu, reaction, user) {
     try {
         const member = reaction.message.guild.members.resolve(user);
         const rrMenu = menu;
-        const reactionRole = rrMenu.find(el => el.emoteID == reaction.emoji.identifier);
+        const reactionRole = rrMenu.find(el => el.emote_id == reaction.emoji.identifier);
         if(reactionRole) {
-            member.roles.remove(reactionRole.roleID);
+            member.roles.remove(reactionRole.role_id);
         }
     } catch (err) {
-        console.log(err);
+        Tools.sendError(err, reaction.message.channel);
     }
 }
 
+/**
+ * Display help about the reaction roles menu.
+ * @param {Message} message 
+ */
 function help(message) {
-    message.channel.send(ReactionRoles.Help);
+    message.channel.send(ReactionRolesTxt.Help);
 }
 
-module.exports = { rrMenu, isReactionMenu, addReactionRole, removeReactionRole };
+module.exports = { menu, isReactionMenu, addReactionRole, removeReactionRole };
