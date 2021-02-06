@@ -142,4 +142,11 @@ async function announceStream(member) {
     }
 }
 
-module.exports = { menu, getStreamingRoleName, announceStream }
+module.exports = { menu, getStreamingRoleName, announceStream }/**
+ * Display help about the streaming feature.
+ * @param {Message} message 
+ */
+function help(message) {
+    message.channel.send(StreamTxt.Help);
+}
+
