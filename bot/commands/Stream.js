@@ -1,4 +1,5 @@
 const StreamingQueries = require('../queries/StreamingQueries.js');
+const Database = require('../queries/GlobalQueries.js');
 const Tools = require('../Tools.js');
 
 async function config(message) {
