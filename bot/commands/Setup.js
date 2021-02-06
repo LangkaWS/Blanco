@@ -1,6 +1,7 @@
-const Database = require('../queries/GlobalQueries.js');
+const Database     = require('../queries/GlobalQueries.js');
+const Tools        = require('../Tools.js');
 const AdminQueries = require('../queries/AdminQueries.js');
-const Tools = require('../Tools.js');
+
 const { Setup, AccessDenied, NotUnderstoodTxt } = require('../languages/fr.json');
 
 /**
