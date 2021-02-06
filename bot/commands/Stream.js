@@ -1,7 +1,7 @@
 const StreamingQueries = require('../queries/StreamingQueries.js');
 const Tools = require('../Tools.js');
 
-const { StreamTxt, NotUnderstoodTxt, AccessDenied } = require('../languages/fr.json');
+const { StreamTxt, NotUnderstoodTxt, AccessDenied, ChannelNotFound } = require('../languages/fr.json');
 
 /**
  * Call the appropriate function according to arguments of the command.
@@ -94,9 +94,9 @@ async function createSetupInDB (message, newSetup, strSetup) {
                 let isChannel = Tools.isChannel(message.guild, strChannelId);
 
                 while (!isChannel) {
-                    streamRole   = await Tools.getReply(message, StreamTxt.ChannelNotFound);
-                    strChannelId = streamChannel.replace('<#', '').replace('>', '');
-                    isChannel    = Tools.isChannel(message.guild, strRoleId);
+                    streamChannel = await Tools.getReply(message, ChannelNotFound);
+                    strChannelId  = streamChannel.replace('<#', '').replace('>', '');
+                    isChannel     = Tools.isChannel(message.guild, strRoleId);
                 }
             }
             
