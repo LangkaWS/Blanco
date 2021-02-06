@@ -2,8 +2,8 @@ const StreamingQueries = require('../queries/StreamingQueries.js');
 const Database = require('../queries/GlobalQueries.js');
 const Tools = require('../Tools.js');
 
-async function config(message) {
 const { StreamTxt, NotUnderstoodTxt, AccessDenied } = require('../languages/fr.json');
+async function setupStream(message) {
     try {
         const isAdmin = message.member.roles.cache.get('492407354537541635');
         if(!isAdmin) {
