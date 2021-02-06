@@ -27,11 +27,12 @@ function menu(message) {
 
 async function setupStream(message) {
     try {
-        if(!isAdmin) {
         const isAdmin = await Tools.isAdmin(message.member);
+        if (!isAdmin) {
             message.channel.send(AccessDenied);
             return;
         }
+
         const guildId = message.guild.id;
         const [strSetup] = await StreamingQueries.getStreaming(guildId);
 
@@ -48,7 +49,7 @@ async function createSetupInDB (message, newSetup, strSetup) {
     try {
         let strRoleId, strChannelId;
 
-        if(!newSetup) {
+        if (!newSetup) {
             strRoleId = strSetup.str_role_id;
             strChannelId = strSetup.str_channel_id;
     
@@ -87,7 +88,7 @@ async function createSetupInDB (message, newSetup, strSetup) {
             
             const streamMessage = await Tools.getReply(message, (!newSetup && strSetup.str_message) ? StreamTxt.AskModifyMessage : StreamTxt.AskMessage);
         
-            if(newSetup && !strSetup) {
+            if (newSetup && !strSetup) {
                 await StreamingQueries.setStreaming(message.guild.id, strRoleId, strChannelId, streamMessage);
             } else {
                 await StreamingQueries.updateStreaming(message.guild.id, strRoleId, strChannelId, streamMessage);
@@ -103,7 +104,7 @@ async function createSetupInDB (message, newSetup, strSetup) {
 async function getStreamingRoleName(guildId) {
     try {
         const [result]  = await StreamingQueries.getStreaming(guildId);
-        if(result) {
+        if (result) {
             return result.streamingRole;
         } else {
             return null;
@@ -119,11 +120,11 @@ async function announceStream(member) {
         const [result]  = await StreamingQueries.getStreaming(guild.id);
         let message = result.streamingMessage;
 
-        if(message.match(/{name}/)) {
+        if (message.match(/{name}/)) {
             message = message.replace(/{name}/, '**' + (member.nickname ? member.nickname : member.user.username) + '**');
         }
 
-        if(message.match(/{url}/)) {
+        if (message.match(/{url}/)) {
             const url = member.presence.activities.find(act => act.type === 'STREAMING').url;
             message = message.replace(/{url}/, url);
         }
