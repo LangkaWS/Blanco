@@ -32,7 +32,7 @@ async function setupStream(message) {
             return;
         }
 
-        const guildId = message.guild.id;
+        const guildId    = message.guild.id;
         const [strSetup] = await StreamingQueries.getStreaming(guildId);
 
         const isNewSetup = !strSetup || (!strSetup.str_channel_id && !strSetup.str_role_id && !strSetup.str_message);
@@ -49,39 +49,46 @@ async function createSetupInDB (message, newSetup, strSetup) {
         let strRoleId, strChannelId;
 
         if (!newSetup) {
-            strRoleId = strSetup.str_role_id;
+            strRoleId    = strSetup.str_role_id;
             strChannelId = strSetup.str_channel_id;
     
-            const currentRole = message.guild.roles.resolve(strRoleId);
+            const currentRole    = message.guild.roles.resolve(strRoleId);
             const currentChannel = message.guild.channels.resolve(strChannelId);
         
             const currentSetupMsg = StreamTxt.AlreadySetup + StreamTxt.StreamerRole + (currentRole ? currentRole.name : '') + '\r' + StreamTxt.StreamChannel + (currentChannel ? currentChannel : '') + '\r' + StreamTxt.StreamMessage + strSetup.str_message;
+
             message.channel.send(currentSetupMsg);
         }
     
         const wantSetupStream =  await Tools.getReply(message, newSetup ? StreamTxt.NoSetup : StreamTxt.AskModifyCurrentSetup);
         
         if (wantSetupStream === 'yes') {
+
             let streamRole = await Tools.getReply(message, (!newSetup && strSetup.str_role_id) ? StreamTxt.AskModifyRole : StreamTxt.AskRole);
     
             if (streamRole !== '!str next') {
-                strRoleId = streamRole.replace('<@&', '').replace('>', '');
+
+                strRoleId  = streamRole.replace('<@&', '').replace('>', '');
                 let isRole = Tools.isRole(message.guild, strRoleId);
+
                 while (!isRole) {
                     streamRole = await Tools.getReply(message, StreamTxt.RoleNotFound);
-                    strRoleId = streamRole.replace('<@&', '').replace('>', '');
-                    isRole = Tools.isRole(message.guild, strRoleId);
+                    strRoleId  = streamRole.replace('<@&', '').replace('>', '');
+                    isRole     = Tools.isRole(message.guild, strRoleId);
                 }
             }
     
             let streamChannel = await Tools.getReply(message, (!newSetup && strSetup.str_channel_id) ? StreamTxt.AskModifyChannel : StreamTxt.AskChannel);
+
             if (streamChannel !== '!str next') {
-                strChannelId = streamChannel.replace('<#', '').replace('>', '');
+
+                strChannelId  = streamChannel.replace('<#', '').replace('>', '');
                 let isChannel = Tools.isChannel(message.guild, strChannelId);
+
                 while (!isChannel) {
-                    streamRole = await Tools.getReply(message, StreamTxt.ChannelNotFound);
+                    streamRole   = await Tools.getReply(message, StreamTxt.ChannelNotFound);
                     strChannelId = streamChannel.replace('<#', '').replace('>', '');
-                    isChannel = Tools.isChannel(message.guild, strRoleId);
+                    isChannel    = Tools.isChannel(message.guild, strRoleId);
                 }
             }
             
@@ -115,9 +122,9 @@ async function getStreamingRoleName(guildId) {
 
 async function announceStream(member) {
     try {
-        const guild = member.guild;
-        const [result]  = await StreamingQueries.getStreaming(guild.id);
-        let message = result.streamingMessage;
+        const guild    = member.guild;
+        const [result] = await StreamingQueries.getStreamingChannelAndMessage(guild.id);
+        let message    = result.streamingMessage;
 
         if (message.match(/{name}/)) {
             message = message.replace(/{name}/, '**' + (member.nickname ? member.nickname : member.user.username) + '**');
@@ -125,7 +132,7 @@ async function announceStream(member) {
 
         if (message.match(/{url}/)) {
             const url = member.presence.activities.find(act => act.type === 'STREAMING').url;
-            message = message.replace(/{url}/, url);
+            message   = message.replace(/{url}/, url);
         }
 
         const announcementChannel = guild.channels.resolve(result.streamingChannelId);
