@@ -1,7 +1,7 @@
 const StreamingQueries = require('../queries/StreamingQueries.js');
 const Tools = require('../Tools.js');
 
-const { StreamTxt, AccessDenied } = require('../languages/fr.json');
+const { StreamTxt, NotUnderstoodTxt, AccessDenied } = require('../languages/fr.json');
 
 /**
  * Call the appropriate function according to arguments of the command.
@@ -16,6 +16,14 @@ function menu(message) {
         break;
 
     case 'next':
+        break;
+
+    case 'go':
+        enableAutoAnnouncement(message);
+        break;
+    
+    case 'stop':
+        disableAutoAnnouncement(message);
         break;
     
     case 'help':
@@ -93,11 +101,18 @@ async function createSetupInDB (message, newSetup, strSetup) {
             }
             
             const streamMessage = await Tools.getReply(message, (!newSetup && strSetup.str_message) ? StreamTxt.AskModifyMessage : StreamTxt.AskMessage);
+
+            let wantToActivate = await Tools.getReply(message, StreamTxt.AskEnableAutoAnnouncement);
+            while (wantToActivate !== 'yes' && wantToActivate !== 'no') {
+                wantToActivate = await Tools.getReply(message, NotUnderstoodTxt);
+            }
+            const autoParam = wantToActivate === 'yes' ? 1 : 0;
+            console.log(autoParam);
         
             if (newSetup && !strSetup) {
-                await StreamingQueries.setStreaming(message.guild.id, strRoleId, strChannelId, streamMessage);
+                await StreamingQueries.setStreaming(message.guild.id, strRoleId, strChannelId, streamMessage, autoParam);
             } else {
-                await StreamingQueries.updateStreaming(message.guild.id, strRoleId, strChannelId, streamMessage);
+                await StreamingQueries.updateStreaming(message.guild.id, strRoleId, strChannelId, streamMessage, autoParam);
             }
         
             message.channel.send(StreamTxt.SuccessConfig);
@@ -118,6 +133,38 @@ async function getStreamingRole(guild) {
     } catch (err) {
         console.log(new Date());
         console.log(err);
+    }
+}
+
+async function enableAutoAnnouncement(message) {
+    try {
+        const isAdmin = await Tools.isAdmin(message.member);
+        if (!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
+
+        await StreamingQueries.toogleAutoAnnouncement(1, message.guild.id);
+
+        message.channel.send(StreamTxt.AutoAnnouncementEnabled);
+    } catch (err) {
+        Tools.sendError(err, message.channel);
+    }
+}
+
+async function disableAutoAnnouncement(message) {
+    try {
+        const isAdmin = await Tools.isAdmin(message.member);
+        if (!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
+
+        await StreamingQueries.toogleAutoAnnouncement(0, message.guild.id);
+
+        message.channel.send(StreamTxt.AutoAnnouncementDisabled);
+    } catch (err) {
+        Tools.sendError(err, message.channel);
     }
 }
 
