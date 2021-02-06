@@ -1,4 +1,4 @@
-const { prefix } = require('../config.json');
+const { prefix }   = require('../config.json');
 const { ErrorTxt } = require('./languages/fr.json');
 
 async function getReply(initMessage, question) {
