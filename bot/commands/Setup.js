@@ -11,9 +11,9 @@ const { Setup, AccessDenied, NotUnderstoodTxt } = require('../languages/fr.json'
 function menu(message) {
     const [command] = Tools.getArgs(message);
 
-    switch(command) {
-    case 'setup':
-        config(message);
+    switch (command) {
+    case 'admin':
+        setupAdmin(message);
         break;
 
     case 'next':
@@ -27,7 +27,7 @@ function menu(message) {
     }
 }
 
-async function config(message) {
+async function setupAdmin(message) {
     try {
         const adminRolesConfig = await Database.getAdminRoles(message.guild.id);
         const adminRoles = [];
