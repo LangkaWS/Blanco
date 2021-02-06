@@ -58,6 +58,21 @@
         "SanitizedMenu": "J'ai affiché les caractères utilisés pour la mise en forme, comme ça tu peux recopier le message et faire tes modifications plus facilement. Envoie \"!rr end\" quand tu as fini pour que je mette à jour le menu."
     },
 
+    "Setup": {
+        "AdminRolesList": "Voici la liste des rôles d'administrateurs :",
+        "AdminSetupEnd": "La configuration des rôles administrateurs est terminée.",
+        "AskAdminRolesModification": "Pour ajouter ou supprimer un rôle, utilisez `!blanco add` ou `!blanco remove` suivi de la mention du rôle à ajouter/retirer.\rVouspouvez en ajouter ou supprimer autant que vous voulez. Tapez `!blanco next` quand vous avez fini toutes vos modifications.",
+        "AskAdminRoleToAdd": "Quel rôle voulez-vous ajouter en tant qu'administrateur ?\rTagguez simplement le rôle et envoyez le message (un seul message par rôle).\rTapez `!blanco next` quand vous avez fini.",
+        "AskModifyAdminRoles": "Des rôles d'administrateurs sont déjà configurés, voulez-vous les modifier ? (yes/no)",
+        "AskSetupAdminRole": "Les rôles d'administrateurs ne sont pas définis. Voulez-vous les définir maintenant ? (yes/no)",
+        "Help" : "La commande `!blanco admin` permet de gérer les rôles que je considère comme administrateurs votre serveur afin que je puisse l'utiliser au mieux.\rLes rôles d'administrateurs ont le droit de modifier ma configuration pour ce serveur et d'accéder à certaines fonctionnalités.\rVous avez besoin du rôle d'administrateur pour les commandes suivantes : `!blanco admin`, `!str setup`, `!str go`, `!str stop`, `!bd setup`, `!bd go`, `!bd stop`, `!rr create`, `!rr modify`, `!rr delete`, `!rr add`, `!rr remove`.",
+        "RoleAlreadyAdmin": "Ce rôle est déjà enregistré en tant qu'administrateur.",
+        "RoleIsNotAdmin": "Ce rôle n'est pas enregistré en tant qu'administrateur",
+        "RoleNotFoundInGuild": "Ce rôle ne semble pas exister sur ce serveur.",
+        "RoleSuccessfullyAdded": "Le rôle a bien été ajouté en tant qu'adminsitrateur.",
+        "RoleSuccessfullyRemoved": "Le rôle a bien été retiré des rôles adminsitrateurs."
+    },
+
     "StreamTxt": {
         "AlreadyConfig": "Il y a déjà une configuration pour mon service d'annonce de stream sur ton serveur. Voici les paramètres :",
         "AskChannel": "Ok, ensuite il me faut l'identifiant du canal dans lequel tu veux que j'annonce le stream.\rTu peux le trouver en faisant un clic droit sur le canal et \"Copier l'identifiant\".",
