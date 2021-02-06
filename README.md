@@ -33,7 +33,7 @@ What is a community without events ? Blanco help you create events and manage re
 * Frequently Ask Questions
 *Coming soon...*
 
-* [Discord](https://discord.gg/4M3PXHRrre)
+* [Discord](https://discord.gg/zpAmPf67Cf)
 
 * [Github](https://github.com/LangkaWS/Blanco)
 
