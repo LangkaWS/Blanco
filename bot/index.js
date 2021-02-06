@@ -48,7 +48,7 @@ client.on('message', message => {
         
         /* Reaction roles commands */
         case 'rr':
-            ReactionRoles.rrMenu(message);
+            ReactionRoles.menu(message);
             break;
 
         /* Birthday commands */
