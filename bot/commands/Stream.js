@@ -2,7 +2,7 @@ const StreamingQueries = require('../queries/StreamingQueries.js');
 const Database = require('../queries/GlobalQueries.js');
 const Tools = require('../Tools.js');
 
-const { StreamTxt, NotUnderstoodTxt, AccessDenied } = require('../languages/fr.json');
+const { StreamTxt, AccessDenied } = require('../languages/fr.json');
 
 /**
  * Call the appropriate function according to arguments of the command.
