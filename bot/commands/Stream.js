@@ -3,6 +3,28 @@ const Database = require('../queries/GlobalQueries.js');
 const Tools = require('../Tools.js');
 
 const { StreamTxt, NotUnderstoodTxt, AccessDenied } = require('../languages/fr.json');
+
+/**
+ * Call the appropriate function according to arguments of the command.
+ * @param {Message} message 
+ */
+function menu(message) {
+    const [command] = Tools.getArgs(message);
+
+    switch (command) {
+    case 'setup':
+        setupStream(message);
+        break;
+
+    case 'next':
+        break;
+    
+    case 'help':
+    default:
+        help(message);
+    }
+}
+
 async function setupStream(message) {
     try {
         const isAdmin = message.member.roles.cache.get('492407354537541635');
