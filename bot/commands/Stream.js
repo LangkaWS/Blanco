@@ -1,7 +1,7 @@
 const StreamingQueries = require('../queries/StreamingQueries.js');
-const { getReply } = require('../Tools.js');
 
 const { StreamTxt, ErrorTxt, NotUnderstoodTxt, AccessDenied } = require('../languages/fr.json');
+const Tools = require('../Tools.js');
 
 async function config(message) {
     try {
