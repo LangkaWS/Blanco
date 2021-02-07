@@ -3,7 +3,7 @@ const Cron     = require('cron');
 const Tools    = require('../Tools.js');
 const BirthdayQueries = require('../queries/BirthdayQueries.js');
 
-const { BirthdayTxt, AccessDenied } = require('../languages/fr.json');
+const { BirthdayTxt, AccessDenied, ChannelNotFound, NotUnderstoodTxt } = require('../languages/fr.json');
 
 /**
  * The menu of Birthday feature that call the appropriate function.
@@ -14,24 +14,17 @@ function menu(message) {
     
     switch(command) {
     case 'setup': {
-        const isAdmin = message.member.roles.cache.get('805321593198477342');
-        if(!isAdmin) {
-            message.channel.send(AccessDenied);
-            return;
-        }
-        setup(message);
+        setupBirthdays(message);
         break;
     }
 
-    case 'auto': {
-        const isAdmin = message.member.roles.cache.get('492407354537541635');
-        if(!isAdmin) {
-            message.channel.send(AccessDenied);
-            return;
-        }
-        happyBirthday(message);
+    case 'go':
+        enableAutoBirthday(message);
         break;
-    }
+
+    case 'stop':
+        disableAutoBirthday(message);
+        break;
     
     case 'add':
         addBirthday(message);
@@ -39,6 +32,9 @@ function menu(message) {
     
     case 'remove':
         removeBirthday(message);
+        break;
+
+    case 'next':
         break;
     
     case 'help':
@@ -52,92 +48,147 @@ function menu(message) {
  * Called with: `!bd setup`
  * @param {Message} message 
  */
-async function setup(message) {
+async function setupBirthdays(message) {
     try {
-        const filter = msg => msg.author.id === message.author.id;
+
+        const isAdmin = await Tools.isAdmin(message.member);
+        if (!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
+
+        const guildId = message.guild.id;
+        const [bdSetup]  = await BirthdayQueries.getSetup(guildId);
+
+        const isNewSetup = !bdSetup || (!bdSetup.bd_channel_id && !bdSetup.bd_message && bdSetup.bd_auto !== 1 && bdSetup.bd_auto !== 0);
+        createSetupInDB(message, isNewSetup, bdSetup);
         
-        const [conf] = await BirthdayQueries.getGuildConfig(message.guild.id);
-        if(conf) {
-            const channel = message.guild.channels.resolve(conf.channelID);
-            message.channel.send(BirthdayTxt.AlreadyConfig + '\r' + BirthdayTxt.Channel + channel.name + '\r' + BirthdayTxt.Message + conf.message + '\r' + BirthdayTxt.AskModifyConfig);
-            const confirm = await message.channel.awaitMessages(filter, { max: 1 });
-            if(confirm.first().content === 'yes') {
-                message.channel.send(BirthdayTxt.AskChannel);
-                const channel = await message.channel.awaitMessages(filter, { max: 1 });
-                const channelId = channel.first().content;
+    } catch (err) {
+        Tools.sendError(err, message.channel);
+    }
 
-                if(message.guild.channels.resolve(channelId)) {
-                    message.channel.send(BirthdayTxt.AskMessage);
-                    const msgCollector = await message.channel.awaitMessages(filter ,{ max: 1 });
-                    const bdMessage = msgCollector.first().content;
+}
 
-                    await BirthdayQueries.updateGuildConfig(message.guild.id, channelId, bdMessage);
-                    message.channel.send(BirthdayTxt.UpdateDone);
+async function createSetupInDB(message, newSetup, bdSetup) {
+    try {
+        let bdChannelId;
+
+        if(!newSetup) {
+            bdChannelId = bdSetup.bd_channel_id;
+            const currentChannel = message.guild.channels.resolve(bdChannelId);
+
+            const currentSetupMsg = BirthdayTxt.AlreadySetup + BirthdayTxt.BirthdayChannel + (currentChannel ? currentChannel : '') + '\r' + BirthdayTxt.BirthdayMessage + bdSetup.bd_message;
+
+            message.channel.send(currentSetupMsg);
+        }
+
+        let wantSetup = await Tools.getReply(message, newSetup ? BirthdayTxt.NoSetup : BirthdayTxt.AskModifyCurrentSetup);
+
+        while(wantSetup !== 'yes' && wantSetup !== 'no') {
+            wantSetup = await Tools.getReply(message, NotUnderstoodTxt);
+        }
+
+        if(wantSetup === 'yes') {
+            let bdChannel = await Tools.getReply(message, (!newSetup && bdSetup.bd_channel_id) ? BirthdayTxt.AskModifyChannel : BirthdayTxt.AskChannel);
+
+            if(bdChannel !== '!bd next') {
+                bdChannelId = bdChannel.replace('<#', '').replace('>', '');
+                let isChannel = Tools.isChannel(message.guild, bdChannelId);
+
+                while(!isChannel) {
+                    bdChannel = await Tools.getReply(message, ChannelNotFound);
+                    bdChannelId = bdChannel.replace('<#', '').replace('>', '');
+                    isChannel = Tools.isChannel(message.guild, bdChannelId);
                 }
-
-
             }
-        } else {
-            const channelId = await collectMessages(message, BirthdayTxt.AskChannel);
-                
-            if(message.guild.channels.resolve(channelId)) {
-                const birthdayMessage = await collectMessages(message, BirthdayTxt.AskMessage);
 
-                await BirthdayQueries.createGuildConfig(message.guild.id, channelId, birthdayMessage);
-                message.channel.send(BirthdayTxt.SetupComplete);
+            const bdMessage = await Tools.getReply(message, (!newSetup && bdSetup.bd_message) ? BirthdayTxt.AskModifyMessage : BirthdayTxt.AskMessage);
+
+            let wantToActivate = await Tools.getReply(message, BirthdayTxt.AskEnableAutoAnnouncement);
+            while (wantToActivate !== 'yes' && wantToActivate !== 'no') {
+                wantToActivate = await Tools.getReply(message, NotUnderstoodTxt);
             }
+            const autoParam = wantToActivate === 'yes' ? 1 : 0;
+
+            if(newSetup && !bdSetup) {
+                await BirthdayQueries.createSetup(message.guild.id, bdChannelId, bdMessage, autoParam);
+            } else {
+                await BirthdayQueries.updateSetup(message.guild.id, bdChannelId, bdMessage, autoParam);
+            }
+
+            message.channel.send(BirthdayTxt.SuccessConfig);
         }
-        
+
     } catch (err) {
-        console.log(err);
+        Tools.sendError(err, message.channel);
     }
-
 }
 
-/**
- * Send a message and collect one reply in a channel (the same as originalMessage was post in).
- * @param {Message} originalMessage 
- * @param {string} question 
- * @returns {string} the content of the first message
- */
-async function collectMessages(originalMessage, question) {
-    originalMessage.channel.send(question);
-    const filter = msg => msg.author.id === originalMessage.author.id;
-    const collector = await originalMessage.channel.awaitMessages(filter, { max: 1 });
-    return collector.first().content;
-}
-
-/**
- * Activate the auto-birthday : in each guild, send an happy birthday message for each member that have a birthday today.
- * @param {Message} message 
- */
-async function happyBirthday(message) {
+async function enableAutoBirthday(message) {
     try {
-        if(await isSetup(message)) {
-            const birthdayJob = new Cron.CronJob('00 00 08 * * *', async () => {
-                const today = new Date();
-                const todayMySQL = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                console.log(todayMySQL);
-                const allBirthdays = await BirthdayQueries.getTodayAllBirthdays(todayMySQL);
-                allBirthdays.forEach(bd => {
-                    const guild = message.client.guilds.resolve(bd.guildID);
-                    const channel = guild.channels.resolve(bd.channelID);
-                    let msg = bd.message;
-                    console.log(msg.match(/\{name\}/));
-                    msg = bd.message.replace(/{name}/, `<@${bd.memberID}>`);
-                    channel.send(msg);
-                });
-                console.log(allBirthdays);
-            });
-            birthdayJob.start();
+        const isAdmin = await Tools.isAdmin(message.member);
+        if (!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
         }
+
+        const [setup] = await isSetup(message);
+        const bdAuto = setup.bd_auto;
+
+        if(bdAuto && bdAuto === 0) {
+            await BirthdayQueries.toogleAutoAnnouncement(1, message.guild.id);
+        }
+
+    } catch (err) {
+        Tools.sendError(err, message.channel);
+    }
+}
+
+async function disableAutoBirthday(message) {
+    try {
+        const isAdmin = await Tools.isAdmin(message.member);
+        if (!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
+
+        const [setup] = await isSetup(message);
+        const bdActive = setup.bd_auto;
+
+        if(bdActive && bdActive === 1) {
+           await BirthdayQueries.toogleAutoAnnouncement(0, message.guild.id);
+        }
+    } catch (err) {
+        Tools.sendError(err, message.channel);
+    }
+}
+
+async function autoBirthday(client) {
+    try {
+        const birthdayJob = new Cron.CronJob('00 * * * * *', async () => {
+            const today = new Date();
+            const todayMySQL = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+            const allBirthdays = await BirthdayQueries.getTodayAllBirthdays(todayMySQL);
+            allBirthdays.forEach(bd => {
+                if(bd.bd_auto === 1) {
+                    const guild = client.guilds.resolve(bd.guild_id);
+                    const channel = guild.channels.resolve(bd.bd_channel_id);
+                    let msg = bd.bd_message;
+                    msg = bd.bd_message.replace(/{name}/, `<@${bd.member_id}>`);
+                    channel.send(msg);
+                }
+            });
+        });
+        birthdayJob.start();
     } catch (err) {
         console.log(err);
     }
 }
+
+
 
 async function isSetup(message) {
-    const [setup] = await BirthdayQueries.getGuildConfig(message.guild.id);
+    const [setup] = await BirthdayQueries.getSetup(message.guild.id);
     if(!setup) {
         message.channel.send(BirthdayTxt.NoConfig);
         return false;
@@ -162,7 +213,7 @@ async function addBirthday(message) {
                 let match = date.match(dateRegex);
 
                 if(!match) {
-                    date = await collectMessages(message, BirthdayTxt.IncorrectDate);
+                    date = await Tools.getReply(message, BirthdayTxt.IncorrectDate);
                     match = date.match(dateRegex);
                 } else {
                     const year = new Date().getFullYear();
@@ -211,4 +262,4 @@ function help(message) {
     message.channel.send(BirthdayTxt.Help);
 }
 
-module.exports = { menu };
+module.exports = { menu, autoBirthday };
