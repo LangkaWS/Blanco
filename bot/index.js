@@ -20,6 +20,7 @@ client.login(process.env.BOT_TOKEN);
 
 client.on('ready', () => {
     console.log('Hello');
+    Birthday.autoBirthday(client);
 });
 
 client.on('message', message => {
