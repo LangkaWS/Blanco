@@ -1,23 +1,37 @@
 {
     "AccessDenied": "Vous ne disposez pas des droits pour faire cette action.",
-    
-    "StreamTxt": {
-        "AlreadyConfig": "Il y a déjà une configuration pour mon service d'annonce de stream sur ton serveur. Voici les paramètres :",
-        "AskChannel": "Ok, ensuite il me faut l'identifiant du canal dans lequel tu veux que j'annonce le stream.\rTu peux le trouver en faisant un clic droit sur le canal et \"Copier l'identifiant\".",
-        "AskMessage": "Merci. Encore une dernière information : peux-tu m'écrire le message que je dois utiliser pour annoncer le steam ?\rTu peux utiliser les expressions suivantes pour personnaliser le message :\r`{name}` : m'indique que je devrai renseigner le pseudo du membre qui streame\r`{url}` : m'indique que je devrai renseigner l'url du stream\rUn exemple de message : \"Salut à tous ! {name} est en train de streamer ! Rendez-vous ici : {url} !\"\rSi tu as besoin de plus de paramètres personnalisables, n'hésites pas à en faire par à mon support.",
-        "AskNewChannel": "Quel est l'identifiant du canal dans lequel tu veux que j'annonce le stream.\rTu peux le trouver en faisant un clic droit sur le canal et \"Copier l'identifiant\".",
-        "AskNewMessage": "Quel est le message que je dois utiliser pour annoncer le steam ?\rTu peux utiliser les expressions suivantes pour personnaliser le message :\r`{name}` : m'indique que je devrai renseigner le pseudo du membre qui streame\r`{url}` : m'indique que je devrai renseigner l'url du stream\rUn exemple de message : \"Salut à tous ! {name} est en train de streamer ! Rendez-vous ici : {url} !\"\rSi tu as besoin de plus de paramètres personnalisables, n'hésites pas à en faire par à mon support.",
-        "AskNewRole": "Quel rôle est attribué lorsqu'un de tes membres commence à streamer sur Twitch ?",
-        "AskRole": "D'abord quel rôle est attribué lorsqu'un de tes membres commence à streamer sur Twitch ?",
-        "AskWhatToModify": "Que veux tu modifier ? Entre une de ces commandes : `role`, `channel`, `message`, `end` (pour terminer les modifications).",
-        "ChannelNotFound": "Je ne retrouve pas le canal qui m'a été donné lors de la configuration...",
-        "NoConfig": "Il n'existe pas encore de configuration pour mon service d'annonce de stream. Configurons-la tout de suite !",
-        "StreamingChannel": "Le canal où j'annonce le stream : ",
-        "StreamingMessage": "Le message d'annonce que j'affiche : ",
-        "StreamingRole": "Le rôle du membre qui est en stream sur Twitch : ",
-        "SuccessConfig": "La configuration est terminée. Merci de ton aide."
-    },
+    "ChannelNotFound": "Ce canal ne semble pas exister sur ce serveur. Merci de mentionner le canal que vous voulez configurer.",
+    "ErrorTxt": "Oops ! J'ai rencontré une erreur. Si celle-ci persiste, contactes un administrateur.",
+    "NotUnderstoodTxt": "Je n'ai pas compris ton message. Peux-tu le vérifier et le renvoyer ?",
+    "RoleNotFound": "Ce rôle ne semble pas exister sur ce serveur. Merci de mentionner le rôle que vous voulez configurer.",
 
+    "BirthdayTxt": {
+        "AlreadySetup": "Mon service \"Annonce des anniversaires\" est configuré de la façon suivante :\r",
+        "AlreadyRegistered": "Votre anniversaire est déjà enregistré.",
+        "AskChannel": "Mentionnez le canal dans lequel je dois annoncer les anniversaires.",
+        "AskEnableAutoAnnouncement": "Voulez-vous que je fasse une annonce automatiquement dès qu'un membre a son anniversaire ? (yes/no)\rVous pourrez toujours activer ou désactiver cette fonction en utilisant les commandes `!bd go` ou `!bd stop`.",
+        "AskMessage": "Quel message dois-je utiliser pour souhaiter un joyeux anniversaire ?\rVous pouvez utiliser les expressions suivantes pour personnaliser le message :\r`{name}` : m'indique que je devrai le membre don't c'est l'anniversaire.\rExemple de message : \"Joyeux anniversaire {name} !!\"\rSi vous avez besoin de plus de paramètres personnalisables, n'hésitez pas à en faire part au support.",
+        "AskMessageHour": "A quelle heure devrai-je annoncer les anniversaires ? L'heure doit être au format 24h.",
+        "AskModifyChannel": "Si vous voulez modifier le canal, mentionnez le nouveau canal que je devrai utiliser, sinon taper `!bd next`.",
+        "AskModifyCurrentSetup": "Voulez-vous modifier cette configuration ? (yes/no)",
+        "AskModifyMessage": "Si vous voulez modifier le message, écrivez le nouveau message que je devrai utiliser, sinon taper `!bd next`.",
+        "AskModifyMessageHour": "Si vous voulez modifier l'heure d'annonce, écrivez la nouvelle heure que je devrai utiliser au format 24h, sinon taper `!bd next`.",
+        "BirthdayAddConfirm": "Votre anniversaire a bien été ajouté.",
+        "BirthdayChannel": "Canal que j'utilise pour annoncer les anniversaires : ",
+        "BirthdayDeleteConfirm" : "Votre anniversaire a bien été supprimé.",
+        "BirthdayMessage": "Message d'anniversaire :\r",
+        "BirthdayMessageHour": "Heure à laquelle je poste le message : ",
+        "BirthdayNotFound": "Vous n'avez pas d'anniversaire enregistré.",
+        "Channel": "Channel : ",
+        "Help": "Le service \"Annonce des anniversaires\" vous permet d'envoyer automatiquement un message personnalisé lorsque l'un de vos membres a son annivesaire.\rAvant de pouvoir l'utiliser, il faut le configurer. Pour cela, utilisez la commande `!bd setup` et laissez vous guidez. Au préalable, il vous faudra décider et créer le case échéant le canal d'annonce.\rLes membres peuvent ajouter leur anniversaire avec la commande `!bd add {dd/mm}` avec {dd/mm} la date d'anniversaire. Ils peuvent aussi supprimer leur anniversaire avec `!bd remove`.\rSi vous avez des problèmes avec ce service, n'hésitez pas à contacter le support.\rPour activer la fonction d'annonce automatique, utilisez `!bd go` ; pour la désactiver, utilisez `!bd stop`.",
+        "IncorrectDate": "La date entrée est incorrecte. Merci de respecter le format DD/MM (par exemple 31/01).",
+        "IncorrectHour": "L'heure entrée est incorrecte. Merci de respecter le format 24h (par exemple 07 pour 7h).",
+        "Message": "Message d'annonce : ",
+        "NoSetup": "Votre serveur n'est pas encore configuré pour utiliser mon service \"Annonce des anniversaires\". Voulez-vous le configurer maintenant ? (yes/no)",
+        "SuccessConfig": "La configuration est terminée. Merci de votre aide.",
+        "UpdateDone": "La mise à jour a bien été faite."
+    },
+    
     "MusicTxt": {
         "Bye": "Au revoir !",
         "Current": "*(En cours) ",
@@ -34,27 +48,62 @@
         "URLNotFound" : "Je n'ai pas trouvé l'URL demandée."
     },
 
-    "ReactionRoles": {
+    "ReactionRolesTxt": {
         "AddRoleDone": "Le rôle a bien été ajouté au menu.",
-        "AskChannelForMenu": "Dans quel canal voulez-vous poster votre menu ?\r(Copiez et collez l'identifiant du canal)",
-        "AskRolesToAdd": "Quels rôles voulez-vous ajouter ?\rTapez\"!rr end\" quand vous avez fini.",
+        "AskChannelForMenu": "Mentionnez le canal dans lequel vous voulez poster votre menu.",
+        "AskRolesToAdd": "Quels rôles voulez-vous ajouter ?\rTapez `!rr next` quand vous avez fini.",
+        "AskValidation": "Tapez `!rr val` pour valider le menu ou `!rr end` pour annuler la création du menu.",
         "CancelMenu": "Arrêt de la création de menu. Aucun rôle configuré.",
-        "ChannelFound": "Ok, j'ai trouvé le canal. Je vais poster le menu. Merci pour votre aide !",
+        "ChannelFound": "J'ai trouvé le canal. Je vais poster le menu. Merci pour votre aide !",
         "CreationStep1": "Création du menu d'attribution des rôles...\rD'abord la description :\r- en 1 ou plusieurs messages\r- tapez `!rr next` quand vous avez fini la description.\r- tapez `!rr end` pour annuler la création du menu.",
-        "CreationStep2": "Ok, j'ai la description du menu. Passons aux rôles.",
+        "CreationStep2": "Passons aux rôles maintenant.",
         "CurrentMenu": "Voici le menu reaction roles actuel :",
         "DeleteConfirm": "Voulez-vous vraiment supprimer ce menu ? (yes/no)\rCette action est irréversible. ",
         "DeleteRoleConfirm": "Voulez-vous vraiment supprimer ce rôle du menu ? (yes/no)\rCette action est irréversible. ",
         "DeleteDone": "Le menu a bien été supprimé.",
         "DeleteRoleDone": "Le rôle a bien été supprimé du menu.",
-        "Help": "Voici les différentes fonctions de la catégorie reaction roles :\r- `!rr` `create` : lance la création d'un message menu reaction roles où chaque membre peut réagir pour s'attribuer un rôle.\r- `!rr` `next` : utilisé pendant la création du menu, permet de passer de l'étape \"renseigner la description\" à l'étape de définition des rôles et réactions.\r- `!rr` `end` : termine la création du menu. Si utilisé pendant la description du menu, annule la création.\r- `!rr` `val` : valide le menu.\r- `!rr` `delete` `messageId` : supprime le menu de reaction roles qui a l'id donné (pour avoir l'id du message : clic droit sur le message puis \"Copier l'identifiant\".", 
-        "MenuPreview": "Voici à quoi ressemblera le menu des rôles. Tapez \"!rr val\" pour valider le menu. Si vous ne validez pas au bout de 1 minute, le menu s'autodétruira.",
+        "Help": "Le menu reaction roles vous permet de créer un menu auquel les membres de votre serveur réagissent pour s'attribuer des rôles.\rPour créer un nouveau menu, utilisez la commande `!rr create` et laissez vous guider. Lorsque c'est indiqué, vous pouvez utiliser `!rr end` pour annuler ou terminer la création du menu.\rPour modifier ou supprimer un menu reaction roles, répondez au menu à modifier/supprimer et tapez la commande `!rr modify` ou `!rr delete`. Attention, la modification ne porte que sur la description du menu. Pour ajouter ou supprimer des rôles, utilisez les commandes `!rr add` et `!rr remove`.\rPour ajouter un rôle à un menu, répondez au menu avec la commande `!rr add`.\rPour retirer un rôle du menu, répondez au menu avec `!rr remove @role` avec `@role` le rôle à retirer. Une fois la suppression faite, il est conseillé de faire un `!rr modify` pour corriger le texte du menu.", 
+        "MenuPreview": "Voici à quoi ressemblera le menu des rôles :",
         "MessageExample": "Par exemple :\rVous voulez devenir un @bot ? Réagissez avec 🤖",
         "MessageExampleReaction": "🤖",
-        "RoleRules": "Voici quelques règles :\r- 1 message par rôle\r- Pensez à mentionner le rôle dans le message et indiquer l'émoticône à utiliser pour s'attribuer ce rôle.\r- **Réagissez au message** avec l'émoticône à utiliser\r- Tapez \"!rr end\" quand vous avez fini.",
-        "SanitizedMenu": "J'ai affiché les caractères utilisés pour la mise en forme, comme ça tu peux recopier le message et faire tes modifications plus facilement. Envoie \"!rr end\" quand tu as fini pour que je mette à jour le menu."
+        "RoleRules": "Voici quelques règles :\r- 1 message par rôle\r- Pensez à mentionner le rôle dans le message et indiquer l'émoticône à utiliser pour s'attribuer ce rôle.\r- **Réagissez au message** avec l'émoticône à utiliser\r- Tapez `!rr next` quand vous avez fini.",
+        "SanitizedMenu": "J'ai affiché les caractères utilisés pour la mise en forme, comme ça tu peux recopier le message et faire tes modifications plus facilement. Envoie `!rr next` quand tu as fini pour que je mette à jour le menu."
     },
 
-    "ErrorTxt": "Oops ! J'ai rencontré une erreur. Si celle-ci persiste, contactes un administrateur.",
-    "NotUnderstoodTxt": "Je n'ai pas compris ton message. Peux-tu le vérifier et le renvoyer ?"
+    "Setup": {
+        "AdminRolesList": "Voici la liste des rôles d'administrateurs :",
+        "AdminSetupEnd": "La configuration des rôles administrateurs est terminée.",
+        "AskAdminRolesModification": "Pour ajouter ou supprimer un rôle, utilisez `!blanco add` ou `!blanco remove` suivi de la mention du rôle à ajouter/retirer.\rVouspouvez en ajouter ou supprimer autant que vous voulez. Tapez `!blanco next` quand vous avez fini toutes vos modifications.",
+        "AskAdminRoleToAdd": "Quel rôle voulez-vous ajouter en tant qu'administrateur ?\rTagguez simplement le rôle et envoyez le message (un seul message par rôle).\rTapez `!blanco next` quand vous avez fini.",
+        "AskModifyAdminRoles": "Des rôles d'administrateurs sont déjà configurés, voulez-vous les modifier ? (yes/no)",
+        "AskSetupAdminRole": "Les rôles d'administrateurs ne sont pas définis. Voulez-vous les définir maintenant ? (yes/no)",
+        "Help" : "La commande `!blanco admin` permet de gérer les rôles que je considère comme administrateurs votre serveur afin que je puisse l'utiliser au mieux.\rLes rôles d'administrateurs ont le droit de modifier ma configuration pour ce serveur et d'accéder à certaines fonctionnalités.\rVous avez besoin du rôle d'administrateur pour les commandes suivantes : `!blanco admin`, `!str setup`, `!str go`, `!str stop`, `!bd setup`, `!bd go`, `!bd stop`, `!rr create`, `!rr modify`, `!rr delete`, `!rr add`, `!rr remove`.",
+        "RoleAlreadyAdmin": "Ce rôle est déjà enregistré en tant qu'administrateur.",
+        "RoleIsNotAdmin": "Ce rôle n'est pas enregistré en tant qu'administrateur",
+        "RoleNotFoundInGuild": "Ce rôle ne semble pas exister sur ce serveur.",
+        "RoleSuccessfullyAdded": "Le rôle a bien été ajouté en tant qu'adminsitrateur.",
+        "RoleSuccessfullyRemoved": "Le rôle a bien été retiré des rôles adminsitrateurs."
+    },
+
+    "StreamTxt": {
+        "AlreadySetup": "Mon service \"Annonce de stream Twitch\" est configuré de la façon suivante :\r",
+        "AskChannel": "Mentionnez le canal dans lequel je dois annoncer le début d'un stream.",
+        "AskEnableAutoAnnouncement": "Voulez-vous que je fasse une annonce automatiquement dès qu'un membre commence un stream sur Twitch ? (yes/no)\rVous pourrez toujours activer ou désactiver cette fonction en utilisant les commandes `!str go` ou `!str stop`.",
+        "AskMessage": "Quel message dois-je utiliser pour annoncer le steam ?\rVous pouvez utiliser les expressions suivantes pour personnaliser le message :\r`{name}` : m'indique que je devrai renseigner le pseudo du membre qui streame.\r`{url}` : m'indique que je devrai renseigner l'url du stream.\rExemple de message : \"Salut à tous ! {name} est en train de streamer ! Rendez-vous ici : {url} !\"\rSi vous avez besoin de plus de paramètres personnalisables, n'hésitez pas à en faire part au support.",
+        "AskModifyChannel": "Si vous voulez modifier le canal, mentionnez le nouveau canal que je devrai utiliser, sinon taper `!str next`.",
+        "AskModifyMessage": "Si vous voulez modifier le message, mentionnez le nouveau message que je devrai utiliser, sinon taper `!str next`.",
+        "AskModifyRole": "Si vous voulez modifier le rôle, mentionnez le nouveau rôle que je devrai utiliser, sinon taper `!str next`.",
+        "AskModifyCurrentSetup": "Voulez-vous modifier cette configuration ? (yes/no)",
+        "AskRole": "Mentionnez le rôle qui est attribué lorsqu'un des membres commence à streamer sur Twitch.",
+        "AutoAnnouncementDisabled": "Je ne ferai plus d'une annonce dès qu'un des membres du serveur commence un stream sur Twitch.",
+        "AutoAnnouncementEnabled": "Je ferai automatiquement une annonce dès qu'un des membres du serveur commence un stream sur Twitch.",
+        "Help": "Le service \"Annonce de stream Twitch\" vous permet d'envoyer automatiquement un message d'annonce dans un canal dès qu'un de vos membres commence un stream sur Twitch.\rAvant de pouvoir l'utiliser, il faut le configurer. Pour cela, utilisez la commande `!str setup` et laissez vous guider. Au préalable, il vous faudra décider et créer le cas échéant le canal d'annonce et le rôle que les streamers Twitch ont lorsqu'ils sont en stream.\rSi vous avez des problèmes avec ce service, n'hésitez pas à contacter le support.\rPour activer la fonction d'annonce automatique des streams, utilisez `!str go` ; pour la désactiver, utilisez `!str stop`.",
+        "NoSetup": "Votre serveur n'est pas encore configuré pour utiliser mon service \"Annonce de stream Twitch\". Voulez-vous le configurer maintenant ? (yes/no)",
+        "StreamChannel": "Canal que j'utilise pour annoncer les streams : ",
+        "StreamMessage": "Message d'annonce de stream :\r",
+        "StreamerRole": "Rôle de streamer : ",
+        "SuccessConfig": "La configuration est terminée. Merci de votre aide."
+    }
+
+
 }
