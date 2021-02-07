@@ -50,8 +50,10 @@ async function setupAdmin(message) {
             if (wantCreateAdminRoles === 'yes') {
                 let reply;
                 do {
-                    const roleMention = await Tools.getReply(message, Setup.AskAdminRoleToAdd);
-                    reply = await addRole(message, roleMention, adminRoles);
+                    reply = await Tools.getReply(message, Setup.AskAdminRoleToAdd);
+                    if(reply !== '!blanco next') {
+                        reply = await addRole(message, reply, adminRoles);
+                    }
                 } while (reply !== '!blanco next')
             }
 
