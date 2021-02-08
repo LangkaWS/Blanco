@@ -165,7 +165,7 @@ async function disableAutoBirthday(message) {
 
 async function autoBirthday(client) {
     try {
-        const birthdayJob = new Cron.CronJob('00 * * * * *', async () => {
+        const birthdayJob = new Cron.CronJob('00 00 08 * * *', async () => {
             const today = new Date();
             const todayMySQL = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
             const allBirthdays = await BirthdayQueries.getTodayAllBirthdays(todayMySQL);
