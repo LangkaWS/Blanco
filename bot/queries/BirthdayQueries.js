@@ -17,9 +17,17 @@ async function updateSetup(guildId, channelId, message, auto) {
 }
 
 async function toogleAutoAnnouncement(param, guildId) {
-    const con = await Database.getConnection();
-    const [row] = await con.execute('UPDATE config SET bd_active = ? WHERE guild_id = ?', [param, guildId]);
-    return row;
+    let con = null;
+    try {
+        con = await Database.getConnection();
+        const [row] = await con.execute('UPDATE config SET bd_auto = ? WHERE guild_id = ?', [param, guildId]);
+        return row;
+    } catch (err) {
+        console.log(err);
+        throw 'SQL Exception';
+    } finally {
+        con.end();
+    }
 }
 
 async function getMemberBirthday(guildId, memberId) {

@@ -16,6 +16,8 @@
         "AskModifyCurrentSetup": "Voulez-vous modifier cette configuration ? (yes/no)",
         "AskModifyMessage": "Si vous voulez modifier le message, écrivez le nouveau message que je devrai utiliser, sinon taper `!bd next`.",
         "AskModifyMessageHour": "Si vous voulez modifier l'heure d'annonce, écrivez la nouvelle heure que je devrai utiliser au format 24h, sinon taper `!bd next`.",
+        "AutoAnnouncementDisabled": "L'annonce automatique des anniversaires est désactivée.",
+        "AutoAnnouncementEnabled": "L'annonce automatique des anniversaires est activée.",
         "BirthdayAddConfirm": "Votre anniversaire a bien été ajouté.",
         "BirthdayChannel": "Canal que j'utilise pour annoncer les anniversaires : ",
         "BirthdayDeleteConfirm" : "Votre anniversaire a bien été supprimé.",
