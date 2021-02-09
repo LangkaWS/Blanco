@@ -13,15 +13,31 @@ async function getConnection() {
 /* Setup */
 
 async function getAdminRoles(guildId) {
-    const con    = await getConnection();
-    const [rows] = await con.execute('SELECT * FROM admin_roles WHERE guild_id = ?', [guildId]);
-    return rows;
+    let con = null;
+    try {
+        con    = await getConnection();
+        const [rows] = await con.execute('SELECT * FROM admin_roles WHERE guild_id = ?', [guildId]);
+        return rows;
+    } catch (err) {
+        console.log(err);
+        throw 'SQL Exception';
+    } finally {
+        con.end();
+    }
 }
 
 async function getSetup(guildId) {
-    const con    = await getConnection();
-    const [rows] = await con.execute('SELECT * FROM config WHERE guild_id = ?', [guildId]);
-    return rows;
+    let con = null;
+    try {
+        con    = await getConnection();
+        const [rows] = await con.execute('SELECT * FROM config WHERE guild_id = ?', [guildId]);
+        return rows;
+    } catch (err) {
+        console.log(err);
+        throw 'SQL Exception';
+    } finally {
+        con.end();
+    }
 }
 
 module.exports = { getConnection, getAdminRoles, getSetup }
