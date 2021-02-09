@@ -1,6 +1,6 @@
 # Commands list
 
-when you encounter data between curly braces (e.g. `{data}`), you need to replace the data AND the curly braces with the data you want to provide. Examples are given when needed.
+When you encounter data between curly braces (e.g. `{data}`), you need to replace the data AND the curly braces with the data you want to provide. Examples are given when needed.
 
 ## Admin
 - `!blanco admin`: create or edit Blanco's admin roles.
@@ -10,7 +10,7 @@ when you encounter data between curly braces (e.g. `{data}`), you need to replac
 - `!bd setup`: create or edit setup for Birthdays feature (birthdays channel and message).
 - `!bd go`: enable automatic birthday messages from Blanco.
 - `!bd stop`: disable automatic birthday messages from Blanco.
-- `!bd add {DD/MM}`: add the provided date as the author's birthday. The date ormat must be DD/MM, e.g. `!bd add 31/01`.
+- `!bd add {DD/MM}`: add the provided date as the author's birthday. The date format must be DD/MM, e.g. `!bd add 31/01`.
 - `!bd remove`: remove the author's birthday.
 - `!bd help`: display help about Birthdays feature.
 
@@ -20,7 +20,7 @@ when you encounter data between curly braces (e.g. `{data}`), you need to replac
 - `!m resume`: resume the paused music if any. You need to be in the same voice channel as Blanco.
 - `!m skip`: skip the current music. You need to be in the same voice channel as Blanco.
 - `!m stop`: stop the playlist and Blanco leaves the voice channel. You need to be in the same voice channel as Blanco.
-- `!m help`: display help aboit Music feature.
+- `!m help`: display help about Music feature.
 
 ## Reaction roles
 - `!rr create`: create a reaction roles menu.
@@ -34,4 +34,4 @@ when you encounter data between curly braces (e.g. `{data}`), you need to replac
 - `!str setup`: create or edit setup for Twitch stream announcements.
 - `!str go`: enable automatic messages from Blanco when a member's stream start.
 - `!str stop`: disable automatic messages from Blanco on
-- `!str help`
+- `!str help`: display help about Stream feature.
