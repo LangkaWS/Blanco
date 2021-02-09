@@ -132,11 +132,12 @@ async function enableAutoBirthday(message) {
             return;
         }
 
-        const [setup] = await isSetup(message);
-        const bdAuto = setup.bd_auto;
+        const [bdSetup]  = await BirthdayQueries.getSetup(message.guild.id);
+        const bdAuto = bdSetup.bd_auto;
 
-        if(bdAuto && bdAuto === 0) {
+        if(bdAuto === 0) {
             await BirthdayQueries.toogleAutoAnnouncement(1, message.guild.id);
+            message.channel.send(BirthdayTxt.AutoAnnouncementEnabled);
         }
 
     } catch (err) {
@@ -152,11 +153,12 @@ async function disableAutoBirthday(message) {
             return;
         }
 
-        const [setup] = await isSetup(message);
-        const bdActive = setup.bd_auto;
+        const [bdSetup]  = await BirthdayQueries.getSetup(message.guild.id);
+        const bdAuto = bdSetup.bd_auto;
 
-        if(bdActive && bdActive === 1) {
+        if(bdAuto === 1) {
            await BirthdayQueries.toogleAutoAnnouncement(0, message.guild.id);
+           message.channel.send(BirthdayTxt.AutoAnnouncementDisabled);
         }
     } catch (err) {
         Tools.sendError(err, message.channel);
