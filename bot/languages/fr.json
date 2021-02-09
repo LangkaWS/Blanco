@@ -44,7 +44,7 @@
         "StreamHelp": "- `!str setup` : crée ou modifie la configuration pour les annonces des streams Twitch.\r- `!str go` : active les messages d'annonce automatiques de Blanco quand un membre commence à streamer sur Twitch.\r- `!str stop` : désactive les messages d'annonce automatiques de Blanco quand un membre commence à streamer sur Twitch.\r- `!str help` : affiche l'aide de la fonctionnalité Stream.",
         "StreamTitle": "Stream",
         "MsgTitle": "Liste des commandes",
-        "MsgDescription": "Voici la liste de mes commandes pour la version actuelle (v2.0.2) :"
+        "MsgDescription": "Voici la liste de mes commandes pour la version actuelle (v2.1.0) :"
     },
     
     "MusicTxt": {
