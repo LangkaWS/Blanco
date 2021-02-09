@@ -190,12 +190,16 @@ async function autoBirthday(client) {
 
 
 async function isSetup(message) {
-    const [setup] = await BirthdayQueries.getSetup(message.guild.id);
-    if(!setup) {
-        message.channel.send(BirthdayTxt.NoConfig);
-        return false;
-    } else {
-        return true;
+    try {
+        const [setup] = await BirthdayQueries.getSetup(message.guild.id);
+        if(!setup) {
+            message.channel.send(BirthdayTxt.NoSetup);
+            return false;
+        } else {
+            return true;
+        }
+    } catch (err) {
+        Tools.send(err);
     }
 }
 
