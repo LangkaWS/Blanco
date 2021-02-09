@@ -17,13 +17,19 @@ const client = new Client({
         intents: [Intents.NON_PRIVILEGED, 'GUILD_PRESENCES', 'GUILD_MEMBERS']
     }
 });
-client.login(process.env.BOT_TOKEN);
 
-client.on('ready', () => {
-    console.log('Hello');
-    client.user.setActivity('!help', {type: 'LISTENING'});
-    Birthday.autoBirthday(client);
-});
+try {
+    client.login(process.env.BOT_TOKEN);
+    
+    client.on('ready', () => {
+        console.log('Hello');
+        client.user.setActivity('!help', {type : 'LISTENING'});
+        Birthday.autoBirthday(client);
+    });
+
+} catch (err) {
+    console.log(err);
+}
 
 client.on('message', message => {
     if(message.author.bot || !message.content.startsWith(prefix)) {
