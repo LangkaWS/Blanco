@@ -5,6 +5,7 @@ const { Client, Intents } = require('discord.js');
 const { prefix }    = require('../config.json');
 
 const Birthday      = require('./commands/Birthday.js');
+const Main          = require('./commands/Main.js');
 const Music         = require('./commands/Music.js');
 const ReactionRoles = require('./commands/ReactionRoles.js');
 const Setup         = require('./commands/Setup.js');
@@ -36,6 +37,10 @@ client.on('message', message => {
 
         case 'blanco':
             Setup.menu(message);
+            break;
+
+        case 'help':
+            Main.help(message);
             break;
 
         /* Music commands */
