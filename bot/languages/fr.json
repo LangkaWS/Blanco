@@ -31,6 +31,21 @@
         "SuccessConfig": "La configuration est terminée. Merci de votre aide.",
         "UpdateDone": "La mise à jour a bien été faite."
     },
+
+    "Help": {
+        "AdminHelp": "- `!blanco admin` : crée ou modifie les rôles administrateurs pour Blanco.\r- `!blanco help` : affiche l'aide de la fonctionnalité Admin.",
+        "AdminTitle": "Admin",
+        "BirthdaysHelp": "- `!bd setup` : crée ou modifie la configuration pour la fonctionnalité Anniversaires (canal d'annonce et message d'anniversaire).\r- `!bd go` : active le message d'anniversaire automatique.\r- `!bd stop` : désactive le message d'anniversaire automatique.\r- `!bd add {DD/MM}` : ajoute la date comme date d'anniversaire de l'auteur du message. La date doit être au format JJ/MM (par exemple `!bd add 31/01`).\r- `!bd remove` : retire l'anniversaire de l'auteur.\r- `!bd help` : affiche l'aide de la fonctionnalité Anniversaires.",
+        "BirthdaysTitle": "Anniversaires",
+        "MusicHelp": "- `!m play {youtube_url}` : joue la musique où pointe l'URL. Vous devez être dans un canal vocal pour exécuter cette commande. Par exemple `!m play https://youtu.be/dQw4w9WgXcQ`.\r- `!m pause` : met en pause la lecture en cours. Vous devez être dans le même canal vocal que Blanco.\r- `!m resume` : reprend la lecture en pause le cas échéant. Vous devez être dans le même canal vocal que Blanco.\r- `!m skip` : passe à la musique suivante dans la liste de lecture. Vous devez être dans le même canal vocal que Blanco.\r- `!m stop` : arrête la lecture et Blanco quitte le canal vocal. Vous devez être dans le même canal vocal que Blanco.\r- `!m help` : affiche l'aide de la fonctionnalité Music.",
+        "MusicTitle": "Musique",
+        "ReactionRolesHelp": "- `!rr create` : crée ou modifie un menu reaction roles.\r- `!rr modify` : modifie un menu reaction roles. Vous devez répondre au menu que vous voulez modifier.\r- `!rr delete` : supprime un menu reaction roles. Vous devez répondre au menu que vous voulez supprimer.\r- `!rr add` : ajoute un rôle à un menu reaction roles. Vous devez répondre au menu auquel vous voulez ajouter un rôle.\r- `!rr remove {@role}` : retire le rôle donné dans la commande d'un menu reaction roles. Vous devez répondre au menu duquel vous voulez retirer le rôle. Par exemple, répondez à un menu reaction roles avec `!rr remove @myRole`.\r- `!rr help` : affiche l'aide de la fonctionnalité Reaction roles.",
+        "ReactionRolesTitle": "Reaction roles",
+        "StreamHelp": "- `!str setup` : crée ou modifie la configuration pour les annonces des streams Twitch.\r- `!str go` : active les messages d'annonce automatiques de Blanco quand un membre commence à streamer sur Twitch.\r- `!str stop` : désactive les messages d'annonce automatiques de Blanco quand un membre commence à streamer sur Twitch.\r- `!str help` : affiche l'aide de la fonctionnalité Stream.",
+        "StreamTitle": "Stream",
+        "MsgTitle": "Liste des commandes",
+        "MsgDescription": "Voici la liste de mes commandes pour la version actuelle (v2.0.2) :"
+    },
     
     "MusicTxt": {
         "Bye": "Au revoir !",
