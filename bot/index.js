@@ -8,7 +8,7 @@ const Birthday      = require('./commands/Birthday.js');
 const Main          = require('./commands/Main.js');
 const Music         = require('./commands/Music.js');
 const ReactionRoles = require('./commands/ReactionRoles.js');
-const Setup         = require('./commands/Setup.js');
+const Admin         = require('./commands/Admin.js');
 const Stream        = require('./commands/Stream.js');
 
 const client = new Client({
@@ -42,7 +42,7 @@ client.on('message', message => {
     switch(command) {
 
         case 'blanco':
-            Setup.menu(message);
+            Admin.menu(message);
             break;
 
         case 'help':
