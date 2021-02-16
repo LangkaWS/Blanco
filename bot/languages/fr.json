@@ -4,31 +4,30 @@
     "ErrorTxt": "Oops ! J'ai rencontré une erreur. Si celle-ci persiste, contactes un administrateur.",
     "NotUnderstoodTxt": "Je n'ai pas compris ton message. Peux-tu le vérifier et le renvoyer ?",
     "RoleNotFound": "Ce rôle ne semble pas exister sur ce serveur. Merci de mentionner le rôle que vous voulez configurer.",
+    "SuccessConfig": "La configuration est terminée. Merci de votre aide.",
 
     "BirthdayTxt": {
         "AlreadySetup": "Mon service \"Annonce des anniversaires\" est configuré de la façon suivante :\r",
         "AlreadyRegistered": "Votre anniversaire est déjà enregistré.",
         "AskChannel": "Mentionnez le canal dans lequel je dois annoncer les anniversaires.",
-        "AskEnableAutoAnnouncement": "Voulez-vous que je fasse une annonce automatiquement dès qu'un membre a son anniversaire ? (yes/no)\rVous pourrez toujours activer ou désactiver cette fonction en utilisant les commandes `!bd go` ou `!bd stop`.",
-        "AskMessage": "Quel message dois-je utiliser pour souhaiter un joyeux anniversaire ?\rVous pouvez utiliser les expressions suivantes pour personnaliser le message :\r`{name}` : m'indique que je devrai le membre don't c'est l'anniversaire.\rExemple de message : \"Joyeux anniversaire {name} !!\"\rSi vous avez besoin de plus de paramètres personnalisables, n'hésitez pas à en faire part au support.",
-        "AskMessageHour": "A quelle heure devrai-je annoncer les anniversaires ? L'heure doit être au format 24h.",
-        "AskModifyChannel": "Si vous voulez modifier le canal, mentionnez le nouveau canal que je devrai utiliser, sinon taper `!bd next`.",
+        "AskEnableAuto": "Voulez-vous que je fasse une annonce automatiquement dès qu'un membre a son anniversaire ? (yes/no)\rVous pourrez toujours activer ou désactiver cette fonction en utilisant les commandes `!bd go` ou `!bd stop`.",
+        "AskMessage": "Quel message dois-je utiliser pour souhaiter un joyeux anniversaire ?\rVous pouvez utiliser les expressions suivantes pour personnaliser le message :\r`{name}` : m'indique que je devrai mettre le nom du membre dont c'est l'anniversaire.\rExemple de message : \"Joyeux anniversaire {name} !!\"\rSi vous avez besoin de plus de paramètres personnalisables, n'hésitez pas à en faire part au support.",
+        "AskModifyChannel": "Si vous voulez modifier le canal, mentionnez le nouveau canal que je devrai utiliser, sinon tapez `!bd next`.",
         "AskModifyCurrentSetup": "Voulez-vous modifier cette configuration ? (yes/no)",
-        "AskModifyMessage": "Si vous voulez modifier le message, écrivez le nouveau message que je devrai utiliser, sinon taper `!bd next`.",
-        "AskModifyMessageHour": "Si vous voulez modifier l'heure d'annonce, écrivez la nouvelle heure que je devrai utiliser au format 24h, sinon taper `!bd next`.",
+        "AskModifyMessage": "Si vous voulez modifier le message, écrivez le nouveau message que je devrai utiliser, sinon tapez `!bd next`.",
+        "AutoAnnouncementDisabled": "Je ne ferai plus d'annonce à l'anniversaire d'un des membres du serveur.",
+        "AutoAnnouncementEnabled": "Je ferai automatiquement une annonce à l'anniversaire d'un des membres du serveur.",
         "BirthdayAddConfirm": "Votre anniversaire a bien été ajouté.",
         "BirthdayChannel": "Canal que j'utilise pour annoncer les anniversaires : ",
         "BirthdayDeleteConfirm" : "Votre anniversaire a bien été supprimé.",
         "BirthdayMessage": "Message d'anniversaire :\r",
         "BirthdayMessageHour": "Heure à laquelle je poste le message : ",
         "BirthdayNotFound": "Vous n'avez pas d'anniversaire enregistré.",
-        "Channel": "Channel : ",
         "Help": "Le service \"Annonce des anniversaires\" vous permet d'envoyer automatiquement un message personnalisé lorsque l'un de vos membres a son annivesaire.\rAvant de pouvoir l'utiliser, il faut le configurer. Pour cela, utilisez la commande `!bd setup` et laissez vous guidez. Au préalable, il vous faudra décider et créer le case échéant le canal d'annonce.\rLes membres peuvent ajouter leur anniversaire avec la commande `!bd add {dd/mm}` avec {dd/mm} la date d'anniversaire. Ils peuvent aussi supprimer leur anniversaire avec `!bd remove`.\rSi vous avez des problèmes avec ce service, n'hésitez pas à contacter le support.\rPour activer la fonction d'annonce automatique, utilisez `!bd go` ; pour la désactiver, utilisez `!bd stop`.",
         "IncorrectDate": "La date entrée est incorrecte. Merci de respecter le format DD/MM (par exemple 31/01).",
-        "IncorrectHour": "L'heure entrée est incorrecte. Merci de respecter le format 24h (par exemple 07 pour 7h).",
-        "Message": "Message d'annonce : ",
         "NoSetup": "Votre serveur n'est pas encore configuré pour utiliser mon service \"Annonce des anniversaires\". Voulez-vous le configurer maintenant ? (yes/no)",
-        "SuccessConfig": "La configuration est terminée. Merci de votre aide.",
+        "Channel": "Channel : ",
+        "Message": "Message d'annonce :\r",
         "UpdateDone": "La mise à jour a bien été faite."
     },
 
@@ -45,6 +44,22 @@
         "StreamTitle": "Stream",
         "MsgTitle": "Liste des commandes",
         "MsgDescription": "Voici la liste de mes commandes pour la version actuelle (v2.1.0) :"
+    },
+
+    "MemberMgerTxt": {
+        "AlreadySetup": "Mon service \"Vérification des nouveaux membres\" est configuré de la façon suivante :\r",
+        "AskChannel": "Mentionnez le canal dans lequel les nouveaux membres doivent valider leur entrée.",
+        "AskEnableAuto": "Voulez-vous que j'envoie régulièrement un message aux nouveaux membres qui n'ont pas encore validé leur entrée ? (yes/no)\rVous pourrez toujours activer ou désactiver cette fonction en utilisant les commandes `!mm go` ou `!mm stop`.",
+        "AskMessage": "Quel message dois-je utiliser pour rappeler aux nouveaux membres qu'ils doivent valider leur entrée sur votre serveur ?\rExemple de message : \"Bonjour, je t'invite à réagir au message dans le canal Bienvenue pour gagner l'accès au reste du serveur.\"\rSi vous avez besoin de plus de paramètres personnalisables, n'hésitez pas à en faire part au support.",
+        "AskModifyChannel": "Si vous voulez modifier le canal, mentionnez le nouveau canal que je devrai utiliser, sinon tapez `!mm next`.",
+        "AskModifyCurrentSetup": "Voulez-vous modifier cette configuration ? (yes/no)",
+        "AskModifyMessage": "Si vous voulez modifier le message, écrivez le nouveau message que je devrai utiliser, sinon tapez `!mm next`.",
+        "AutoAnnouncementDisabled": "Je n'enverrai plus de messages aux nouveaux membres.",
+        "AutoAnnouncementEnabled": "J'enverrai automatiquement des messages aux nouveaux membres pour qu'ils valident leur entrée.",
+        "Help": "Le service \"Vérification des nouveaux membres\" vous permet d'envoyer automatiquement chaque semaine un message de rappel personnalisé aux nouveaux membres qui n'auraient pas validé leur entrée.\rAvant de pouvoir l'utiliser, il faut le configurer. Pour cela, utilisez la commande `!mm setup` et laissez vous guider. Au préalable, il vous faudra décider et créer le cas échéant le canal de bienvenue.\rSi vous avez des problèmes avec ce service, n'hésitez pas à contacter le support.\rPour activer la fonction d'annonce automatique, utilisez `!mm go` ; pour la désactiver, utilisez `!mm stop`.",
+        "NoSetup": "Votre serveur n'est pas encore configuré pour utiliser mon service \"Vérification des nouveaux membres\". Voulez-vous le configurer maintenant ? (yes/no)",
+        "Channel": "Channel de bienvenue : ",
+        "Message": "Message de rappel :\r"
     },
     
     "MusicTxt": {
@@ -103,21 +118,23 @@
     "StreamTxt": {
         "AlreadySetup": "Mon service \"Annonce de stream Twitch\" est configuré de la façon suivante :\r",
         "AskChannel": "Mentionnez le canal dans lequel je dois annoncer le début d'un stream.",
-        "AskEnableAutoAnnouncement": "Voulez-vous que je fasse une annonce automatiquement dès qu'un membre commence un stream sur Twitch ? (yes/no)\rVous pourrez toujours activer ou désactiver cette fonction en utilisant les commandes `!str go` ou `!str stop`.",
+        "AskEnableAuto": "Voulez-vous que je fasse une annonce automatiquement dès qu'un membre commence un stream sur Twitch ? (yes/no)\rVous pourrez toujours activer ou désactiver cette fonction en utilisant les commandes `!str go` ou `!str stop`.",
         "AskMessage": "Quel message dois-je utiliser pour annoncer le steam ?\rVous pouvez utiliser les expressions suivantes pour personnaliser le message :\r`{name}` : m'indique que je devrai renseigner le pseudo du membre qui streame.\r`{url}` : m'indique que je devrai renseigner l'url du stream.\rExemple de message : \"Salut à tous ! {name} est en train de streamer ! Rendez-vous ici : {url} !\"\rSi vous avez besoin de plus de paramètres personnalisables, n'hésitez pas à en faire part au support.",
-        "AskModifyChannel": "Si vous voulez modifier le canal, mentionnez le nouveau canal que je devrai utiliser, sinon taper `!str next`.",
-        "AskModifyMessage": "Si vous voulez modifier le message, mentionnez le nouveau message que je devrai utiliser, sinon taper `!str next`.",
-        "AskModifyRole": "Si vous voulez modifier le rôle, mentionnez le nouveau rôle que je devrai utiliser, sinon taper `!str next`.",
+        "AskModifyChannel": "Si vous voulez modifier le canal, mentionnez le nouveau canal que je devrai utiliser, sinon tapez `!str next`.",
         "AskModifyCurrentSetup": "Voulez-vous modifier cette configuration ? (yes/no)",
+        "AskModifyMessage": "Si vous voulez modifier le message, mentionnez le nouveau message que je devrai utiliser, sinon tapez `!str next`.",
+        "AskModifyRole": "Si vous voulez modifier le rôle, mentionnez le nouveau rôle que je devrai utiliser, sinon taper `!str next`.",
         "AskRole": "Mentionnez le rôle qui est attribué lorsqu'un des membres commence à streamer sur Twitch.",
-        "AutoAnnouncementDisabled": "Je ne ferai plus d'une annonce dès qu'un des membres du serveur commence un stream sur Twitch.",
+        "AutoAnnouncementDisabled": "Je ne ferai plus d'annonce dès qu'un des membres du serveur commence un stream sur Twitch.",
         "AutoAnnouncementEnabled": "Je ferai automatiquement une annonce dès qu'un des membres du serveur commence un stream sur Twitch.",
         "Help": "Le service \"Annonce de stream Twitch\" vous permet d'envoyer automatiquement un message d'annonce dans un canal dès qu'un de vos membres commence un stream sur Twitch.\rAvant de pouvoir l'utiliser, il faut le configurer. Pour cela, utilisez la commande `!str setup` et laissez vous guider. Au préalable, il vous faudra décider et créer le cas échéant le canal d'annonce et le rôle que les streamers Twitch ont lorsqu'ils sont en stream.\rSi vous avez des problèmes avec ce service, n'hésitez pas à contacter le support.\rPour activer la fonction d'annonce automatique des streams, utilisez `!str go` ; pour la désactiver, utilisez `!str stop`.",
         "NoSetup": "Votre serveur n'est pas encore configuré pour utiliser mon service \"Annonce de stream Twitch\". Voulez-vous le configurer maintenant ? (yes/no)",
         "StreamChannel": "Canal que j'utilise pour annoncer les streams : ",
         "StreamMessage": "Message d'annonce de stream :\r",
         "StreamerRole": "Rôle de streamer : ",
-        "SuccessConfig": "La configuration est terminée. Merci de votre aide."
+        "Channel": "Canal que j'utilise pour annoncer les streams : ",
+        "Message": "Message d'annonce de stream :\r",
+        "Role": "Rôle de streamer : "
     }
 
 

@@ -1,13 +1,18 @@
 const { prefix }   = require('../config.json');
-const { ErrorTxt } = require('./languages/fr.json');
-const Database = require('./queries/GlobalQueries.js');
+
+const Database         = require('./queries/GlobalQueries.js');
+const BirthdayQueries  = require('./queries/BirthdayQueries.js');
+const StreamQueries    = require('./queries/StreamQueries.js');
+const MemberMgerQueries = require('./queries/MemberMgerQueries.js');
+
+const { AccessDenied, ChannelNotFound, ErrorTxt, NotUnderstoodTxt, RoleNotFound, SuccessConfig, BirthdayTxt, StreamTxt, MemberMgerTxt } = require('./languages/fr.json');
 
 /**
  * Check if the member has an admin role or not.
  * @param {GuildMember} member the member to check
  * @param {[string]} roles the list of admin roles
  */
-async function isAdmin(member) {
+async function checkAdmin(member) {
     const adminRolesConfig = await Database.getAdminRoles(member.guild.id);
     return member.roles.cache.some(role => {
         for (let row of adminRolesConfig) {
@@ -23,7 +28,7 @@ async function isAdmin(member) {
  * @param {Guild} guild 
  * @param {string} roleId 
  */
-function isRole(guild, roleId) {
+function checkRole(guild, roleId) {
     return guild.roles.cache.some(r => r.id === roleId);
 }
 
@@ -32,7 +37,7 @@ function isRole(guild, roleId) {
  * @param {Guild} guild 
  * @param {string} channelId 
  */
-function isChannel(guild, channelId) {
+function checkChannel(guild, channelId) {
     return guild.channels.cache.some(c => c.id === channelId);
 }
 
@@ -68,4 +73,180 @@ function sendError(error, channel) {
     channel.send(ErrorTxt);
 }
 
-module.exports = { isAdmin, isRole, isChannel, getReply, getArgs, sendError };
+async function setup(feature, message) {
+    try {
+        const isAdmin = await checkAdmin(message.member);
+        if (!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
+
+        const guildId = message.guild.id;
+
+        let featureQueries, featureTxt, featurePrefix;
+
+        switch(feature) {
+            case 'birthdays':
+                featureQueries = BirthdayQueries;
+                featureTxt = BirthdayTxt;
+                featurePrefix = 'bd';
+                break;
+
+            case 'stream':
+                featureQueries = StreamQueries;
+                featureTxt = StreamTxt;
+                featurePrefix = 'str';
+                break;
+
+            case 'checkMember':
+                featureQueries = MemberMgerQueries;
+                featureTxt = MemberMgerTxt;
+                featurePrefix = 'mm';
+                break;
+        }
+
+        const [setup] = await featureQueries.getSetup(guildId);
+
+        let channelId, msg;
+        let roleId, role;
+
+        if(setup) {
+            channelId = setup.channel_id;
+            const channel = message.guild.channels.resolve(channelId);
+
+            if(feature === 'stream') {
+                roleId = setup.role_id;
+                role = message.guild.roles.resolve(roleId);
+            }
+
+            msg = setup.message;
+
+            const currentSetupMsg = featureTxt.AlreadySetup
+             + (feature === 'stream' ? featureTxt.Role + (role ? '<@&' + role + '>' : '') + '\r' : '') 
+             + featureTxt.Channel + (channel ? '<#' + channel + '>' : '') + '\r' + featureTxt.Message + msg;
+
+            message.channel.send(currentSetupMsg);
+        }
+
+        let wantSetup = await getReply(message, setup ? featureTxt.AskModifyCurrentSetup : featureTxt.NoSetup);
+
+        while(wantSetup !== 'yes' && wantSetup !== 'no') {
+            wantSetup = await getReply(message, NotUnderstoodTxt);
+        }
+
+        if(wantSetup === 'yes') {
+
+            if(feature === 'stream') {
+                let newRole = await getReply(message, (setup && setup.role_id) ? featureTxt.AskModifyRole : featureTxt.AskRole);
+
+                if(newRole !== '!' + featurePrefix + ' next') {
+                    let newRoleId = newRole.replace('<@&', '').replace('>', '');
+                    let isRole = checkRole(message.guild, newRoleId);
+
+                    while(!isRole) {
+                        newRole = await getReply(message, RoleNotFound);
+                        newRoleId = newRole.replace('<@', '').replace('>', '');
+                        isRole = checkRole(message.guild, newRoleId);
+                    }
+
+                    roleId = newRoleId;
+                }
+
+            }
+
+            let newChannel = await getReply(message, (setup && setup.channel_id) ? featureTxt.AskModifyChannel : featureTxt.AskChannel);
+
+            if(newChannel !== '!' + featurePrefix + ' next') {
+                let newChannelId = newChannel.replace('<#', '').replace('>', '');
+                let isChannel = checkChannel(message.guild, newChannelId);
+
+                while(!isChannel) {
+                    newChannel = await getReply(message, ChannelNotFound);
+                    newChannelId = newChannel.replace('<#', '').replace('>', '');
+                    isChannel = checkChannel(message.guild, newChannelId);
+                }
+
+                channelId = newChannelId;
+            }
+
+            const reply = await getReply(message, (setup && setup.message) ? featureTxt.AskModifyMessage : featureTxt.AskMessage);
+
+            if(reply !== '!' + featurePrefix + ' next') {
+                msg = reply;
+            }
+
+            let wantToActivate = await getReply(message, featureTxt.AskEnableAuto);
+
+            while(wantToActivate !== 'yes' && wantToActivate !== 'no') {
+                wantToActivate = await getReply(message, NotUnderstoodTxt);
+            }
+            const auto = wantToActivate === 'yes' ? 1 : 0;
+
+            if(setup) {
+                if(feature === 'stream') {
+                    await featureQueries.updateSetup(message.guild.id, roleId, channelId, msg, auto);
+                } else {
+                    await featureQueries.updateSetup(message.guild.id, channelId, msg, auto);
+                }
+            } else {
+                if(feature === 'stream') {
+                    await featureQueries.createSetup(message.guild.id, roleId, channelId, msg, auto);
+                } else {
+                    await featureQueries.createSetup(message.guild.id, channelId, msg, auto);
+                }
+            }
+
+            message.channel.send(SuccessConfig);
+        }
+
+    } catch (err) {
+        sendError(err, message.channel);
+    }
+}
+
+async function toogleAuto(feature, message, toogle) {
+    try {
+        const isAdmin = await checkAdmin(message.member);
+        if(!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
+
+        let featureQueries, featureTxt;
+
+        switch(feature) {
+            case 'birthdays':
+                featureQueries = BirthdayQueries;
+                featureTxt = BirthdayTxt;
+                break;
+
+            case 'stream':
+                featureQueries = StreamQueries;
+                featureTxt = StreamTxt;
+                break;
+
+            case 'checkMember':
+                featureQueries = MemberMgerQueries;
+                featureTxt = MemberMgerTxt;
+                break;
+        }
+
+        const [setup] = await featureQueries.getSetup(message.guild.id);
+
+        if(!setup) {
+            message.channel.send(featureTxt.NoSetup);
+            return;
+        } else {
+            await featureQueries.toogleAutoAnnouncement(toogle, message.guild.id);
+            if(toogle === 1) {
+                message.channel.send(featureTxt.AutoAnnouncementEnabled);
+            } else {
+                message.channel.send(featureTxt.AutoAnnouncementDisabled);
+            }
+        }
+    } catch (err) {
+        sendError(err, message.channel);
+    }
+}
+
+module.exports = { checkAdmin, checkRole, checkChannel, getReply, getArgs, sendError, setup, toogleAuto };
