@@ -128,6 +128,11 @@ function start(guildId, music) {
                 guildQueue.musics.shift();
                 start(guildId, guildQueue.musics[0]);
             })
+            .on('error', (err) => {
+                console.log(music, err);
+                queue.get(guildId).voiceChannel.leave();
+                queue.delete(guildId);
+            });
         dispatcher.setVolumeLogarithmic(1);
         guildQueue.textChannel.send(MusicTxt.NowPlaying + "**" + music.title + "**");
         guildQueue.textChannel.send(printQueue(guildQueue));
