@@ -73,7 +73,7 @@ function sendError(error, channel) {
     channel.send(ErrorTxt);
 }
 
-module.exports = { isAdmin, isRole, isChannel, getReply, getArgs, sendError };async function setup(feature, message) {
+async function setup(feature, message) {
     try {
         const isAdmin = await checkAdmin(message.member);
         if (!isAdmin) {
@@ -204,3 +204,44 @@ module.exports = { isAdmin, isRole, isChannel, getReply, getArgs, sendError };as
     }
 }
 
+async function toogleAuto(feature, message, toogle) {
+    try {
+        const isAdmin = await checkAdmin(message.member);
+        if(!isAdmin) {
+            message.channel.send(AccessDenied);
+            return;
+        }
+
+        let featureQueries, featureTxt;
+
+        switch(feature) {
+            case 'birthdays':
+                featureQueries = BirthdayQueries;
+                featureTxt = BirthdayTxt;
+                break;
+
+            case 'stream':
+                featureQueries = StreamQueries;
+                featureTxt = StreamTxt;
+                break;
+
+            case 'checkMember':
+                featureQueries = MemberMgerQueries;
+                featureTxt = MemberMgerTxt;
+                break;
+        }
+
+        const [setup] = await featureQueries.getSetup(message.guild.id);
+
+        if(!setup) {
+            message.channel.send(featureTxt.NoSetup);
+            return;
+        } else {
+            await featureQueries.toogleAutoAnnouncement(toogle, message.guild.id);
+        }
+    } catch (err) {
+        sendError(err, message.channel);
+    }
+}
+
+module.exports = { checkAdmin, checkRole, checkChannel, getReply, getArgs, sendError, setup, toogleAuto };
