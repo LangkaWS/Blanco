@@ -48,6 +48,22 @@
         "MsgTitle": "Liste des commandes",
         "MsgDescription": "Voici la liste de mes commandes pour la version actuelle (v2.1.0) :"
     },
+
+    "MemberMgerTxt": {
+        "AlreadySetup": "Mon service \"Vérification des nouveaux membres\" est configuré de la façon suivante :\r",
+        "AskChannel": "Mentionnez le canal dans lequel les nouveaux membres doivent valider leur entrée.",
+        "AskEnableAuto": "Voulez-vous que j'envoie régulièrement un message aux nouveaux membres qui n'ont pas encore validé leur entrée ? (yes/no)\rVous pourrez toujours activer ou désactiver cette fonction en utilisant les commandes `!mm go` ou `!mm stop`.",
+        "AskMessage": "Quel message dois-je utiliser pour rappeler aux nouveaux membres qu'ils doivent valider leur entrée sur votre serveur ?\rExemple de message : \"Bonjour, je t'invite à réagir au message dans le canal Bienvenue pour gagner l'accès au reste du serveur.\"\rSi vous avez besoin de plus de paramètres personnalisables, n'hésitez pas à en faire part au support.",
+        "AskModifyChannel": "Si vous voulez modifier le canal, mentionnez le nouveau canal que je devrai utiliser, sinon tapez `!mm next`.",
+        "AskModifyCurrentSetup": "Voulez-vous modifier cette configuration ? (yes/no)",
+        "AskModifyMessage": "Si vous voulez modifier le message, écrivez le nouveau message que je devrai utiliser, sinon tapez `!mm next`.",
+        "AutoAnnouncementDisabled": "Je n'enverrai plus de messages aux nouveaux membres.",
+        "AutoAnnouncementEnabled": "J'enverrai automatiquement des messages aux nouveaux membres pour qu'ils valident leur entrée.",
+        "Help": "Le service \"Vérification des nouveaux membres\" vous permet d'envoyer automatiquement chaque semaine un message de rappel personnalisé aux nouveaux membres qui n'auraient pas validé leur entrée.\rAvant de pouvoir l'utiliser, il faut le configurer. Pour cela, utilisez la commande `!mm setup` et laissez vous guider. Au préalable, il vous faudra décider et créer le cas échéant le canal de bienvenue.\rSi vous avez des problèmes avec ce service, n'hésitez pas à contacter le support.\rPour activer la fonction d'annonce automatique, utilisez `!mm go` ; pour la désactiver, utilisez `!mm stop`.",
+        "NoSetup": "Votre serveur n'est pas encore configuré pour utiliser mon service \"Vérification des nouveaux membres\". Voulez-vous le configurer maintenant ? (yes/no)",
+        "Channel": "Channel de bienvenue : ",
+        "Message": "Message de rappel :\r"
+    },
     
     "MusicTxt": {
         "Bye": "Au revoir !",
