@@ -1,24 +1,56 @@
 const Database = require('./GlobalQueries.js');
 
 async function setRRMenu(guildId, channelId, menuMessageId, roleId, emoteId) {
-    const con = await Database.getConnection();
-    await con.execute('INSERT INTO RR_MENU SET guildID = ?, channelID = ?, menuID = ?, roleID = ?, emoteID = ?', [guildId, channelId, menuMessageId, roleId, emoteId]);
+    let con = null;
+    try {
+        con = await Database.getConnection();
+        await con.execute('INSERT INTO rr_menu SET guild_id = ?, channel_id = ?, menu_id = ?, role_id = ?, emote_id = ?', [guildId, channelId, menuMessageId, roleId, emoteId]);
+    } catch (err) {
+        console.log(err);
+        throw 'SQL Exception';
+    } finally {
+        con.end();
+    }
 }
 
 async function getRRMenu(menuMessageId) {
-    const con = await Database.getConnection();
-    const [rows] = await con.execute('SELECT * FROM RR_MENU WHERE menuID = ?', [menuMessageId]);
-    return rows;
+    let con = null;
+    try {
+        con = await Database.getConnection();
+        const [rows] = await con.execute('SELECT * FROM rr_menu WHERE menu_id = ?', [menuMessageId]);
+        return rows;
+    } catch (err) {
+        console.log(err);
+        throw 'SQL Exception';
+    } finally {
+        con.end();
+    }
 }
 
 async function deleteRRMenu(menuMessageId) {
-    const con = await Database.getConnection();
-    await con.execute('DELETE FROM RR_MENU WHERE menuID = ?', [menuMessageId]);
+    let con = null;
+    try {
+        con = await Database.getConnection();
+        await con.execute('DELETE FROM rr_menu WHERE menu_id = ?', [menuMessageId]);
+    } catch (err) {
+        console.log(err);
+        throw 'SQL Exception';
+    } finally {
+        con.end();
+    }
 }
 
 async function deleteRole(menuMessageId, roleId) {
-    const con = await Database.getConnection();
-    await con.execute('DELETE FROM RR_MENU WHERE menuID = ? AND roleID = ?', [menuMessageId, roleId]);
+    let con = null;
+    try {
+        con = await Database.getConnection();
+        await con.execute('DELETE FROM rr_menu WHERE menu_id = ? AND role_id = ?', [menuMessageId, roleId]);
+    } catch (err) {
+        console.log(err);
+        throw 'SQL Exception';
+    } finally {
+        con.end();
+    }
 }
 
 module.exports = { getRRMenu, setRRMenu, deleteRRMenu, deleteRole };
