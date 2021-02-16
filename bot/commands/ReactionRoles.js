@@ -51,7 +51,7 @@ async function createMenu(message) {
 
     try {
 
-        const isAdmin = await Tools.isAdmin(message.member);
+        const isAdmin = await Tools.checkAdmin(message.member);
         if (!isAdmin) {
             message.channel.send(AccessDenied);
             return;
@@ -130,12 +130,12 @@ async function createMenu(message) {
                 let menuChannelStr = await Tools.getReply(message, ReactionRolesTxt.AskChannelForMenu);
 
                 let menuChannelId  = menuChannelStr.replace('<#', '').replace('>', '');
-                let isChannel      = Tools.isChannel(message.guild, menuChannelId);
+                let isChannel      = Tools.checkChannel(message.guild, menuChannelId);
 
                 while (!isChannel) {
                     menuChannelStr   = await Tools.getReply(message, ReactionRolesTxt.ChannelNotFound);
                     menuChannelId = menuChannelStr.replace('<#', '').replace('>', '');
-                    isChannel     = Tools.isChannel(message.guild, menuChannelId);
+                    isChannel     = Tools.checkChannel(message.guild, menuChannelId);
                 }
                 
                 if(menuChannelStr) {
@@ -170,7 +170,7 @@ async function createMenu(message) {
 async function modifyMenu(message) {
     try {
 
-        const isAdmin = await Tools.isAdmin(message.member);
+        const isAdmin = await Tools.checkAdmin(message.member);
         if (!isAdmin) {
             message.channel.send(AccessDenied);
             return;
@@ -206,7 +206,7 @@ async function modifyMenu(message) {
 async function deleteMenu(message) {
     try {
 
-        const isAdmin = await Tools.isAdmin(message.member);
+        const isAdmin = await Tools.checkAdmin(message.member);
         if (!isAdmin) {
             message.channel.send(AccessDenied);
             return;
@@ -243,7 +243,7 @@ async function deleteMenu(message) {
 async function addRoleToMenu(message) {
     try {
 
-        const isAdmin = await Tools.isAdmin(message.member);
+        const isAdmin = await Tools.checkAdmin(message.member);
         if (!isAdmin) {
             message.channel.send(AccessDenied);
             return;
@@ -318,7 +318,7 @@ async function addRoleToMenu(message) {
 async function removeRoleFromMenu(message) {
     try {
 
-        const isAdmin = await Tools.isAdmin(message.member);
+        const isAdmin = await Tools.checkAdmin(message.member);
         if (!isAdmin) {
             message.channel.send(AccessDenied);
             return;
@@ -333,8 +333,8 @@ async function removeRoleFromMenu(message) {
         const [, roleMention] = Tools.getArgs(message);
         const roleId = roleMention.replace('<@&', '').replace('>', '');
 
-        if (Tools.isRole(message.guild, roleId)) {
-
+        if (Tools.checkRole(message.guild, roleId)) {
+            
             let confirmDelete =  await Tools.getReply(message, ReactionRolesTxt.DeleteRoleConfirm);
             while (confirmDelete !== 'yes' && confirmDelete !== 'no') {
                 confirmDelete = await Tools.getReply(message, NotUnderstoodTxt);
