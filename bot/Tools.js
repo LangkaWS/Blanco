@@ -7,7 +7,7 @@ const Database = require('./queries/GlobalQueries.js');
  * @param {GuildMember} member the member to check
  * @param {[string]} roles the list of admin roles
  */
-async function isAdmin(member) {
+async function checkAdmin(member) {
     const adminRolesConfig = await Database.getAdminRoles(member.guild.id);
     return member.roles.cache.some(role => {
         for (let row of adminRolesConfig) {
@@ -23,7 +23,7 @@ async function isAdmin(member) {
  * @param {Guild} guild 
  * @param {string} roleId 
  */
-function isRole(guild, roleId) {
+function checkRole(guild, roleId) {
     return guild.roles.cache.some(r => r.id === roleId);
 }
 
@@ -32,7 +32,7 @@ function isRole(guild, roleId) {
  * @param {Guild} guild 
  * @param {string} channelId 
  */
-function isChannel(guild, channelId) {
+function checkChannel(guild, channelId) {
     return guild.channels.cache.some(c => c.id === channelId);
 }
 
