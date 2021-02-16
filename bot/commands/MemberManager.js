@@ -1,9 +1,6 @@
 const Cron     = require('cron');
 const Tools    = require('../Tools.js');
 const MemberMngQueries = require('../queries/MemberMgerQueries.js');
-const GlobalQueries = require('../queries/GlobalQueries.js');
-
-const { AccessDenied, ChannelNotFound, NotUnderstoodTxt } = require('../languages/fr.json');
 
 function menu(message) {
     const feature = 'checkMember';
@@ -27,8 +24,8 @@ function menu(message) {
 
 function autoCheckNewMembers(client) {
     try {
-        const cron = new Cron.CronJob('00 * * * * *', async () => {
-            const guilds = await GlobalQueries.getAllGuilds();
+        const cron = new Cron.CronJob('00 00 14 * * 6', async () => {
+            const guilds = await MemberMngQueries.getAllGuilds();
             const guildsEnabled = guilds.filter(guild => guild.auto === 1);
             guildsEnabled.forEach(element => {
                 const guild = client.guilds.resolve(element.guild_id);
