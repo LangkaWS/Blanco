@@ -1,10 +1,10 @@
 const Database = require('./GlobalQueries.js');
 
-async function getStreaming(guildId) {
+async function getSetup(guildId) {
     let con = null;
     try {
         con    = await Database.getConnection();
-        const [rows] = await con.execute('SELECT * FROM config WHERE guild_id = ?', [guildId]);
+        const [rows] = await con.execute('SELECT * FROM str_config WHERE guild_id = ?', [guildId]);
         return rows;
     } catch (err) {
         console.log(err);
@@ -18,7 +18,7 @@ async function getStreamingRoleId(guildId) {
     let con = null;
     try {
         con    = await Database.getConnection();
-        const [rows] = await con.execute('SELECT str_role_id FROM config WHERE guild_id = ?', [guildId]);
+        const [rows] = await con.execute('SELECT role_id FROM str_config WHERE guild_id = ?', [guildId]);
         return rows;
     } catch (err) {
         console.log(err);
@@ -32,7 +32,7 @@ async function getStreamingChannelAndMessage(guildId) {
     let con = null;
     try {
         con    = await Database.getConnection();
-        const [rows] = await con.execute('SELECT str_channel_id, str_message FROM config WHERE guild_id = ?', [guildId]);
+        const [rows] = await con.execute('SELECT channel_id, message FROM str_config WHERE guild_id = ?', [guildId]);
         return rows;
     } catch (err) {
         console.log(err);
@@ -46,7 +46,7 @@ async function toogleAutoAnnouncement(param, guildId) {
     let con = null;
     try {
         con = await Database.getConnection();
-        await con.execute('UPDATE config SET str_active = ? WHERE guild_id = ?', [param, guildId]);
+        await con.execute('UPDATE str_config SET auto = ? WHERE guild_id = ?', [param, guildId]);
     } catch (err) {
         console.log(err);
         throw 'SQL Exception';
@@ -59,7 +59,7 @@ async function isStreamActive(guildId) {
     let con = null;
     try {
         con    = await Database.getConnection();
-        const [rows] = await con.execute('SELECT str_active FROM config WHERE guild_id = ?', [guildId]);
+        const [rows] = await con.execute('SELECT auto FROM str_config WHERE guild_id = ?', [guildId]);
         return rows;
     } catch (err) {
         console.log(err);
@@ -69,11 +69,11 @@ async function isStreamActive(guildId) {
     }
 }
 
-async function setStreaming(guildId, role, channel, message, autoParam) {
+async function createSetup(guildId, role, channel, message, autoParam) {
     let con = null;
     try {
         con = await Database.getConnection();
-        await con.execute('INSERT INTO config SET guild_id = ?, str_channel_id = ?, str_role_id = ?, str_message = ?, str_active = ?', [guildId, channel, role, message, autoParam]);
+        await con.execute('INSERT INTO str_config SET guild_id = ?, channel_id = ?, role_id = ?, message = ?, auto = ?', [guildId, channel, role, message, autoParam]);
     } catch (err) {
         console.log(err);
         throw 'SQL Exception';
@@ -82,11 +82,11 @@ async function setStreaming(guildId, role, channel, message, autoParam) {
     }
 }
 
-async function updateStreaming(guildId, role, channel, message, autoParam) {
+async function updateSetup(guildId, role, channel, message, autoParam) {
     let con = null;
     try {
         con = await Database.getConnection();
-        await con.execute('UPDATE config SET str_channel_id = ?, str_role_id = ?, str_message = ?, str_active = ? WHERE guild_id = ?', [channel, role, message, autoParam, guildId]);
+        await con.execute('UPDATE str_config SET channel_id = ?, role_id = ?, message = ?, auto = ? WHERE guild_id = ?', [channel, role, message, autoParam, guildId]);
     } catch (err) {
         console.log(err);
         throw 'SQL Exception';
@@ -95,4 +95,4 @@ async function updateStreaming(guildId, role, channel, message, autoParam) {
     }
 }
 
-module.exports = { getStreaming, getStreamingChannelAndMessage, getStreamingRoleId, toogleAutoAnnouncement, isStreamActive, setStreaming, updateStreaming };
+module.exports = { getSetup, getStreamingChannelAndMessage, getStreamingRoleId, toogleAutoAnnouncement, isStreamActive, createSetup, updateSetup };
