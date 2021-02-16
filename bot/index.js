@@ -10,6 +10,7 @@ const Music         = require('./commands/Music.js');
 const ReactionRoles = require('./commands/ReactionRoles.js');
 const Setup         = require('./commands/Setup.js');
 const Stream        = require('./commands/Stream.js');
+const MemberManager = require('./commands/MemberManager.js');
 
 const client = new Client({
     partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
@@ -25,6 +26,7 @@ try {
         console.log('Hello');
         client.user.setActivity('!help', {type : 'LISTENING'});
         Birthday.autoBirthday(client);
+        MemberManager.autoCheckNewMembers(client);
     });
 
 } catch (err) {
@@ -67,6 +69,10 @@ client.on('message', message => {
         /* Birthday commands */
         case 'bd':
             Birthday.menu(message);
+            break;
+
+        case 'mm':
+            MemberManager.menu(message);
             break;
     }
 
