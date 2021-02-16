@@ -14,11 +14,11 @@ async function getSetup(guildId) {
     }
 }
 
-async function createSetup(guildId, channelId, message, auto) {
+async function createSetup(guildId, message, auto) {
     let con = null;
     try {
         con = await Database.getConnection();
-        await con.execute('INSERT INTO mbmger_config SET guild_id = ?, message = ?, auto = ?', [guildId, channelId, message, auto]);
+        await con.execute('INSERT INTO mbmger_config SET guild_id = ?, message = ?, auto = ?', [guildId, message, auto]);
     } catch (err) {
         console.log(err);
         throw 'SQL Exception';
@@ -27,11 +27,11 @@ async function createSetup(guildId, channelId, message, auto) {
     }
 }
 
-async function updateSetup(guildId, channelId, message, auto) {
+async function updateSetup(guildId, message, auto) {
     let con = null;
     try {
         con = await Database.getConnection();
-        await con.execute('UPDATE mbmger_config SET message = ?, auto = ? WHERE guild_id = ?', [channelId, message, auto, guildId]);
+        await con.execute('UPDATE mbmger_config SET message = ?, auto = ? WHERE guild_id = ?', [message, auto, guildId]);
     } catch (err) {
         console.log(err);
         throw 'SQL Exception';

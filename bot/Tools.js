@@ -84,24 +84,33 @@ async function setup(feature, message) {
         const guildId = message.guild.id;
 
         let featureQueries, featureTxt, featurePrefix;
+        let needChannel = false;
+        let needRole = false;
+        let needMsg = false;
 
         switch(feature) {
             case 'birthdays':
                 featureQueries = BirthdayQueries;
                 featureTxt = BirthdayTxt;
                 featurePrefix = 'bd';
+                needChannel = true;
+                needMsg = true;
                 break;
 
             case 'stream':
                 featureQueries = StreamQueries;
                 featureTxt = StreamTxt;
                 featurePrefix = 'str';
+                needChannel = true;
+                needRole = true;
+                needMsg = true;
                 break;
 
             case 'checkMember':
                 featureQueries = MemberMgerQueries;
                 featureTxt = MemberMgerTxt;
                 featurePrefix = 'mm';
+                needMsg = true;
                 break;
         }
 
@@ -114,7 +123,7 @@ async function setup(feature, message) {
             channelId = setup.channel_id;
             const channel = message.guild.channels.resolve(channelId);
 
-            if(feature === 'stream') {
+            if(needRole) {
                 roleId = setup.role_id;
                 role = message.guild.roles.resolve(roleId);
             }
@@ -122,8 +131,9 @@ async function setup(feature, message) {
             msg = setup.message;
 
             const currentSetupMsg = featureTxt.AlreadySetup
-             + (feature === 'stream' ? featureTxt.Role + (role ? '<@&' + role + '>' : '') + '\r' : '') 
-             + featureTxt.Channel + (channel ? '<#' + channel + '>' : '') + '\r' + featureTxt.Message + msg;
+             + (needRole ? featureTxt.Role + (role ? '<@&' + role + '>' : '') + '\r' : '') 
+             + (needChannel ? featureTxt.Channel + (channel ? '<#' + channel + '>' : '') + '\r' : '')
+             + (needMsg ? featureTxt.Message + msg : '');
 
             message.channel.send(currentSetupMsg);
         }
@@ -136,7 +146,7 @@ async function setup(feature, message) {
 
         if(wantSetup === 'yes') {
 
-            if(feature === 'stream') {
+            if(needRole) {
                 let newRole = await getReply(message, (setup && setup.role_id) ? featureTxt.AskModifyRole : featureTxt.AskRole);
 
                 if(newRole !== '!' + featurePrefix + ' next') {
@@ -154,25 +164,29 @@ async function setup(feature, message) {
 
             }
 
-            let newChannel = await getReply(message, (setup && setup.channel_id) ? featureTxt.AskModifyChannel : featureTxt.AskChannel);
-
-            if(newChannel !== '!' + featurePrefix + ' next') {
-                let newChannelId = newChannel.replace('<#', '').replace('>', '');
-                let isChannel = checkChannel(message.guild, newChannelId);
-
-                while(!isChannel) {
-                    newChannel = await getReply(message, ChannelNotFound);
-                    newChannelId = newChannel.replace('<#', '').replace('>', '');
-                    isChannel = checkChannel(message.guild, newChannelId);
+            if(needChannel) {
+                let newChannel = await getReply(message, (setup && setup.channel_id) ? featureTxt.AskModifyChannel : featureTxt.AskChannel);
+    
+                if(newChannel !== '!' + featurePrefix + ' next') {
+                    let newChannelId = newChannel.replace('<#', '').replace('>', '');
+                    let isChannel = checkChannel(message.guild, newChannelId);
+    
+                    while(!isChannel) {
+                        newChannel = await getReply(message, ChannelNotFound);
+                        newChannelId = newChannel.replace('<#', '').replace('>', '');
+                        isChannel = checkChannel(message.guild, newChannelId);
+                    }
+    
+                    channelId = newChannelId;
                 }
-
-                channelId = newChannelId;
             }
 
-            const reply = await getReply(message, (setup && setup.message) ? featureTxt.AskModifyMessage : featureTxt.AskMessage);
-
-            if(reply !== '!' + featurePrefix + ' next') {
-                msg = reply;
+            if(needMsg) {
+                const reply = await getReply(message, (setup && setup.message) ? featureTxt.AskModifyMessage : featureTxt.AskMessage);
+    
+                if(reply !== '!' + featurePrefix + ' next') {
+                    msg = reply;
+                }
             }
 
             let wantToActivate = await getReply(message, featureTxt.AskEnableAuto);
@@ -183,16 +197,24 @@ async function setup(feature, message) {
             const auto = wantToActivate === 'yes' ? 1 : 0;
 
             if(setup) {
-                if(feature === 'stream') {
-                    await featureQueries.updateSetup(message.guild.id, roleId, channelId, msg, auto);
+                if(needChannel) {
+                    if(needRole) {
+                        await featureQueries.updateSetup(message.guild.id, roleId, channelId, msg, auto);
+                    } else {
+                        await featureQueries.updateSetup(message.guild.id, channelId, msg, auto);
+                    }
                 } else {
-                    await featureQueries.updateSetup(message.guild.id, channelId, msg, auto);
+                    await featureQueries.updateSetup(message.guild.id, msg, auto);
                 }
             } else {
-                if(feature === 'stream') {
-                    await featureQueries.createSetup(message.guild.id, roleId, channelId, msg, auto);
+                if(needChannel) {
+                    if(needRole) {
+                        await featureQueries.createSetup(message.guild.id, roleId, channelId, msg, auto);
+                    } else {
+                        await featureQueries.createSetup(message.guild.id, channelId, msg, auto);
+                    }
                 } else {
-                    await featureQueries.createSetup(message.guild.id, channelId, msg, auto);
+                    await featureQueries.createSetup(message.guild.id, msg, auto);
                 }
             }
 
