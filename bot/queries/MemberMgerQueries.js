@@ -54,4 +54,18 @@ async function toogleAutoAnnouncement(param, guildId) {
     }
 }
 
-module.exports = { getSetup, createSetup, updateSetup, toogleAutoAnnouncement };
+async function getAllGuilds() {
+    let con = null;
+    try {
+        con = await Database.getConnection();
+        const [row] = await con.execute('SELECT * FROM mbmger_config');
+        return row;
+    } catch (err) {
+        console.log(err);
+        throw 'SQL Exception';
+    } finally {
+        con.end();
+    }
+}
+
+module.exports = { getSetup, createSetup, updateSetup, toogleAutoAnnouncement, getAllGuilds };
