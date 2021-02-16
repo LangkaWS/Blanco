@@ -45,6 +45,7 @@ async function toogleAutoAnnouncement(param, guildId) {
     try {
         con = await Database.getConnection();
         const [row] = await con.execute('UPDATE bd_config SET auto = ? WHERE guild_id = ?', [param, guildId]);
+
         return row;
     } catch (err) {
         console.log(err);

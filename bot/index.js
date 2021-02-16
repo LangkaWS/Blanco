@@ -2,26 +2,34 @@ require('dotenv').config();
 
 const { Client, Intents } = require('discord.js');
 
-const { prefix }          = require('../config.json');
+const { prefix }    = require('../config.json');
 
-const Music               = require('./commands/Music.js');
-const Stream              = require('./commands/Stream.js');
-const ReactionRoles       = require('./commands/ReactionRoles.js');
-const Birthday = require('./commands/Birthday.js');
-const Setup = require('./commands/Setup.js');
+const Birthday      = require('./commands/Birthday.js');
+const Main          = require('./commands/Main.js');
+const Music         = require('./commands/Music.js');
+const ReactionRoles = require('./commands/ReactionRoles.js');
+const Admin         = require('./commands/Admin.js');
+const Stream        = require('./commands/Stream.js');
 
-const client  = new Client({
+const client = new Client({
     partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
     ws: {
         intents: [Intents.NON_PRIVILEGED, 'GUILD_PRESENCES', 'GUILD_MEMBERS']
     }
 });
-client.login(process.env.BOT_TOKEN);
 
-client.on('ready', () => {
-    console.log('Hello');
-    Birthday.autoBirthday(client);
-});
+try {
+    client.login(process.env.BOT_TOKEN);
+    
+    client.on('ready', () => {
+        console.log('Hello');
+        client.user.setActivity('!help', {type : 'LISTENING'});
+        Birthday.autoBirthday(client);
+    });
+
+} catch (err) {
+    console.log(err);
+}
 
 client.on('message', message => {
     if(message.author.bot || !message.content.startsWith(prefix)) {
@@ -34,7 +42,11 @@ client.on('message', message => {
     switch(command) {
 
         case 'blanco':
-            Setup.menu(message);
+            Admin.menu(message);
+            break;
+
+        case 'help':
+            Main.help(message);
             break;
 
         /* Music commands */

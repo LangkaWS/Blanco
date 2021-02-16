@@ -28,7 +28,7 @@
     "ffmpeg-static": "^4.2.7",
     "moment": "^2.29.1",
     "mysql2": "^2.2.5",
-    "ytdl-core": "^4.4.4"
+    "ytdl-core": "^4.4.5"
   },
   "devDependencies": {
     "@types/node": "^14.14.22",
