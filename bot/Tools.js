@@ -238,6 +238,11 @@ async function toogleAuto(feature, message, toogle) {
             return;
         } else {
             await featureQueries.toogleAutoAnnouncement(toogle, message.guild.id);
+            if(toogle === 1) {
+                message.channel.send(featureTxt.AutoAnnouncementEnabled);
+            } else {
+                message.channel.send(featureTxt.AutoAnnouncementDisabled);
+            }
         }
     } catch (err) {
         sendError(err, message.channel);
