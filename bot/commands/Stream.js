@@ -1,4 +1,4 @@
-const StreamingQueries = require('../queries/StreamingQueries.js');
+const StreamingQueries = require('../queries/StreamQueries.js');
 const Tools = require('../Tools.js');
 
 const { StreamTxt, NotUnderstoodTxt, AccessDenied, ChannelNotFound } = require('../languages/fr.json');
