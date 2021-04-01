@@ -59,7 +59,7 @@ async function getReply(initMessage, question) {
  * @returns {[string]} the arguments of the command
  */
 function getArgs(message) {
-  return message.content.slice(prefix.length).split(' ').slice(1);
+  return message.content.slice(prefix.length).split(' ').slice(1).filter(el => el.length);
 }
 
 /**
