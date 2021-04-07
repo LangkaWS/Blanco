@@ -1,4 +1,4 @@
-const ytdl     = require('ytdl-core');
+const ytdl     = require('ytdl-core-discord');
 const { getArgs }  = require('../Tools.js');
 
 const { MusicTxt, ErrorTxt } = require('../languages/fr.json');
@@ -111,7 +111,7 @@ async function play(message) {
  * @param {String} music.title the title of the music
  * @param {String} music.url the url of the music
  */
-function start(guildId, music) {
+async function start(guildId, music) {
   try {
     const guildQueue = queue.get(guildId);
   
@@ -123,7 +123,7 @@ function start(guildId, music) {
     }
   
     const dispatcher = guildQueue.connection
-      .play(ytdl(music.url))
+      .play(await ytdl(music.url), {type: 'opus' })
       .on('finish', () => {
         guildQueue.musics.shift();
         start(guildId, guildQueue.musics[0]);
