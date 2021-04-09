@@ -1,71 +1,71 @@
 const Database = require('./GlobalQueries.js');
 
 async function getSetup(guildId) {
-    let con = null;
-    try {
-        con = await Database.getConnection();
-        const [rows] = await con.execute('SELECT * FROM mbmger_config WHERE guild_id = ?', [guildId]);
-        return rows;
-    } catch (err) {
-        console.log(err);
-        throw 'SQL Exception';
-    } finally {
-        con.end();
-    }
+  let con = null;
+  try {
+    con = await Database.getConnection();
+    const [rows] = await con.execute('SELECT * FROM mbmger_config WHERE guild_id = ?', [guildId]);
+    return rows;
+  } catch (err) {
+    console.log(err);
+    throw 'SQL Exception';
+  } finally {
+    con.end();
+  }
 }
 
 async function createSetup(guildId, message, auto) {
-    let con = null;
-    try {
-        con = await Database.getConnection();
-        await con.execute('INSERT INTO mbmger_config SET guild_id = ?, message = ?, auto = ?', [guildId, message, auto]);
-    } catch (err) {
-        console.log(err);
-        throw 'SQL Exception';
-    } finally {
-        con.end();
-    }
+  let con = null;
+  try {
+    con = await Database.getConnection();
+    await con.execute('INSERT INTO mbmger_config SET guild_id = ?, message = ?, auto = ?', [guildId, message, auto]);
+  } catch (err) {
+    console.log(err);
+    throw 'SQL Exception';
+  } finally {
+    con.end();
+  }
 }
 
 async function updateSetup(guildId, message, auto) {
-    let con = null;
-    try {
-        con = await Database.getConnection();
-        await con.execute('UPDATE mbmger_config SET message = ?, auto = ? WHERE guild_id = ?', [message, auto, guildId]);
-    } catch (err) {
-        console.log(err);
-        throw 'SQL Exception';
-    } finally {
-        con.end();
-    }
+  let con = null;
+  try {
+    con = await Database.getConnection();
+    await con.execute('UPDATE mbmger_config SET message = ?, auto = ? WHERE guild_id = ?', [message, auto, guildId]);
+  } catch (err) {
+    console.log(err);
+    throw 'SQL Exception';
+  } finally {
+    con.end();
+  }
 }
 
 async function toogleAutoAnnouncement(param, guildId) {
-    let con = null;
-    try {
-        con = await Database.getConnection();
-        const [row] = await con.execute('UPDATE mbmger_config SET auto = ? WHERE guild_id = ?', [param, guildId]);
-        return row;
-    } catch (err) {
-        console.log(err);
-        throw 'SQL Exception';
-    } finally {
-        con.end();
-    }
+  let con = null;
+  try {
+    con = await Database.getConnection();
+    const [row] = await con.execute('UPDATE mbmger_config SET auto = ? WHERE guild_id = ?', [param, guildId]);
+    return row;
+  } catch (err) {
+    console.log(err);
+    throw 'SQL Exception';
+  } finally {
+    con.end();
+  }
 }
 
 async function getAllGuilds() {
-    let con = null;
-    try {
-        con = await Database.getConnection();
-        const [row] = await con.execute('SELECT * FROM mbmger_config');
-        return row;
-    } catch (err) {
-        console.log(err);
-        throw 'SQL Exception';
-    } finally {
-        con.end();
-    }
+  let con = null;
+  try {
+    con = await Database.getConnection();
+    const [row] = await con.execute('SELECT * FROM mbmger_config');
+    return row;
+  } catch (err) {
+    console.log(err);
+    throw 'SQL Exception';
+  } finally {
+    con.end();
+  }
 }
 
 module.exports = { getSetup, createSetup, updateSetup, toogleAutoAnnouncement, getAllGuilds };
