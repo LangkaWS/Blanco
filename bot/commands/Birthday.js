@@ -53,8 +53,8 @@ async function autoBirthday(client) {
       allBirthdays.forEach(bd => {
         if(bd.bd_auto === 1) {
           const guild = client.guilds.resolve(bd.guild_id);
-          const channel = guild.channels.resolve(bd.bd_channel_id);
-          let msg = bd.bd_message;
+          const channel = guild.channels.resolve(bd.channel_id);
+          let msg = bd.message;
           msg = bd.bd_message.replace(/{name}/, `<@${bd.member_id}>`);
           channel.send(msg);
         }
