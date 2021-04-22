@@ -37,7 +37,7 @@ async function getStreamingRole(guild) {
   try {
     const [result] = await StreamingQueries.getStreamingRoleId(guild.id);
     if (result) {
-      return guild.roles.resolve(result.str_role_id);
+      return guild.roles.resolve(result.role_id);
     } else {
       return null;
     }
@@ -51,7 +51,7 @@ async function isStreamActive(guild) {
   try {
     const [result] = await StreamingQueries.isStreamActive(guild.id);
     if (result) {
-      return result.str_active === 1 ? true : false;
+      return result.auto === 1 ? true : false;
     } else {
       return null;
     }
@@ -65,7 +65,7 @@ async function announceStream(member) {
   try {
     const guild  = member.guild;
     const [result] = await StreamingQueries.getStreamingChannelAndMessage(guild.id);
-    let message  = result.streamingMessage;
+    let message  = result.message;
 
     if (message.match(/{name}/)) {
       message = message.replace(/{name}/, '**' + (member.nickname ? member.nickname : member.user.username) + '**');
@@ -76,7 +76,7 @@ async function announceStream(member) {
       message   = message.replace(/{url}/, url);
     }
 
-    const announcementChannel = guild.channels.resolve(result.streamingChannelId);
+    const announcementChannel = guild.channels.resolve(result.channel_id);
     announcementChannel.send(message);
   } catch (err) {
     console.log(new Date());
