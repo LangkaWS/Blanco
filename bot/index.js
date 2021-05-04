@@ -116,11 +116,19 @@ client.on('presenceUpdate', async (oldPresence, newPresence) => {
       return Stream.announceStream(newPresence);
     }
 
-    const streamEnded = oldPresence.activities.some(activity => activity.type === 'STREAMING');
+    if (oldPresence) {
+      const streamEnded = oldPresence.activities.some(activity => activity.type === 'STREAMING');
+  
+      if (streamEnded) {
+        const streamerRole = await Stream.getStreamerRole(newPresence.guild);
+        if (!streamerRole) return;
 
-    if (streamEnded) {
-      const liveRole = await Stream.getLiveRole(newPresence.guild);
-      return oldPresence.member.roles.remove(liveRole);
+        const isStreamer = newPresence.member.roles.cache.some(role => role.id === streamerRole.id);
+        if (!isStreamer) return;
+        
+        const liveRole = await Stream.getLiveRole(newPresence.guild);
+        return oldPresence.member.roles.remove(liveRole);
+      }
     }
 
   } catch (error) {
