@@ -13,9 +13,9 @@ const Stream    = require('./commands/Stream.js');
 const MemberManager = require('./commands/MemberManager.js');
 
 const client = new Client({
-  partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
+  partials: ['MESSAGE', 'CHANNEL', 'REACTION', 'USER'],
   ws: {
-    intents: [Intents.NON_PRIVILEGED, 'GUILD_PRESENCES', 'GUILD_MEMBERS']
+    intents: [Intents.ALL]
   }
 });
 
@@ -98,19 +98,33 @@ client.on('messageReactionRemove', async (reaction, user) => {
   }
 });
 
-client.on('guildMemberUpdate', async (oldMember, newMember) => {
+client.on('presenceUpdate', async (oldPresence, newPresence) => {
+
   try {
-    const diffRole = newMember.roles.cache.difference(oldMember.roles.cache).first();
-    if(diffRole) {
-      const streamingRole = await Stream.getStreamingRole(oldMember.guild);
-      if(streamingRole && diffRole === streamingRole && newMember.roles.cache.get(diffRole.id)) {
-        const isStreamActive = await Stream.isStreamActive(newMember.guild);
-        if(isStreamActive) {
-          Stream.announceStream(newMember);
-        }
-      }
+
+    const streamStarted = newPresence.activities.some(activity => activity.type === 'STREAMING');
+
+    if (streamStarted) {
+      const streamerRole = await Stream.getStreamerRole(newPresence.guild);
+      if (!streamerRole) return;
+
+      const isStreamer = newPresence.member.roles.cache.some(role => role.id === streamerRole.id);
+      if (!isStreamer) return;
+
+      const liveRole = await Stream.getLiveRole(newPresence.guild);
+      newPresence.member.roles.add(liveRole);
+      return Stream.announceStream(newPresence);
     }
+
+    const streamEnded = oldPresence.activities.some(activity => activity.type === 'STREAMING');
+
+    if (streamEnded) {
+      const liveRole = await Stream.getLiveRole(newPresence.guild);
+      return oldPresence.member.roles.remove(liveRole);
+    }
+
   } catch (error) {
+    console.log(new Date());
     console.log(error);
   }
 });
