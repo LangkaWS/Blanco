@@ -185,19 +185,26 @@ async function isStreamActive(guild) {
   }
 }
 
-async function announceStream(member) {
+async function announceStream(presence) {
   try {
-    const guild  = member.guild;
+    const guild  = presence.guild;
     const [result] = await StreamingQueries.getStreamingChannelAndMessage(guild.id);
     let message  = result.message;
 
+    const activity = presence.activities.find(act => act.type === 'STREAMING');
+
     if (message.match(/{name}/)) {
-      message = message.replace(/{name}/, '**' + (member.nickname ? member.nickname : member.user.username) + '**');
+      message = message.replace(/{name}/, '**' + (presence.member.nickname ? presence.member.nickname : presence.member.user.username) + '**');
     }
 
     if (message.match(/{url}/)) {
-      const url = member.presence.activities.find(act => act.type === 'STREAMING').url;
+      const url = activity.url;
       message   = message.replace(/{url}/, url);
+    }
+
+    if (message.match(/{category}/)) {
+      const category = activity.state;
+      message        = message.replace(/{category}/, category);
     }
 
     const announcementChannel = guild.channels.resolve(result.channel_id);
