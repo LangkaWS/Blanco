@@ -36,8 +36,26 @@ function menu(message) {
 async function getStreamingRole(guild) {
   try {
     const [result] = await StreamingQueries.getStreamingRoleId(guild.id);
+
+async function getStreamerRole(guild) {
+  try {
+    const [result] = await StreamingQueries.getStreamerRoleId(guild.id);
     if (result) {
-      return guild.roles.resolve(result.role_id);
+      return guild.roles.resolve(result.streamer_role_id);
+    } else {
+      return null;
+    }
+  } catch (err) {
+    console.log(new Date());
+    console.log(err);
+  }
+}
+
+async function getLiveRole(guild) {
+  try {
+    const [result] = await StreamingQueries.getLiveRoleId(guild.id);
+    if (result) {
+      return guild.roles.resolve(result.live_role_id);
     } else {
       return null;
     }
@@ -92,4 +110,4 @@ function help(message) {
   message.channel.send(StreamTxt.Help);
 }
 
-module.exports = { menu, getStreamingRole, isStreamActive, announceStream }
+module.exports = { menu, getStreamerRole, getLiveRole, isStreamActive, announceStream }

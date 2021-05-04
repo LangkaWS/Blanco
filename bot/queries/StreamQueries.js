@@ -14,11 +14,25 @@ async function getSetup(guildId) {
   }
 }
 
-async function getStreamingRoleId(guildId) {
+async function getStreamerRoleId(guildId) {
   let con = null;
   try {
     con  = await Database.getConnection();
-    const [rows] = await con.execute('SELECT role_id FROM str_config WHERE guild_id = ?', [guildId]);
+    const [rows] = await con.execute('SELECT streamer_role_id FROM str_config WHERE guild_id = ?', [guildId]);
+    return rows;
+  } catch (err) {
+    console.log(err);
+    throw 'SQL Exception';
+  } finally {
+    con.end();
+  }
+}
+
+async function getLiveRoleId(guildId) {
+  let con = null;
+  try {
+    con  = await Database.getConnection();
+    const [rows] = await con.execute('SELECT live_role_id FROM str_config WHERE guild_id = ?', [guildId]);
     return rows;
   } catch (err) {
     console.log(err);
@@ -69,11 +83,11 @@ async function isStreamActive(guildId) {
   }
 }
 
-async function createSetup(guildId, role, channel, message, autoParam) {
+async function createSetup(guildId, streamerRole, liveRole, channel, message, autoParam) {
   let con = null;
   try {
     con = await Database.getConnection();
-    await con.execute('INSERT INTO str_config SET guild_id = ?, channel_id = ?, role_id = ?, message = ?, auto = ?', [guildId, channel, role, message, autoParam]);
+    await con.execute('INSERT INTO str_config SET guild_id = ?, channel_id = ?, streamer_role_id = ?, live_role_id = ?, message = ?, auto = ?', [guildId, channel, streamerRole, liveRole, message, autoParam]);
   } catch (err) {
     console.log(err);
     throw 'SQL Exception';
@@ -82,11 +96,11 @@ async function createSetup(guildId, role, channel, message, autoParam) {
   }
 }
 
-async function updateSetup(guildId, role, channel, message, autoParam) {
+async function updateSetup(guildId, streamerRole, liveRole, channel, message, autoParam) {
   let con = null;
   try {
     con = await Database.getConnection();
-    await con.execute('UPDATE str_config SET channel_id = ?, role_id = ?, message = ?, auto = ? WHERE guild_id = ?', [channel, role, message, autoParam, guildId]);
+    await con.execute('UPDATE str_config SET channel_id = ?, streamer_role_id = ?, live_role_id = ?, message = ?, auto = ? WHERE guild_id = ?', [channel, streamerRole, liveRole, message, autoParam, guildId]);
   } catch (err) {
     console.log(err);
     throw 'SQL Exception';
@@ -95,4 +109,4 @@ async function updateSetup(guildId, role, channel, message, autoParam) {
   }
 }
 
-module.exports = { getSetup, getStreamingChannelAndMessage, getStreamingRoleId, toogleAutoAnnouncement, isStreamActive, createSetup, updateSetup };
+module.exports = { getSetup, getStreamingChannelAndMessage, getStreamerRoleId, getLiveRoleId, toogleAutoAnnouncement, isStreamActive, createSetup, updateSetup };
